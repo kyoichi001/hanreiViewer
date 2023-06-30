@@ -1,0 +1,32 @@
+.headerText {
+    -unity-font-style: bold;
+    font-size: 30px;
+}
+
+.container {
+    background-color: rgb(233, 233, 233);
+    height: 100%;
+    width: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.containerHeader {
+    -unity-font-style: normal;
+    font-size: 20px;
+}
+
+.bodyContainer {
+    flex-direction: row;
+}
+
+.subMenu {
+    width: 200px;
+    background-color: rgb(190, 190, 190);
+}
+
+.content {
+    width: 100%;
+}

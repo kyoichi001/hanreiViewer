@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/ui.uss?fileID=7433441132597879392&amp;guid=383730823e66368448321a1cb8c8b2d7&amp;type=3#ui" />
+    <ui:VisualElement name="container" class="container">
+        <ui:Label tabindex="-1" text="HanreiViewer" display-tooltip-when-elided="true" class="headerText" />
+        <ui:VisualElement name="bodyContainer" class="bodyContainer" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+            <ui:VisualElement name="subMenu" class="subMenu">
+                <ui:Label tabindex="-1" text="Files" display-tooltip-when-elided="true" class="containerHeader" />
+                <ui:ListView focusable="true" />
+            </ui:VisualElement>
+            <ui:VisualElement name="content" class="content">
+                <ui:Label tabindex="-1" text="Contents" display-tooltip-when-elided="true" class="containerHeader" />
+                <ui:ListView focusable="true" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
