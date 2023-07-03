@@ -1,11 +1,15 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:Label tabindex="-1" text="Title" display-tooltip-when-elided="true" name="title" />
-    <ui:Label tabindex="-1" text="Signature" display-tooltip-when-elided="true" name="signatureLabel" />
-    <ui:VisualElement name="signatureContents" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
-    <ui:Label tabindex="-1" text="Judgement" display-tooltip-when-elided="true" name="judgementLabel" />
-    <ui:VisualElement name="judgementContents" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
-    <ui:Label tabindex="-1" text="MainText" display-tooltip-when-elided="true" name="mainTextLabel" />
-    <ui:VisualElement name="mainTextContents" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
-    <ui:Label tabindex="-1" text="FactReason" display-tooltip-when-elided="true" name="factReasonLabel" />
-    <ui:VisualElement name="factReasonContents" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+    <ui:Foldout text="Foldout" name="signatureLabel">
+        <ui:VisualElement name="signatureContents" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+    </ui:Foldout>
+    <ui:Foldout text="Foldout" name="judgementLabel">
+        <ui:VisualElement name="judgementContents" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+    </ui:Foldout>
+    <ui:Foldout text="Foldout" name="mainTextLabel">
+        <ui:VisualElement name="mainTextContents" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+    </ui:Foldout>
+    <ui:Foldout text="Foldout" name="factReasonLabel">
+        <ui:VisualElement name="factReasonContents" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+    </ui:Foldout>
 </ui:UXML>

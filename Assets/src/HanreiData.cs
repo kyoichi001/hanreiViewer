@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
+public class SectionText
+{
+    public string raw_text;
+}
+
+[System.Serializable]
 public class Section
 {
     public string type;
     public string header;
     public string header_text;
-    public string text;
+    public List<SectionText> texts=new List<SectionText>();
     public int indent;
 }
 

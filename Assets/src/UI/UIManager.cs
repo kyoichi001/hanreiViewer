@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
@@ -34,7 +35,7 @@ public    VisualTreeAsset sectionUXML;
         container.Clear();
         var t = hanreiUXML.CloneTree();
         t.Q<Label>("title").text = data.filename;
-        t.Q<Label>("signatureLabel").text = data.contents.signature.header_text;
+        t.Q<Foldout>("signatureLabel").text = data.contents.signature.header_text;
         var signatureLst = t.Q<VisualElement>("signatureContents");
         foreach (var i in data.contents.signature.texts)
         {
@@ -42,7 +43,7 @@ public    VisualTreeAsset sectionUXML;
             text.text = i;
             signatureLst.Add(text);
         }
-        t.Q<Label>("judgementLabel").text = data.contents.judgement.header_text;
+        t.Q<Foldout>("judgementLabel").text = data.contents.judgement.header_text;
         var judgementLst = t.Q<VisualElement>("judgementContents");
         foreach (var i in data.contents.judgement.texts)
         {
@@ -50,41 +51,66 @@ public    VisualTreeAsset sectionUXML;
             text.text = i;
             judgementLst.Add(text);
         }
-        t.Q<Label>("mainTextLabel").text = data.contents.main_text.header_text;
+        t.Q<Foldout>("mainTextLabel").text = data.contents.main_text.header_text;
         var mainTexttLst = t.Q<VisualElement>("mainTextContents");
+        var indentContainer =new List<VisualElement>();
+        indentContainer.Add(t.Q<VisualElement>("mainTextContents"));
         foreach (var i in data.contents.main_text.sections)
         {
             var section = sectionUXML.CloneTree();
-            section.Q<Label>("header").text = i.header;
+            section.Q<Foldout>("header").text = i.header;
             section.Q<Label>("headerText").text = i.header_text;
             if (i.header_text == "" || i.header_text==null)
-                section.Q<VisualElement>("rightContainer").Remove(
+                section.Q<VisualElement>("unity-content").Remove(
                     section.Q<Label>("headerText")
                     );
-            section.Q<Label>("text").text = i.text;
-            if (i.text == "" || i.text == null)
-                section.Q<VisualElement>("rightContainer").Remove(
-                    section.Q<Label>("text")
-                    );
-            mainTexttLst.Add(section);
+            foreach(var text in i.texts)
+            {
+                var textDOM = new Label();
+                textDOM.text = text.raw_text;
+                section.Q<VisualElement>("childContainer").Add(textDOM);
+            }
+            Debug.Log(indentContainer);
+            indentContainer[i.indent-1].Add(section);
+            if (indentContainer.Count <= i.indent)
+            {
+                indentContainer.Add(section.Q<VisualElement>("unity-content"));
+            }
+            else
+            {
+                indentContainer[i.indent] = section.Q<VisualElement>("unity-content");
+            }
         }
-        t.Q<Label>("factReasonLabel").text = data.contents.fact_reason.header_text;
+        t.Q<Foldout>("factReasonLabel").text = data.contents.fact_reason.header_text;
         var factReasonLst = t.Q<VisualElement>("factReasonContents");
+        indentContainer = new List<VisualElement>();
+        indentContainer.Add(t.Q<VisualElement>("factReasonContents"));
         foreach (var i in data.contents.fact_reason.sections)
         {
             var section = sectionUXML.CloneTree();
-            section.Q<Label>("header").text = i.header;
+            section.Q<Foldout>("header").text = i.header;
             section.Q<Label>("headerText").text = i.header_text;
             if (i.header_text == "" || i.header_text == null)
-                section.Q<VisualElement>("rightContainer").Remove(
+                section.Q<VisualElement>("unity-content").Remove(
                     section.Q<Label>("headerText")
                     );
-            section.Q<Label>("text").text = i.text;
-            if (i.text == "" || i.text == null)
-                section.Q<VisualElement>("rightContainer").Remove(
-                    section.Q<Label>("text")
-                    );
-            factReasonLst.Add(section);
+            foreach (var text in i.texts)
+            {
+                var textDOM = new Label();
+                textDOM.text = text.raw_text;
+                section.Q<VisualElement>("childContainer").Add(textDOM);
+            }
+            Debug.Log(indentContainer);
+            indentContainer[i.indent - 1].Add(section);
+            if (indentContainer.Count <= i.indent)
+            {
+                Debug.Log($"add container {indentContainer.Count} : {i.indent}");
+                indentContainer.Add(section.Q<VisualElement>("unity-content"));
+            }
+            else
+            {
+                indentContainer[i.indent] = section.Q<VisualElement>("unity-content");
+            }
         }
         container.Add(t);
     }
