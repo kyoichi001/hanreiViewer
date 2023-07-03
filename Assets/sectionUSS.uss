@@ -1,0 +1,7 @@
+.sectionContainer {
+    flex-direction: row;
+}
+
+.unity-label {
+    white-space: normal;
+}

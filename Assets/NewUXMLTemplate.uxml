@@ -9,7 +9,7 @@
             </ui:VisualElement>
             <ui:VisualElement name="content" class="content">
                 <ui:Label tabindex="-1" text="Contents" display-tooltip-when-elided="true" class="containerHeader" />
-                <ui:ListView focusable="true" />
+                <ui:ScrollView name="contentContainer" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
