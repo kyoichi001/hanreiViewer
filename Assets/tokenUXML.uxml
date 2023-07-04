@@ -1,5 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="VisualElement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; border-left-color: rgb(255, 0, 0); border-right-color: rgb(255, 0, 0); border-top-color: rgb(255, 0, 0); border-bottom-color: rgb(255, 0, 0); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
-        <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="text" style="flex-shrink: 1; width: initial; white-space: nowrap;" />
+    <Style src="project://database/Assets/tokenUSS.uss?fileID=7433441132597879392&amp;guid=9ad78d8c37876424598948e2720810e4&amp;type=3#tokenUSS" />
+    <ui:VisualElement name="VisualElement" class="tokenContainer" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); padding-left: 0; padding-right: 0; padding-top: 1px; padding-bottom: 1px;">
+        <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="text" style="flex-shrink: 1; width: initial; white-space: nowrap; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
     </ui:VisualElement>
 </ui:UXML>

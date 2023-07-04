@@ -1,7 +1,10 @@
 .sectionContainer {
     flex-direction: row;
+    align-items: flex-start;
 }
 
 .textContainer {
     flex-wrap: wrap;
+    align-items: flex-start;
+    flex-direction: row;
 }
