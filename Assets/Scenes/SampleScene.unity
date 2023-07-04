@@ -186,7 +186,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dataLoader: {fileID: 48626618}
   hanreiUXML: {fileID: 9197481963319205126, guid: 04649bbe81b67de43a0cee9362f72561, type: 3}
-  sectionUXML: {fileID: 9197481963319205126, guid: 9863ab9b3747c0b40aaf16880107cce8, type: 3}
+  foldableSectionUXML: {fileID: 9197481963319205126, guid: 9863ab9b3747c0b40aaf16880107cce8, type: 3}
+  sectionUXML: {fileID: 9197481963319205126, guid: cfbaa9fe74fcdac4eb44dc043189d73c, type: 3}
 --- !u!1 &48626617
 GameObject:
   m_ObjectHideFlags: 0

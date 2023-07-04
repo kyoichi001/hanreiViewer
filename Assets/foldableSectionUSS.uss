@@ -1,0 +1,13 @@
+.sectionContainer {
+    flex-direction: row;
+}
+
+.unity-label {
+    white-space: normal;
+}
+
+.headerText {
+    -unity-font-style: normal;
+    font-size: 14px;
+    white-space: normal;
+}

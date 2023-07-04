@@ -10,11 +10,13 @@ public class UIManager : MonoBehaviour
 {
     public DataLoader dataLoader;
     UIDocument uIDocument;
-public    VisualTreeAsset hanreiUXML;
-public    VisualTreeAsset sectionUXML;
+    public VisualTreeAsset hanreiUXML;
+    public VisualTreeAsset foldableSectionUXML;
+    public VisualTreeAsset sectionUXML;
+
     private void Awake()
     {
-        uIDocument=GetComponent<UIDocument>();
+        uIDocument = GetComponent<UIDocument>();
         var submenuElement = uIDocument.rootVisualElement.Q("subMenu");
         dataLoader.OnDataLoaded.AddListener((dat) =>
         {
@@ -22,11 +24,67 @@ public    VisualTreeAsset sectionUXML;
             newVisualElement.name = "AddButton";
             newVisualElement.AddToClassList("sample-button");
             newVisualElement.text = dat.filename;
-            newVisualElement.clicked += () => {
+            newVisualElement.clicked += () =>
+            {
                 ShowHanrei(dat);
             };
             submenuElement.Add(newVisualElement);
         });
+    }
+
+    bool hasChild(Section target, Section next)
+    {
+        return next.indent == target.indent + 1;
+    }
+
+    void generateSectionsDOM(VisualElement root, List<Section> sections)
+    {
+        var indentContainer = new List<VisualElement>{root};
+        for (var i = 0; i < sections.Count; i++)
+        {
+            var sectionData = sections[i];
+            if (i < sections.Count - 1 &&
+                (hasChild(sectionData, sections[i + 1]) ||
+                sectionData.header_text?.Length > 0 && sectionData.texts.Count > 0
+                ))
+            {
+                //セクションが子要素を含むか、header_text,text両方を含むならfoldoutにする
+                var section = foldableSectionUXML.CloneTree();
+                section.Q<Foldout>("header").text = sectionData.header + "  " + sectionData?.header_text;
+                foreach (var text in sectionData.texts)
+                {
+                    var textDOM = new Label();
+                    textDOM.text = text.raw_text;
+                    section.Q<VisualElement>("childContainer").Add(textDOM);
+                }
+                indentContainer[sectionData.indent - 1].Add(section);
+                if (indentContainer.Count <= sectionData.indent)
+                {
+                    indentContainer.Add(section.Q<VisualElement>("unity-content"));
+                }
+                else
+                {
+                    indentContainer[sectionData.indent] = section.Q<VisualElement>("unity-content");
+                }
+            }
+            else
+            {
+                var section = sectionUXML.CloneTree();
+                section.Q<Label>("header").text = sectionData.header;
+                section.Q<Label>("headerText").text = sectionData.header_text;
+                if (sectionData.header_text == "" || sectionData.header_text == null)
+                    section.Q<VisualElement>("rightContainer").Remove(
+                        section.Q<Label>("headerText")
+                        );
+                foreach (var text in sectionData.texts)
+                {
+                    var textDOM = new Label();
+                    textDOM.text = text.raw_text;
+                    section.Q<VisualElement>("rightContainer").Add(textDOM);
+                }
+                indentContainer[sectionData.indent - 1].Add(section);
+            }
+        }
     }
 
     void ShowHanrei(HanreiData data)
@@ -52,66 +110,9 @@ public    VisualTreeAsset sectionUXML;
             judgementLst.Add(text);
         }
         t.Q<Foldout>("mainTextLabel").text = data.contents.main_text.header_text;
-        var mainTexttLst = t.Q<VisualElement>("mainTextContents");
-        var indentContainer =new List<VisualElement>();
-        indentContainer.Add(t.Q<VisualElement>("mainTextContents"));
-        foreach (var i in data.contents.main_text.sections)
-        {
-            var section = sectionUXML.CloneTree();
-            section.Q<Foldout>("header").text = i.header;
-            section.Q<Label>("headerText").text = i.header_text;
-            if (i.header_text == "" || i.header_text==null)
-                section.Q<VisualElement>("unity-content").Remove(
-                    section.Q<Label>("headerText")
-                    );
-            foreach(var text in i.texts)
-            {
-                var textDOM = new Label();
-                textDOM.text = text.raw_text;
-                section.Q<VisualElement>("childContainer").Add(textDOM);
-            }
-            Debug.Log(indentContainer);
-            indentContainer[i.indent-1].Add(section);
-            if (indentContainer.Count <= i.indent)
-            {
-                indentContainer.Add(section.Q<VisualElement>("unity-content"));
-            }
-            else
-            {
-                indentContainer[i.indent] = section.Q<VisualElement>("unity-content");
-            }
-        }
+        generateSectionsDOM(t.Q<VisualElement>("mainTextContents"), data.contents.main_text.sections);
         t.Q<Foldout>("factReasonLabel").text = data.contents.fact_reason.header_text;
-        var factReasonLst = t.Q<VisualElement>("factReasonContents");
-        indentContainer = new List<VisualElement>();
-        indentContainer.Add(t.Q<VisualElement>("factReasonContents"));
-        foreach (var i in data.contents.fact_reason.sections)
-        {
-            var section = sectionUXML.CloneTree();
-            section.Q<Foldout>("header").text = i.header;
-            section.Q<Label>("headerText").text = i.header_text;
-            if (i.header_text == "" || i.header_text == null)
-                section.Q<VisualElement>("unity-content").Remove(
-                    section.Q<Label>("headerText")
-                    );
-            foreach (var text in i.texts)
-            {
-                var textDOM = new Label();
-                textDOM.text = text.raw_text;
-                section.Q<VisualElement>("childContainer").Add(textDOM);
-            }
-            Debug.Log(indentContainer);
-            indentContainer[i.indent - 1].Add(section);
-            if (indentContainer.Count <= i.indent)
-            {
-                Debug.Log($"add container {indentContainer.Count} : {i.indent}");
-                indentContainer.Add(section.Q<VisualElement>("unity-content"));
-            }
-            else
-            {
-                indentContainer[i.indent] = section.Q<VisualElement>("unity-content");
-            }
-        }
+        generateSectionsDOM(t.Q<VisualElement>("factReasonContents"), data.contents.fact_reason.sections);
         container.Add(t);
     }
 }
