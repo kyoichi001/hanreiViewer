@@ -20,7 +20,7 @@ public class DataLoader : MonoBehaviour
         StreamReader reader = new StreamReader(filePath);
         string datastr = reader.ReadToEnd();
         reader.Close();
-        //Debug.Log(datastr);
+        Debug.Log(datastr);
         return JsonUtility.FromJson<HanreiData>(datastr);
     }
 

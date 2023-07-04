@@ -1,3 +1,7 @@
 .sectionContainer {
     flex-direction: row;
 }
+
+.textContainer {
+    flex-wrap: wrap;
+}

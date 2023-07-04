@@ -3,9 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
+public class Token
+{
+    public int id;
+    public string text;
+    public string tag;
+}
+
+[System.Serializable]
 public class SectionText
 {
     public string raw_text;
+    public List<Token>  tokens;
 }
 
 [System.Serializable]
@@ -14,8 +23,8 @@ public class Section
     public string type;
     public string header;
     public string header_text;
-    public List<SectionText> texts=new List<SectionText>();
     public int indent;
+    public List<SectionText> texts=new List<SectionText>();
 }
 
 [System.Serializable]

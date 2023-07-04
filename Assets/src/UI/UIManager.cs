@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     public VisualTreeAsset hanreiUXML;
     public VisualTreeAsset foldableSectionUXML;
     public VisualTreeAsset sectionUXML;
+    public VisualTreeAsset tokenUXML;
 
     private void Awake()
     {
@@ -78,9 +79,12 @@ public class UIManager : MonoBehaviour
                         );
                 foreach (var text in sectionData.texts)
                 {
-                    var textDOM = new Label();
-                    textDOM.text = text.raw_text;
-                    section.Q<VisualElement>("rightContainer").Add(textDOM);
+                    foreach(var token in text.tokens)
+                    {
+                        var tokenDOM = tokenUXML.CloneTree();
+                        tokenDOM.Q<Label>().text=token.text;
+                        section.Q<VisualElement>("textContainer").Add(tokenDOM);
+                    }
                 }
                 indentContainer[sectionData.indent - 1].Add(section);
             }
