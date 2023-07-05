@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/foldableSectionUSS.uss?fileID=7433441132597879392&amp;guid=aa733862327037b4aaa5a875d1647c6b&amp;type=3#foldableSectionUSS" />
     <ui:Foldout text="Foldout" name="header">
-        <ui:VisualElement name="childContainer" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+        <ui:VisualElement name="childContainer" class="sectionContainer" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
     </ui:Foldout>
 </ui:UXML>

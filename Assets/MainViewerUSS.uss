@@ -16,6 +16,11 @@
 .containerHeader {
     -unity-font-style: normal;
     font-size: 20px;
+    border-left-color: rgb(140, 138, 200);
+    border-right-color: rgb(140, 138, 200);
+    border-top-color: rgb(140, 138, 200);
+    border-bottom-color: rgb(140, 138, 200);
+    border-bottom-width: 2px;
 }
 
 .bodyContainer {
@@ -31,16 +36,13 @@
     width: 100%;
 }
 
-/* スクロールバーの背景色を消す */
 .unity-base-slider__tracker {
-    background-color: rgba(0, 0, 0, 0);   
+    background-color: rgba(0, 0, 0, 0);
     border-left-width: 0;
     border-right-width: 0;
 }
 
-/* スクロールバー上下のボタンを消す */
- .unity-scroller__low-button,
- .unity-scroller__high-button {
+.unity-scroller__low-button {
     width: 0;
     height: 0;
     border-left-width: 0;
@@ -49,14 +51,23 @@
     border-bottom-width: 0;
 }
 
- .unity-scroller .unity-base-slider__dragger {
+.unity-scroller__high-button {
+    width: 0;
+    height: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+}
+
+.unity-scroller .unity-base-slider__dragger {
     border-top-left-radius: 9px;
     border-top-right-radius: 9px;
     border-bottom-left-radius: 9px;
     border-bottom-right-radius: 9px;
 }
 
-    .unity-base-slider__dragger{
-        min-height:10px;
-    background-color: rgba(0, 0, 0, 0.3);   
-    }
+.unity-base-slider__dragger {
+    min-height: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+}

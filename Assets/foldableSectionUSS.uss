@@ -1,5 +1,7 @@
 .sectionContainer {
     flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
 }
 
 .unity-label {
@@ -10,4 +12,7 @@
     -unity-font-style: normal;
     font-size: 14px;
     white-space: normal;
+}
+
+.unity-foldout__toggle :hover {
 }
