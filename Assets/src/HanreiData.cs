@@ -1,6 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+[System.Serializable]
+public enum EntityType
+{
+    None,
+    Date
+}
+
 [System.Serializable]
 public class Entity
 {
@@ -25,15 +33,34 @@ public class Bunsetsu
 {
     public int id;
     public string text;
-    public List<Token> tokens;
-    public List<Entity> ents;
+    public List<Token> tokens=new List<Token>();
+
 }
 
 [System.Serializable]
 public class SectionText
 {
     public string raw_text;
-    public List<Bunsetsu> bunsetu;
+    public List<Bunsetsu> bunsetu = new List<Bunsetsu>();
+    public List<Entity> ents = new List<Entity>();
+
+    public EntityType GetTokenEntity(int tokenId)
+    {
+        foreach (var b in bunsetu)
+        {
+            foreach (var token in b.tokens)
+            {
+                if (token.id != tokenId) continue;
+                foreach (var ent in ents)
+                {
+                    if (ent.id != token.ent) continue;
+                    if (ent.label == "Date") return EntityType.Date;
+                    else return EntityType.None;
+                }
+            }
+        }
+        return EntityType.None;
+    }
 }
 
 [System.Serializable]

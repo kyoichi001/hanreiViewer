@@ -99,6 +99,10 @@ public class UIManager : MonoBehaviour
                         {
                             var tokenDOM = tokenUXML.CloneTree();
                             tokenDOM.Q<Label>().text = token.text;
+                            if (text.GetTokenEntity(token.id) == EntityType.Date)
+                            {
+                                tokenDOM.style.backgroundColor = new Color(1, 0, 0,0.4f);
+                            }
                             bunsetsuDOM.Q<VisualElement>("tokenContainer").Add(tokenDOM);
                         }
                         section.Q<VisualElement>("childContainer").Add(bunsetsuDOM);
@@ -132,6 +136,11 @@ public class UIManager : MonoBehaviour
                         {
                             var tokenDOM = tokenUXML.CloneTree();
                             tokenDOM.Q<Label>().text = token.text;
+                            if (text.GetTokenEntity(token.id) == EntityType.Date)
+                            {
+                                Debug.Log("!!!!!!!!!!!!!!!!!!!!!");
+                                tokenDOM.style.backgroundColor = new Color(1, 0, 0,0.4f);
+                            }
                             bunsetsuDOM.Q<VisualElement>("tokenContainer").Add(tokenDOM);
                         }
                         section.Q<VisualElement>("textContainer").Add(bunsetsuDOM);
