@@ -1,6 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+[System.Serializable]
+public class Entity
+{
+    public int id;
+    public string text;
+    public string label;
+    public string start;
+    public string end;
+}
 
 [System.Serializable]
 public class Token
@@ -8,6 +17,7 @@ public class Token
     public int id;
     public string text;
     public string tag;
+    public int ent;
 }
 
 [System.Serializable]
@@ -16,6 +26,7 @@ public class Bunsetsu
     public int id;
     public string text;
     public List<Token> tokens;
+    public List<Entity> ents;
 }
 
 [System.Serializable]
