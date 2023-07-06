@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
     public VisualTreeAsset hanreiUXML;
     public VisualTreeAsset foldableSectionUXML;
     public VisualTreeAsset sectionUXML;
+    public VisualTreeAsset bunsetsuUXML;
     public VisualTreeAsset tokenUXML;
 
     private void Awake()
@@ -77,7 +78,7 @@ public class UIManager : MonoBehaviour
 
     void generateSectionsDOM(VisualElement root, List<Section> sections)
     {
-        var indentContainer = new List<VisualElement>{root};
+        var indentContainer = new List<VisualElement> { root };
         for (var i = 0; i < sections.Count; i++)
         {
             var sectionData = sections[i];
@@ -91,11 +92,16 @@ public class UIManager : MonoBehaviour
                 section.Q<Foldout>("header").text = sectionData.header + "  " + sectionData?.header_text;
                 foreach (var text in sectionData.texts)
                 {
-                    foreach(var token in text.tokens)
+                    foreach (var bunsetsu in text.bunsetu)
                     {
-                        var tokenDOM = tokenUXML.CloneTree();
-                        tokenDOM.Q<Label>().text = token.text;
-                        section.Q<VisualElement>("childContainer").Add(tokenDOM);
+                        var bunsetsuDOM = bunsetsuUXML.CloneTree();
+                        foreach (var token in bunsetsu.tokens)
+                        {
+                            var tokenDOM = tokenUXML.CloneTree();
+                            tokenDOM.Q<Label>().text = token.text;
+                            bunsetsuDOM.Q<VisualElement>("tokenContainer").Add(tokenDOM);
+                        }
+                        section.Q<VisualElement>("childContainer").Add(bunsetsuDOM);
                     }
                 }
                 indentContainer[sectionData.indent - 1].Add(section);
@@ -119,11 +125,16 @@ public class UIManager : MonoBehaviour
                         );
                 foreach (var text in sectionData.texts)
                 {
-                    foreach(var token in text.tokens)
+                    foreach (var bunsetsu in text.bunsetu)
                     {
-                        var tokenDOM = tokenUXML.CloneTree();
-                        tokenDOM.Q<Label>().text=token.text;
-                        section.Q<VisualElement>("textContainer").Add(tokenDOM);
+                        var bunsetsuDOM = bunsetsuUXML.CloneTree();
+                        foreach (var token in bunsetsu.tokens)
+                        {
+                            var tokenDOM = tokenUXML.CloneTree();
+                            tokenDOM.Q<Label>().text = token.text;
+                            bunsetsuDOM.Q<VisualElement>("tokenContainer").Add(tokenDOM);
+                        }
+                        section.Q<VisualElement>("textContainer").Add(bunsetsuDOM);
                     }
                 }
                 indentContainer[sectionData.indent - 1].Add(section);

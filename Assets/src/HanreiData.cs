@@ -11,10 +11,18 @@ public class Token
 }
 
 [System.Serializable]
+public class Bunsetsu
+{
+    public int id;
+    public string text;
+    public List<Token> tokens;
+}
+
+[System.Serializable]
 public class SectionText
 {
     public string raw_text;
-    public List<Token>  tokens;
+    public List<Bunsetsu> bunsetu;
 }
 
 [System.Serializable]
