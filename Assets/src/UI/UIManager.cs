@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
     public VisualTreeAsset sectionUXML;
     public VisualTreeAsset bunsetsuUXML;
     public VisualTreeAsset tokenUXML;
+    //public VisualTreeAsset loadingUXML;
 
     private void Awake()
     {
@@ -61,15 +62,15 @@ public class UIManager : MonoBehaviour
                     indentContainer[sectionData.indent] = section.Q<VisualElement>("unity-content");
                 }
             }
-            else if(sectionData.header_text?.Length>0)
+            else if (sectionData.header_text?.Length > 0)
             {
                 var section = sectionUXML.CloneTree();
-                section.Q<Label>("header").text = sectionData.header+sectionData.header_text;
+                section.Q<Label>("header").text = sectionData.header + sectionData.header_text;
                 section.Q<VisualElement>("sectionContainer").Remove(section.Q<VisualElement>("rightContainer"));
                 indentContainer[sectionData.indent - 1].Add(section);
             }
         }
-        var sectionDat = sections[sections.Count-1];
+        var sectionDat = sections[sections.Count - 1];
         var sectionDOM = sectionUXML.CloneTree();
         sectionDOM.Q<Label>("header").text = sectionDat.header + sectionDat.header_text;
         sectionDOM.Q<VisualElement>("sectionContainer").Remove(sectionDOM.Q<VisualElement>("rightContainer"));
@@ -101,7 +102,7 @@ public class UIManager : MonoBehaviour
                             tokenDOM.Q<Label>().text = token.text;
                             if (text.GetTokenEntity(token.id) == EntityType.Date)
                             {
-                                tokenDOM.style.backgroundColor = new Color(1, 0, 0,0.4f);
+                                tokenDOM.style.backgroundColor = new Color(1, 0, 0, 0.4f);
                             }
                             bunsetsuDOM.Q<VisualElement>("tokenContainer").Add(tokenDOM);
                         }
@@ -139,7 +140,7 @@ public class UIManager : MonoBehaviour
                             if (text.GetTokenEntity(token.id) == EntityType.Date)
                             {
                                 Debug.Log("!!!!!!!!!!!!!!!!!!!!!");
-                                tokenDOM.style.backgroundColor = new Color(1, 0, 0,0.4f);
+                                tokenDOM.style.backgroundColor = new Color(1, 0, 0, 0.4f);
                             }
                             bunsetsuDOM.Q<VisualElement>("tokenContainer").Add(tokenDOM);
                         }
@@ -157,24 +158,24 @@ public class UIManager : MonoBehaviour
         container.Clear();
         var t = hanreiUXML.CloneTree();
         t.Q<Label>("title").text = data.filename;
+        // èëéèèÓïÒê∂ê¨
         t.Q<Foldout>("signatureLabel").text = data.contents.signature.header_text;
         var signatureLst = t.Q<VisualElement>("signatureContents");
         foreach (var i in data.contents.signature.texts)
         {
-            var text = new Label();
-            text.text = i;
-            signatureLst.Add(text);
+            signatureLst.Add(new Label(i));
         }
+        // îªåàê∂ê¨
         t.Q<Foldout>("judgementLabel").text = data.contents.judgement.header_text;
         var judgementLst = t.Q<VisualElement>("judgementContents");
         foreach (var i in data.contents.judgement.texts)
         {
-            var text = new Label();
-            text.text = i;
-            judgementLst.Add(text);
+            judgementLst.Add(new Label(i));
         }
+        //éÂï∂ê∂ê¨
         t.Q<Foldout>("mainTextLabel").text = data.contents.main_text.header_text;
         generateSectionsDOM(t.Q<VisualElement>("mainTextContents"), data.contents.main_text.sections);
+        //éñé¿ãyÇ—óùóRê∂ê¨
         t.Q<Foldout>("factReasonLabel").text = data.contents.fact_reason.header_text;
         generateSectionsDOM(t.Q<VisualElement>("factReasonContents"), data.contents.fact_reason.sections);
         container.Add(t);
