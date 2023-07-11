@@ -1,0 +1,15 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: flex-start;">
+        <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); height: 15px; align-items: stretch; width: 342px;">
+            <ui:VisualElement name="VisualElement" style="flex-grow: 0; translate: 20px 14px; position: absolute; width: 8px; height: 10px; background-image: none; border-left-width: 4px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); transform-origin: left top;">
+                <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=4154780841294389669&amp;guid=1bd89a97d920da4429cd80b173a55b1f&amp;type=3#arrow-down&apos;); width: 25px; height: 10px; left: -15px; bottom: -5px; -unity-background-image-tint-color: rgb(0, 0, 0);" />
+            </ui:VisualElement>
+            <ui:VisualElement name="VisualElement" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); position: absolute; width: 50px; height: 10px; border-top-width: 4px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); translate: 20px 10px; transform-origin: left top;" />
+            <ui:VisualElement name="VisualElement" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); position: absolute; width: 8px; border-right-width: 0; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); bottom: 1px; height: 10px; translate: 66px 10px; transform-origin: left top; border-left-width: 4px;" />
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: flex-start;">
+            <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" />
+            <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
