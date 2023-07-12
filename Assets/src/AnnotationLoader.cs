@@ -7,8 +7,8 @@ using UnityEngine.Events;
 public class AnnotationLoader : MonoBehaviour
 {
     public string dirPath;
-    public DataLoader loader;
-    List<AnotationData> anotationDatas = new List<AnotationData>();
+    private DataLoader loader;
+    public List<AnotationData> anotationDatas = new List<AnotationData>();
 
     [System.Serializable]
     public class OnDataLoadedEvent : UnityEvent<AnotationData> { }
@@ -66,9 +66,10 @@ public class AnnotationLoader : MonoBehaviour
 
     private void Awake()
     {
+        loader=GetComponent<DataLoader>();
         loader.OnDataLoaded.AddListener((data) =>
         {
-            LoadData(data.filename);
+            //LoadData(data.filename);
         });
     }
     // Start is called before the first frame update

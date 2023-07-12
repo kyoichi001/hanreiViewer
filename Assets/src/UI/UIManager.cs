@@ -1,155 +1,35 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Linq;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static System.Collections.Specialized.BitVector32;
-using static UnityEditor.Rendering.FilterWindow;
 
 public class UIManager : MonoBehaviour
 {
-    public DataLoader dataLoader;
     UIDocument uIDocument;
+    public DataLoader dataLoader;
     public VisualTreeAsset hanreiUXML;
-    public VisualTreeAsset foldableSectionUXML;
-    public VisualTreeAsset sectionUXML;
-    public VisualTreeAsset bunsetsuUXML;
-    public VisualTreeAsset tokenUXML;
-    //public VisualTreeAsset loadingUXML;
+
+    UIFilesController uIFilesController;
+    UIContentsController uContentsController;
+    UIContentsTableController uContentsTableController;
+
+    PopoverManager popoverManager;
 
     private void Awake()
     {
         uIDocument = GetComponent<UIDocument>();
+        uIFilesController = GetComponent<UIFilesController>();
+        uContentsController = GetComponent<UIContentsController>();
+        uContentsTableController = GetComponent<UIContentsTableController>();
+        popoverManager = GetComponent<PopoverManager>();
+
         var submenuElement = uIDocument.rootVisualElement.Q("subMenu");
         dataLoader.OnDataLoaded.AddListener((dat) =>
         {
-            var newVisualElement = new Button();
-            newVisualElement.name = "AddButton";
-            newVisualElement.AddToClassList("sample-button");
-            newVisualElement.text = dat.filename;
-            newVisualElement.clicked += () =>
-            {
-                ShowHanrei(dat);
-            };
-            submenuElement.Add(newVisualElement);
+            uIFilesController.GenerateButton(dat);
         });
-    }
-
-    bool hasChild(Section target, Section next)
-    {
-        return next.indent == target.indent + 1;
-    }
-    void generateTableOfContentDOM(VisualElement root, List<Section> sections)
-    {
-        var indentContainer = new List<VisualElement> { root };
-        for (var i = 0; i < sections.Count - 1; i++)
-        {
-            var sectionData = sections[i];
-            if (hasChild(sectionData, sections[i + 1]))
-            {
-                //セクションが子要素を含むならfoldoutにする
-                var section = foldableSectionUXML.CloneTree();
-                section.Q<Foldout>("header").text = sectionData.header + "  " + sectionData?.header_text;
-                indentContainer[sectionData.indent - 1].Add(section);
-                if (indentContainer.Count <= sectionData.indent)
-                {
-                    indentContainer.Add(section.Q<VisualElement>("unity-content"));
-                }
-                else
-                {
-                    indentContainer[sectionData.indent] = section.Q<VisualElement>("unity-content");
-                }
-            }
-            else if (sectionData.header_text?.Length > 0)
-            {
-                var section = sectionUXML.CloneTree();
-                section.Q<Label>("header").text = sectionData.header + sectionData.header_text;
-                section.Q<VisualElement>("sectionContainer").Remove(section.Q<VisualElement>("rightContainer"));
-                indentContainer[sectionData.indent - 1].Add(section);
-            }
-        }
-        var sectionDat = sections[sections.Count - 1];
-        var sectionDOM = sectionUXML.CloneTree();
-        sectionDOM.Q<Label>("header").text = sectionDat.header + sectionDat.header_text;
-        sectionDOM.Q<VisualElement>("sectionContainer").Remove(sectionDOM.Q<VisualElement>("rightContainer"));
-        indentContainer[sectionDat.indent - 1].Add(sectionDOM);
-    }
-
-    void generateSectionsDOM(VisualElement root, List<Section> sections)
-    {
-        var indentContainer = new List<VisualElement> { root };
-        for (var i = 0; i < sections.Count; i++)
-        {
-            var sectionData = sections[i];
-            if (i < sections.Count - 1 &&
-                (hasChild(sectionData, sections[i + 1]) ||
-                sectionData.header_text?.Length > 0 && sectionData.texts.Count > 0
-                ))
-            {
-                //セクションが子要素を含むか、header_text,text両方を含むならfoldoutにする
-                var section = foldableSectionUXML.CloneTree();
-                section.Q<Foldout>("header").text = sectionData.header + "  " + sectionData?.header_text;
-                foreach (var text in sectionData.texts)
-                {
-                    foreach (var bunsetsu in text.bunsetu)
-                    {
-                        var bunsetsuDOM = bunsetsuUXML.CloneTree();
-                        foreach (var token in bunsetsu.tokens)
-                        {
-                            var tokenDOM = tokenUXML.CloneTree();
-                            tokenDOM.Q<Label>().text = token.text;
-                            if (text.GetTokenEntity(token.id) == EntityType.Date)
-                            {
-                                tokenDOM.style.backgroundColor = new Color(1, 0, 0, 0.4f);
-                            }
-                            bunsetsuDOM.Q<VisualElement>("tokenContainer").Add(tokenDOM);
-                        }
-                        section.Q<VisualElement>("childContainer").Add(bunsetsuDOM);
-                    }
-                }
-                indentContainer[sectionData.indent - 1].Add(section);
-                if (indentContainer.Count <= sectionData.indent)
-                {
-                    indentContainer.Add(section.Q<VisualElement>("unity-content"));
-                }
-                else
-                {
-                    indentContainer[sectionData.indent] = section.Q<VisualElement>("unity-content");
-                }
-            }
-            else
-            {
-                var section = sectionUXML.CloneTree();
-                section.Q<Label>("header").text = sectionData.header;
-                section.Q<Label>("headerText").text = sectionData.header_text;
-                if (sectionData.header_text == "" || sectionData.header_text == null)
-                    section.Q<VisualElement>("rightContainer").Remove(
-                        section.Q<Label>("headerText")
-                        );
-                foreach (var text in sectionData.texts)
-                {
-                    foreach (var bunsetsu in text.bunsetu)
-                    {
-                        var bunsetsuDOM = bunsetsuUXML.CloneTree();
-                        foreach (var token in bunsetsu.tokens)
-                        {
-                            var tokenDOM = tokenUXML.CloneTree();
-                            tokenDOM.Q<Label>().text = token.text;
-                            if (text.GetTokenEntity(token.id) == EntityType.Date)
-                            {
-                                Debug.Log("!!!!!!!!!!!!!!!!!!!!!");
-                                tokenDOM.style.backgroundColor = new Color(1, 0, 0, 0.4f);
-                            }
-                            bunsetsuDOM.Q<VisualElement>("tokenContainer").Add(tokenDOM);
-                        }
-                        section.Q<VisualElement>("textContainer").Add(bunsetsuDOM);
-                    }
-                }
-                indentContainer[sectionData.indent - 1].Add(section);
-            }
-        }
+        uIFilesController.OnButtonClicked.AddListener((dat) => ShowHanrei(dat));
     }
 
     void ShowHanrei(HanreiData data)
@@ -174,11 +54,27 @@ public class UIManager : MonoBehaviour
         }
         //主文生成
         t.Q<Foldout>("mainTextLabel").text = data.contents.main_text.header_text;
-        generateSectionsDOM(t.Q<VisualElement>("mainTextContents"), data.contents.main_text.sections);
+        uContentsController.generateSectionsDOM(
+            t.Q<VisualElement>("mainTextContents"), data.contents.main_text.sections
+            );
+        uContentsController.OnTokenMouseOver.AddListener((token) =>
+        {
+            //popoverManager.AddPopover();
+        });
+        uContentsController.OnTokenMouseOut.AddListener((token) =>
+        {
+            //popoverManager.RemovePopover();
+        });
+
+
         //事実及び理由生成
         t.Q<Foldout>("factReasonLabel").text = data.contents.fact_reason.header_text;
-        generateSectionsDOM(t.Q<VisualElement>("factReasonContents"), data.contents.fact_reason.sections);
+        uContentsController.generateSectionsDOM(
+            t.Q<VisualElement>("factReasonContents"), data.contents.fact_reason.sections
+            );
         container.Add(t);
-        generateTableOfContentDOM(uIDocument.rootVisualElement.Q<ScrollView>("tableContainer"), data.contents.fact_reason.sections);
+        uContentsTableController.generateTableOfContentDOM(
+            uIDocument.rootVisualElement.Q<ScrollView>("tableContainer"), data.contents.fact_reason.sections
+            );
     }
 }
