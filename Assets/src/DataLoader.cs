@@ -35,18 +35,10 @@ public class DataLoader : MonoBehaviour
             if(!file.EndsWith(".json")) continue;
             Debug.Log($"loading {file}");
             var dat = LoadData(file);
-            dat.filename = Path.GetFileName(file);
+            dat.filename = Path.GetFileName(file).Split(".")[0];
             hanreiDatas.Add(dat);
             OnDataLoaded.Invoke(dat);
         }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
 
 }

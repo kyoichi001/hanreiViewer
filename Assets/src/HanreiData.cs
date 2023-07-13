@@ -40,6 +40,7 @@ public class Bunsetsu
 [System.Serializable]
 public class SectionText
 {
+    public int text_id;
     public string raw_text;
     public List<Bunsetsu> bunsetu = new List<Bunsetsu>();
     public List<Entity> ents = new List<Entity>();

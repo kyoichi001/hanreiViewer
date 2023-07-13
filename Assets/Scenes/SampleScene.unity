@@ -132,8 +132,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 14265313}
-  - component: {fileID: 14265318}
   - component: {fileID: 14265312}
+  - component: {fileID: 14265318}
   - component: {fileID: 14265314}
   - component: {fileID: 14265317}
   - component: {fileID: 14265316}
@@ -189,6 +189,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dataLoader: {fileID: 48626618}
+  annotationLoader: {fileID: 48626620}
   hanreiUXML: {fileID: 9197481963319205126, guid: 04649bbe81b67de43a0cee9362f72561, type: 3}
 --- !u!114 &14265315
 MonoBehaviour:
@@ -206,6 +207,8 @@ MonoBehaviour:
   sectionUXML: {fileID: 9197481963319205126, guid: cfbaa9fe74fcdac4eb44dc043189d73c, type: 3}
   bunsetsuUXML: {fileID: 9197481963319205126, guid: b58c946ed4d904d41a9051d4ed64284d, type: 3}
   tokenUXML: {fileID: 9197481963319205126, guid: 6fa62afecd993354e98b1825676c5d3c, type: 3}
+  arrowUXML: {fileID: 9197481963319205126, guid: 43188a5f56b625842824f8f8e6eede05, type: 3}
+  annotationLoader: {fileID: 48626620}
 --- !u!114 &14265316
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="arrowContainer" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); width: 46px; height: 10px; position: absolute;">
+        <ui:VisualElement name="arrowTop" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); position: absolute; width: 100%; height: 10px; border-top-width: 4px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); left: auto; top: auto;" />
+        <ui:VisualElement name="arrowRight" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); position: absolute; width: 8px; border-right-width: 4px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); bottom: auto; height: 100%; border-left-width: 0; left: auto; top: auto; right: 0;" />
+        <ui:VisualElement name="arrowLeft" style="flex-grow: 0; width: 8px; height: 100%; background-image: none; border-left-width: 4px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); position: absolute; left: 0;">
+            <ui:VisualElement name="arrowTip" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=4154780841294389669&amp;guid=1bd89a97d920da4429cd80b173a55b1f&amp;type=3#arrow-down&apos;); width: 25px; height: 10px; left: -14px; bottom: -7px; -unity-background-image-tint-color: rgb(0, 0, 0); position: absolute; -unity-background-scale-mode: stretch-to-fill;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

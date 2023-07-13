@@ -14,50 +14,54 @@ public class AnnotationLoader : MonoBehaviour
     public class OnDataLoadedEvent : UnityEvent<AnotationData> { }
     public OnDataLoadedEvent OnDataLoaded = new OnDataLoadedEvent();
 
-    AnotationData LoadData(string path)
+    List<TokenAnnotation> LoadData(string path)
     {
         var reader = new StreamReader(path);
         var datastr = reader.ReadToEnd();
         reader.Close();
         Debug.Log(datastr);
         var list = new List<TokenAnnotation>();
+        bool header = true;
         foreach (var row in datastr.Split("\n"))
         {
+            if (header)
+            {
+                header = false;
+                continue;
+            }
             var l = row.Split(",");
             var anno = new TokenAnnotation();
             anno.textID = int.Parse(l[0]);
-            anno.tokenID = int.Parse(l[0]);
+            anno.tokenID = int.Parse(l[1]);
             var ss = new List<TokenRelation>
             {
                 new TokenRelation(),
                 new TokenRelation(),
                 new TokenRelation(),
             };
-            ss[0].targetID = int.Parse(l[0]);
-            ss[0].type = (TokenRelationType)int.Parse(l[0]);
-            ss[1].targetID = int.Parse(l[0]);
-            ss[1].type = (TokenRelationType)int.Parse(l[0]);
-            ss[2].targetID = int.Parse(l[0]);
-            ss[2].type = (TokenRelationType)int.Parse(l[0]);
+            ss[0].targetID = int.Parse(l[2]);
+            ss[0].type = (TokenRelationType)int.Parse(l[3]);
+            ss[1].targetID = int.Parse(l[4]);
+            ss[1].type = (TokenRelationType)int.Parse(l[5]);
+            ss[2].targetID = int.Parse(l[6]);
+            ss[2].type = (TokenRelationType)int.Parse(l[7]);
             anno.relations = ss;
             list.Add(anno);
         }
-        AnotationData res = new AnotationData();
-        res.filename = path;
-        res.annotations = list;
-        return res;
+        return list;
     }
 
-    void SaveData(AnotationData data, string filepath)
+    void SaveData(List<TokenAnnotation> data, string filepath)
     {
         if (data == null) return;
         var sw = new StreamWriter(filepath);
-        foreach(var annotation in data.annotations)
+        sw.WriteLine("textID,tokenID,rID1,rType1,rID2,rType2,rID3,rType3");
+        foreach (var annotation in data)
         {
-            var res = $"{annotation.textID},{annotation.tokenID},tag,annotationTag,";
-            foreach(var i in annotation.relations)
+            var res = $"{annotation.textID},{annotation.tokenID}";
+            foreach (var i in annotation.relations)
             {
-                res += $"{i.targetID},{i.type},";
+                res += $",{i.targetID},{i.type}";
             }
             sw.WriteLine(res);
         }
@@ -67,10 +71,6 @@ public class AnnotationLoader : MonoBehaviour
     private void Awake()
     {
         loader=GetComponent<DataLoader>();
-        loader.OnDataLoaded.AddListener((data) =>
-        {
-            //LoadData(data.filename);
-        });
     }
     // Start is called before the first frame update
     void Start()
@@ -79,12 +79,14 @@ public class AnnotationLoader : MonoBehaviour
         string[] files = Directory.GetFiles(dirPath);
         foreach (var file in files)
         {
-            if (!file.EndsWith(".json")) continue;
+            if (!file.EndsWith(".csv")) continue;
             Debug.Log($"loading {file}");
             var dat = LoadData(file);
-            dat.filename = Path.GetFileName(file);
-            anotationDatas.Add(dat);
-            OnDataLoaded.Invoke(dat);
+            var d = new AnotationData();
+            d.annotations = dat;
+            d.filename = Path.GetFileName(file).Split(".")[0];
+            anotationDatas.Add(d);
+            OnDataLoaded.Invoke(d);
         }
     }
 
@@ -97,32 +99,32 @@ public class AnnotationLoader : MonoBehaviour
     {
         foreach(var d in anotationDatas)
         {
-            SaveData(d, d.filename);
+            SaveData(d.annotations, d.filename);
         }
     }
 
-    void AddRelation(int textID, int tokenID, int targetID, TokenRelationType type)
+    public void AddRelation(int textID, int tokenID, int targetID, TokenRelationType type)
     {
 
         foreach (var d in anotationDatas)
         {
-            SaveData(d, d.filename);
+            SaveData(d.annotations, d.filename);
         }
     }
-    void RemoveRelation()
+    public void RemoveRelation()
     {
 
         foreach (var d in anotationDatas)
         {
-            SaveData(d, d.filename);
+            SaveData(d.annotations, d.filename);
         }
     }
-    void UpdateRelation()
+    public void UpdateRelation()
     {
 
         foreach (var d in anotationDatas)
         {
-            SaveData(d, d.filename);
+            SaveData(d.annotations, d.filename);
         }
     }
 }
