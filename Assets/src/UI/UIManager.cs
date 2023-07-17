@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     UIDocument uIDocument;
     public DataLoader dataLoader;
     public AnnotationLoader annotationLoader;
+    [Header("DOM")]
     public VisualTreeAsset hanreiUXML;
 
     UIFilesController uIFilesController;

@@ -7,44 +7,39 @@ using static System.Collections.Specialized.BitVector32;
 
 public class UIContentsController : MonoBehaviour
 {
+    public AnnotationLoader annotationLoader;
+    [Header("DOM")]
     public VisualTreeAsset foldableSectionUXML;
     public VisualTreeAsset sectionUXML;
     public VisualTreeAsset bunsetsuUXML;
     public VisualTreeAsset tokenUXML;
     public VisualTreeAsset arrowUXML;
-    public AnnotationLoader annotationLoader;
 
 
     public class OnTokenMouseOverEvent : UnityEvent<Token> { }
     public OnTokenMouseOverEvent OnTokenMouseOver=new OnTokenMouseOverEvent();
     public class OnTokenMouseOutEvent : UnityEvent<Token> { }
     public OnTokenMouseOutEvent OnTokenMouseOut=new OnTokenMouseOutEvent();
-    public class OnTokenClickedEvent : UnityEvent<Token> { }
+    public class OnTokenClickedEvent : UnityEvent<Token,VisualElement> { }
     public OnTokenClickedEvent OnTokenClicked=new OnTokenClickedEvent();
-    public class OnTokenDraggingEvent : UnityEvent<Token> { }
+    public class OnTokenDraggingEvent : UnityEvent<Token, VisualElement> { }
     public OnTokenDraggingEvent OnTokenDragging=new OnTokenDraggingEvent();
-    public class OnTokenDraggedEvent : UnityEvent<Token,Token> { }
+    public class OnTokenDraggedEvent : UnityEvent<Token, VisualElement, Token, VisualElement> { }
     public OnTokenDraggedEvent OnTokenDragged=new OnTokenDraggedEvent();
 
 
     private void Start()
     {
-        OnTokenDragged.AddListener((token,target) =>
+        OnTokenDragged.AddListener((token,tokenDOM,target,targetDOM) =>
         {
-            var textID = 0;
-            var tokenID = token.id;
-            annotationLoader.AddRelation(textID,tokenID, target.id,TokenRelationType.None);
+            var textID = currentToken.id;
+            annotationLoader.AddRelation(textID, token.id, target.id,TokenRelationType.None);
         });
     }
 
     bool dragging = false;
     Token currentToken;
-    Token targetToken;
-
-    bool hasChild(Section target, Section next)
-    {
-        return next.indent == target.indent + 1;
-    }
+    VisualElement currentTokenDOM;
 
     void GenerateText(VisualElement root, SectionText text)
     {
@@ -59,30 +54,28 @@ public class UIContentsController : MonoBehaviour
                 tokenDOM.RegisterCallback<MouseOutEvent>((type) => OnTokenMouseOut.Invoke(token));
                 tokenDOM.RegisterCallback<PointerDownEvent>((type) =>
                 {
-                    Debug.Log($"on pointer down : {token.text}");
-                    OnTokenClicked.Invoke(token);
+                    //Debug.Log($"token coord : {tokenDOM.worldBound}");
+                    OnTokenClicked.Invoke(token,tokenDOM);
                     dragging = true;
+                    currentToken = token;
+                    currentTokenDOM = tokenDOM;
                 });
                 tokenDOM.RegisterCallback<PointerMoveEvent>((type) =>
                 {
-                    Debug.Log($"on pointer move : {token.text}");
                     if (dragging)
-                        OnTokenDragging.Invoke(token);
+                    {
+                        //Debug.Log($"pointer coord : {Input.mousePosition.x},{Screen.height-Input.mousePosition.y}");
+                        OnTokenDragging.Invoke(currentToken, currentTokenDOM);
+                    }
                 });
                 tokenDOM.RegisterCallback<PointerUpEvent>((type) =>
                 {
-                    Debug.Log($"on pointer up : {token.text}");
-                    OnTokenDragged.Invoke(token, targetToken);
+                    OnTokenDragged.Invoke(currentToken, currentTokenDOM,token, tokenDOM);
                     dragging = false;
+                    currentToken = null;
+                    currentTokenDOM = null;
                 });
-                tokenDOM.RegisterCallback<PointerEnterEvent>((type) =>
-                {
-                    Debug.Log($"on pointer enter : {token.text}");
-                    if (dragging)
-                    {
-                        targetToken = token;
-                    }
-                });
+                tokenDOM.RegisterCallback<PointerEnterEvent>((type) => {});
                 tokenDOM.tooltip = token.id.ToString();// tokenのIDとDOMを結び付け、検索できるようにする（こうするべきではない）
                 if (text.GetTokenEntity(token.id) == EntityType.Date)
                 {
@@ -133,6 +126,11 @@ public class UIContentsController : MonoBehaviour
         dom.Q<VisualElement>("arrowContainer").style.height = height;
         dom.Q<VisualElement>("arrowContainer").style.height = height;
         root.Add(dom);
+    }
+
+    bool hasChild(Section target, Section next)
+    {
+        return next.indent == target.indent + 1;
     }
     bool HasAnnotation(SectionText text,List<TokenAnnotation> annotations)
     {
