@@ -57,7 +57,9 @@ public class UIManager : MonoBehaviour
         //éÂï∂ê∂ê¨
         t.Q<Foldout>("mainTextLabel").text = data.contents.main_text.header_text;
         uContentsController.generateSectionsDOM(
-            t.Q<VisualElement>("mainTextContents"), data.contents.main_text.sections, new List<TokenAnnotation>());
+            t.Q<VisualElement>("mainTextContents"), 
+            data.filename,
+            data.contents.main_text.sections, new List<TokenAnnotation>());
         uContentsController.OnTokenMouseOver.AddListener((token) =>
         {
             //popoverManager.AddPopover();
@@ -70,10 +72,13 @@ public class UIManager : MonoBehaviour
         //éñé¿ãyÇ—óùóRê∂ê¨
         t.Q<Foldout>("factReasonLabel").text = data.contents.fact_reason.header_text;
         uContentsController.generateSectionsDOM(
-            t.Q<VisualElement>("factReasonContents"), data.contents.fact_reason.sections,new List<TokenAnnotation>()            );
+            t.Q<VisualElement>("factReasonContents"),
+            data.filename,
+            data.contents.fact_reason.sections,new List<TokenAnnotation>());
         container.Add(t);
         uContentsTableController.generateTableOfContentDOM(
             uIDocument.rootVisualElement.Q<ScrollView>("tableContainer"), data.contents.fact_reason.sections
             );
+        uContentsController.GenerateAnnotation();
     }
 }

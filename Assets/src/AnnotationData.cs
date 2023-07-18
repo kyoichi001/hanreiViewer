@@ -8,18 +8,12 @@ public enum TokenRelationType
 }
 
 [System.Serializable]
-public class TokenRelation
-{
-    public int targetID;
-    public TokenRelationType type;
-}
-
-[System.Serializable]
 public class TokenAnnotation
 {
     public int textID;
     public int tokenID;
-    public List<TokenRelation> relations;
+    public int targetID;
+    public TokenRelationType type;
 }
 
 [System.Serializable]

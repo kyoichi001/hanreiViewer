@@ -112,6 +112,9 @@ public class HanreiContent
 [System.Serializable]
 public class HanreiData
 {
+    /// <summary>
+    /// ファイル名から拡張子を抜いたものが入る
+    /// </summary>
     public string filename;
     public HanreiContent contents;
 }
