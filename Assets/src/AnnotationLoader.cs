@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
@@ -16,13 +17,15 @@ public class AnnotationLoader : MonoBehaviour
 
     List<TokenAnnotation> LoadData(string path)
     {
-        var reader = new StreamReader(path);
-        var datastr = reader.ReadToEnd();
-        reader.Close();
-        Debug.Log(datastr);
+        string content = "";
+        using(var sr=new StreamReader(path))
+        {
+            content = sr.ReadToEnd();
+        }
+        Debug.Log(content);
         var list = new List<TokenAnnotation>();
         bool header = true;
-        foreach (var row in datastr.Split("\n"))
+        foreach (var row in content.Split("\n"))
         {
             if (header)
             {
@@ -44,14 +47,15 @@ public class AnnotationLoader : MonoBehaviour
     {
         if (data == null) return;
         Debug.Log($"save relation filepath : {dirPath}/{filename}.csv");
-        var sw = new StreamWriter($"{dirPath}/{filename}.csv");
-        sw.WriteLine("textID,tokenID,targetID,rType1");
-        foreach (var annotation in data)
+        using (var sw = new StreamWriter($"{dirPath}/{filename}.csv"))
         {
-            var res = $"{annotation.textID},{annotation.tokenID},{annotation.targetID},{annotation.type}";
-            sw.WriteLine(res);
+            sw.WriteLine("textID,tokenID,targetID,type");
+            foreach (var annotation in data)
+            {
+                var res = $"{annotation.textID},{annotation.tokenID},{annotation.targetID},{annotation.type}";
+                sw.WriteLine(res);
+            }
         }
-        sw.Close();
     }
 
 
