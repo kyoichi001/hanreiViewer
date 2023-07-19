@@ -60,11 +60,11 @@ public class UIManager : MonoBehaviour
             t.Q<VisualElement>("mainTextContents"), 
             data.filename,
             data.contents.main_text.sections, new List<TokenAnnotation>());
-        uContentsController.OnTokenMouseOver.AddListener((token) =>
+        uContentsController.OnTokenMouseOver.AddListener((token,tokenDOM) =>
         {
             //popoverManager.AddPopover();
         });
-        uContentsController.OnTokenMouseOut.AddListener((token) =>
+        uContentsController.OnTokenMouseOut.AddListener((token, tokenDOM) =>
         {
             //popoverManager.RemovePopover();
         });

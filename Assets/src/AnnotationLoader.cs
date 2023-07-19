@@ -17,6 +17,7 @@ public class AnnotationLoader : MonoBehaviour
 
     List<TokenAnnotation> LoadData(string path)
     {
+        if (!System.IO.File.Exists(path)) return new List<TokenAnnotation>();
         string content = "";
         using(var sr=new StreamReader(path))
         {
@@ -33,6 +34,7 @@ public class AnnotationLoader : MonoBehaviour
                 continue;
             }
             var l = row.Split(",");
+            if (l.Length < 4) break;
             var anno = new TokenAnnotation();
             anno.textID = int.Parse(l[0]);
             anno.tokenID = int.Parse(l[1]);
@@ -52,7 +54,7 @@ public class AnnotationLoader : MonoBehaviour
             sw.WriteLine("textID,tokenID,targetID,type");
             foreach (var annotation in data)
             {
-                var res = $"{annotation.textID},{annotation.tokenID},{annotation.targetID},{annotation.type}";
+                var res = $"{annotation.textID},{annotation.tokenID},{annotation.targetID},{((int)annotation.type)}";
                 sw.WriteLine(res);
             }
         }
@@ -93,6 +95,13 @@ public class AnnotationLoader : MonoBehaviour
             SaveData(d.annotations, d.filename);
         }
     }
+    public bool ExistsData(string filename)
+    {
+        foreach (var d in anotationDatas)
+            if (d.filename == filename) return true;
+        return false;
+    }
+
     public List<TokenAnnotation> GetAnnotations(string filename)
     {
         //var res=new List<TokenAnnotation>();
@@ -101,12 +110,20 @@ public class AnnotationLoader : MonoBehaviour
             if (d.filename != filename) continue;
             return d.annotations;
         }
-        return null;
+        return new List<TokenAnnotation>();
     }
 
     public void AddRelation(string filename,int textID, int tokenID, int targetID, TokenRelationType type)
     {
         Debug.Log("add relation");
+        if (!ExistsData(filename))
+        {
+            var dat= new List<TokenAnnotation>();
+            var d = new AnotationData();
+            d.annotations = dat;
+            d.filename = filename;
+            anotationDatas.Add(d);
+        }
         foreach (var d in anotationDatas)
         {
             if(d.filename != filename) continue;

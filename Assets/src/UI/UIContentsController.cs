@@ -21,9 +21,9 @@ public class UIContentsController : MonoBehaviour
     Dictionary<(int, int), VisualElement> tokenMap = new Dictionary<(int, int), VisualElement>();
     Dictionary<VisualElement, (int, int)> domMap = new Dictionary<VisualElement, (int, int)>();
 
-    public class OnTokenMouseOverEvent : UnityEvent<Token> { }
+    public class OnTokenMouseOverEvent : UnityEvent<Token, VisualElement> { }
     public OnTokenMouseOverEvent OnTokenMouseOver = new OnTokenMouseOverEvent();
-    public class OnTokenMouseOutEvent : UnityEvent<Token> { }
+    public class OnTokenMouseOutEvent : UnityEvent<Token, VisualElement> { }
     public OnTokenMouseOutEvent OnTokenMouseOut = new OnTokenMouseOutEvent();
     public class OnTokenClickedEvent : UnityEvent<Token, VisualElement> { }
     public OnTokenClickedEvent OnTokenClicked = new OnTokenClickedEvent();
@@ -38,6 +38,11 @@ public class UIContentsController : MonoBehaviour
         OnTokenDragged.AddListener((token, tokenDOM, target, targetDOM) =>
         {
             Debug.Log("add relation");
+            if (!domMap.ContainsKey(tokenDOM) || !domMap.ContainsKey(targetDOM))
+            {
+                Debug.LogError($"key does not found token1:{tokenDOM} token2:{targetDOM}");
+                return;
+            }
             var textID = domMap[tokenDOM].Item1;
             annotationLoader.AddRelation(cullentFilename, textID, token.id, target.id, TokenRelationType.None);
         });
@@ -58,16 +63,20 @@ public class UIContentsController : MonoBehaviour
                 tokenDOM.Q<Label>().text = token.text;
                 tokenDOM.RegisterCallback<MouseOverEvent>((type) =>
                 {
-                    OnTokenMouseOver.Invoke(token);
+                    var dom = type.target as VisualElement;
+                    //Debug.Log(dom.Q<Label>().text);
+                    OnTokenMouseOver.Invoke(token, dom);
                 });
                 tokenDOM.RegisterCallback<MouseOutEvent>((type) =>
                 {
-                    OnTokenMouseOut.Invoke(token);
+                    var dom = type.target as VisualElement;
+                    OnTokenMouseOut.Invoke(token, dom);
                 });
                 tokenDOM.RegisterCallback<PointerDownEvent>((type) =>
                 {
                     //Debug.Log($"token coord : {tokenDOM.worldBound}");
-                    OnTokenClicked.Invoke(token, tokenDOM);
+                    var dom = type.target as VisualElement;
+                    OnTokenClicked.Invoke(token, dom);
                     dragging = true;
                     currentToken = token;
                     currentTokenDOM = tokenDOM;
@@ -82,6 +91,7 @@ public class UIContentsController : MonoBehaviour
                 });
                 tokenDOM.RegisterCallback<PointerUpEvent>((type) =>
                 {
+                    //var dom = type.target as VisualElement; //これだとうまくDictionaryのkeyと一致しない。参照先は同じだが別物扱い？キャストしているから？
                     OnTokenDragged.Invoke(currentToken, currentTokenDOM, token, tokenDOM);
                     dragging = false;
                     currentToken = null;
@@ -227,30 +237,87 @@ public class UIContentsController : MonoBehaviour
 
     public void ClearAnnotation()
     {
-
     }
     public void GenerateAnnotation()
     {
+        Debug.Log($"generate annotation {annotationLoader.GetAnnotations(cullentFilename).Count}");
         foreach (var i in annotationLoader.GetAnnotations(cullentFilename))
         {
             var token1 = (i.textID, i.tokenID);
             var token2 = (i.textID, i.targetID);
+            if (!tokenMap.ContainsKey(token1) || !tokenMap.ContainsKey(token2))
+            {
+                Debug.LogError($"key does not found token1:{token1} token2:{token2}");
+                continue;
+            }
+
+            var col = new Color(0.5f, 1, 0.5f);
+            var borderWidth = 3f;
+
+            tokenMap[token1].style.borderLeftColor = col;
+            tokenMap[token1].style.borderLeftWidth = borderWidth;
+            tokenMap[token1].style.borderTopColor = col;
+            tokenMap[token1].style.borderTopWidth = borderWidth;
+            tokenMap[token1].style.borderBottomColor = col;
+            tokenMap[token1].style.borderBottomWidth = borderWidth;
+            tokenMap[token1].style.borderRightColor = col;
+            tokenMap[token1].style.borderRightWidth = borderWidth;
+
+            tokenMap[token2].style.borderLeftColor = col;
+            tokenMap[token2].style.borderLeftWidth = borderWidth;
+            tokenMap[token2].style.borderTopColor = col;
+            tokenMap[token2].style.borderTopWidth = borderWidth;
+            tokenMap[token2].style.borderBottomColor = col;
+            tokenMap[token2].style.borderBottomWidth = borderWidth;
+            tokenMap[token2].style.borderRightColor = col;
+            tokenMap[token2].style.borderRightWidth = borderWidth;
+
             tokenMap[token1].RegisterCallback<MouseOverEvent>((type) =>
             {
+                Debug.Log("on annotation hover");
                 HighlightRelation(tokenMap[token1], tokenMap[token2]);
             });
             tokenMap[token1].RegisterCallback<MouseOutEvent>((type) =>
             {
+                Debug.Log("on annotation hover exit");
                 ResetHighlight(tokenMap[token1], tokenMap[token2]);
             });
             tokenMap[token2].RegisterCallback<MouseOverEvent>((type) =>
             {
+                Debug.Log("on annotation hover");
                 HighlightRelation(tokenMap[token1], tokenMap[token2]);
             });
             tokenMap[token2].RegisterCallback<MouseOutEvent>((type) =>
             {
+                Debug.Log("on annotation hover exit");
                 ResetHighlight(tokenMap[token1], tokenMap[token2]);
             });
         }
+        OnTokenDragging.AddListener((token, tokenDOM) =>
+        {
+            var col = new Color( 1, 0.5f, 0.5f);
+            var borderWidth = 3f;
+            tokenDOM.style.borderLeftColor = col;
+            tokenDOM.style.borderLeftWidth = borderWidth;
+            tokenDOM.style.borderTopColor = col;
+            tokenDOM.style.borderTopWidth = borderWidth;
+            tokenDOM.style.borderBottomColor = col;
+            tokenDOM.style.borderBottomWidth = borderWidth;
+            tokenDOM.style.borderRightColor = col;
+            tokenDOM.style.borderRightWidth = borderWidth;
+        });
+        OnTokenDragged.AddListener((token, tokenDOM, targetToken, targetDOM) =>
+        {
+            var col = new Color(0,0,0);
+            var borderWidth = 0f;
+            tokenDOM.style.borderLeftColor = col;
+            tokenDOM.style.borderLeftWidth = borderWidth;
+            tokenDOM.style.borderTopColor = col;
+            tokenDOM.style.borderTopWidth = borderWidth;
+            tokenDOM.style.borderBottomColor = col;
+            tokenDOM.style.borderBottomWidth = borderWidth;
+            tokenDOM.style.borderRightColor = col;
+            tokenDOM.style.borderRightWidth = borderWidth;
+        });
     }
 }

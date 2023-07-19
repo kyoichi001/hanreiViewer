@@ -1,1 +1,3 @@
-textID,tokenID,rID1,rType1,rID2,rType2,rID3,rType3
+textID,tokenID,targetID,type
+2,8,16,0
+5,16,71,0
