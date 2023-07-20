@@ -6,8 +6,8 @@ using UnityEngine.UIElements;
 public class UIContentsTableController : MonoBehaviour
 {
 
-    public VisualTreeAsset foldableSectionUXML;
-    public VisualTreeAsset sectionUXML;
+    [SerializeField] VisualTreeAsset foldableSectionUXML;
+    [SerializeField] VisualTreeAsset sectionUXML;
 
     bool hasChild(Section target, Section next)
     {

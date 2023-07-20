@@ -6,10 +6,9 @@ using UnityEngine.UIElements;
 
 public class UIFilesController : MonoBehaviour
 {
-    [System.Serializable]
     public class OnButtonClickedEvent : UnityEvent<HanreiData> { }
 
-    public OnButtonClickedEvent OnButtonClicked;
+    public OnButtonClickedEvent OnButtonClicked=new OnButtonClickedEvent();
 
     public void GenerateButton(HanreiData dat)
     {

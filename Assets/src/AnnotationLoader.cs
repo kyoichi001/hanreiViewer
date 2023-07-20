@@ -11,7 +11,6 @@ public class AnnotationLoader : MonoBehaviour
     private DataLoader loader;
     public List<AnotationData> anotationDatas = new List<AnotationData>();
 
-    [System.Serializable]
     public class OnDataLoadedEvent : UnityEvent<AnotationData> { }
     public OnDataLoadedEvent OnDataLoaded = new OnDataLoadedEvent();
 
@@ -136,9 +135,25 @@ public class AnnotationLoader : MonoBehaviour
             SaveData(d.annotations, d.filename);
         }
     }
+
+    public bool ExistsAnnotation(string filename, int textID, int tokenID)
+    {
+        if (!ExistsData(filename)) return false;
+
+        foreach (var d in anotationDatas)
+        {
+            if (d.filename != filename) continue;
+            foreach (var i in d.annotations)
+            {
+                if (i.textID == textID && i.tokenID == tokenID) return true;
+            }
+        }
+        return false;
+    }
+
     public void RemoveRelation(string filename, int textID, int tokenID, int targetID)
     {
-
+        if (!ExistsData(filename)) return;
         Debug.Log("remove relation");
         foreach (var d in anotationDatas)
         {

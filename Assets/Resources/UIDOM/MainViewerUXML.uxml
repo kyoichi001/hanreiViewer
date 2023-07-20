@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/MainViewerUSS.uss?fileID=7433441132597879392&amp;guid=383730823e66368448321a1cb8c8b2d7&amp;type=3#MainViewerUSS" />
+    <Style src="project://database/Assets/UIDOM/MainViewerUSS.uss?fileID=7433441132597879392&amp;guid=383730823e66368448321a1cb8c8b2d7&amp;type=3#MainViewerUSS" />
     <ui:VisualElement name="container" class="container">
         <ui:Label tabindex="-1" text="HanreiViewer" display-tooltip-when-elided="true" class="headerText" />
         <ui:VisualElement name="bodyContainer" class="bodyContainer" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
@@ -9,11 +9,17 @@
             </ui:VisualElement>
             <ui:VisualElement name="content" class="content" style="width: 100%;">
                 <ui:Label tabindex="-1" text="Contents" display-tooltip-when-elided="true" class="containerHeader" />
-                <ui:ScrollView name="contentContainer" />
+                <ui:ScrollView name="contentContainer" mouse-wheel-scroll-size="900" />
             </ui:VisualElement>
-            <ui:VisualElement name="tableOfContent" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); width: 50%;">
-                <ui:Label tabindex="-1" text="目次" display-tooltip-when-elided="true" class="containerHeader" />
-                <ui:ScrollView name="tableContainer" />
+            <ui:VisualElement name="sideview" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); width: 50%;">
+                <ui:VisualElement name="tableOfContent" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); height: 50%;">
+                    <ui:Label tabindex="-1" text="目次" display-tooltip-when-elided="true" class="containerHeader" />
+                    <ui:ScrollView name="tableContainer" mouse-wheel-scroll-size="900" />
+                </ui:VisualElement>
+                <ui:VisualElement name="annotations" style="background-color: rgba(0, 0, 0, 0); min-height: 84px; flex-grow: 0; height: 50%;">
+                    <ui:Label tabindex="-1" text="Annotations" display-tooltip-when-elided="true" class="containerHeader" />
+                    <ui:ScrollView name="annotationContainer" mouse-wheel-scroll-size="900" />
+                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

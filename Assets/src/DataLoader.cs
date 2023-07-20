@@ -8,7 +8,6 @@ using UnityEngine.Events;
 
 public class DataLoader : MonoBehaviour
 {
-    [System.Serializable]
     public class OnDataLoadedEvent:UnityEvent<HanreiData>{}
 
     public string DataPath;
@@ -39,6 +38,27 @@ public class DataLoader : MonoBehaviour
             hanreiDatas.Add(dat);
             OnDataLoaded.Invoke(dat);
         }
+    }
+    public Token GetToken(string filename,int textID,int tokenID)
+    {
+        foreach(var i in hanreiDatas)
+        {
+            if (i.filename != filename) continue;
+            foreach(var j in i.contents.fact_reason.sections)
+            {
+                foreach(var k in j.texts)
+                {
+                    foreach(var l in k.bunsetu)
+                    {
+                        foreach(var m in l.tokens)
+                        {
+                            if (textID == k.text_id && tokenID == m.id) return m;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
     }
 
 }

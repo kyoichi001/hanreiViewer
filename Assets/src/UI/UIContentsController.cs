@@ -9,13 +9,14 @@ using static System.Collections.Specialized.BitVector32;
 
 public class UIContentsController : MonoBehaviour
 {
-    public AnnotationLoader annotationLoader;
     [Header("DOM")]
-    public VisualTreeAsset foldableSectionUXML;
-    public VisualTreeAsset sectionUXML;
-    public VisualTreeAsset bunsetsuUXML;
-    public VisualTreeAsset tokenUXML;
-    public VisualTreeAsset arrowUXML;
+    [SerializeField] VisualTreeAsset foldableSectionUXML;
+    [SerializeField] VisualTreeAsset sectionUXML;
+    [SerializeField] VisualTreeAsset bunsetsuUXML;
+    [SerializeField] VisualTreeAsset tokenUXML;
+    [Header("annotation")]
+    [SerializeField] AnnotationLoader annotationLoader;
+    [SerializeField] VisualTreeAsset arrowUXML;
 
     string cullentFilename;
     Dictionary<(int, int), VisualElement> tokenMap = new Dictionary<(int, int), VisualElement>();
@@ -45,6 +46,21 @@ public class UIContentsController : MonoBehaviour
             }
             var textID = domMap[tokenDOM].Item1;
             annotationLoader.AddRelation(cullentFilename, textID, token.id, target.id, TokenRelationType.None);
+            GenerateAnnotation();
+        });
+        OnTokenDragging.AddListener((token, tokenDOM) =>
+        {
+            var col = new Color(1, 0.5f, 0.5f);
+            var borderWidth = 3f;
+            SetBorderColor(tokenDOM, col);
+            SetBorderWidth(tokenDOM, borderWidth);
+        });
+        OnTokenDragged.AddListener((token, tokenDOM, targetToken, targetDOM) =>
+        {
+            var col = new Color(0, 0, 0);
+            var borderWidth = 0f;
+            SetBorderColor(tokenDOM, col);
+            SetBorderWidth(tokenDOM, borderWidth);
         });
     }
 
@@ -66,11 +82,33 @@ public class UIContentsController : MonoBehaviour
                     var dom = type.target as VisualElement;
                     //Debug.Log(dom.Q<Label>().text);
                     OnTokenMouseOver.Invoke(token, dom);
+                    foreach (var i in annotationLoader.GetAnnotations(cullentFilename))
+                    {
+                        var token1 = (i.textID, i.tokenID);
+                        var token2 = (i.textID, i.targetID);
+                        if (i.textID != text.text_id) continue;
+                        if (i.tokenID == token.id || i.targetID == token.id)
+                        {
+                            HighlightRelation(tokenMap[token1], tokenMap[token2]);
+                            break;
+                        }
+                    }
                 });
                 tokenDOM.RegisterCallback<MouseOutEvent>((type) =>
                 {
                     var dom = type.target as VisualElement;
                     OnTokenMouseOut.Invoke(token, dom);
+                    foreach (var i in annotationLoader.GetAnnotations(cullentFilename))
+                    {
+                        var token1 = (i.textID, i.tokenID);
+                        var token2 = (i.textID, i.targetID);
+                        if (i.textID != text.text_id) continue;
+                        if (i.tokenID == token.id || i.targetID == token.id)
+                        {
+                            ResetHighlight(tokenMap[token1], tokenMap[token2]);
+                            break;
+                        }
+                    }
                 });
                 tokenDOM.RegisterCallback<PointerDownEvent>((type) =>
                 {
@@ -175,7 +213,7 @@ public class UIContentsController : MonoBehaviour
         return false;
     }
 
-    public void generateSectionsDOM(VisualElement root, string filename, List<Section> sections, List<TokenAnnotation> annotations)
+    public void generateSectionsDOM(VisualElement root, string filename, List<Section> sections)
     {
         cullentFilename = filename;
         var indentContainer = new List<VisualElement> { root };
@@ -193,19 +231,6 @@ public class UIContentsController : MonoBehaviour
                 foreach (var text in sectionData.texts)
                 {
                     GenerateText(section.Q<VisualElement>("childContainer"), text);
-                    if (HasAnnotation(text, annotations))
-                    {
-                        foreach (var annotation in annotations)
-                        {
-                            GenerateMarker(
-                                section.Q<VisualElement>("childContainer"),
-                                section.Q<VisualElement>("childContainer"),
-                                annotation.tokenID,
-                                annotation.targetID,
-                                annotation.type
-                                );
-                        }
-                    }
                 }
                 indentContainer[sectionData.indent - 1].Add(section);
                 if (indentContainer.Count <= sectionData.indent)
@@ -234,11 +259,24 @@ public class UIContentsController : MonoBehaviour
             }
         }
     }
-
+    void SetBorderColor(VisualElement dom, Color col)
+    {
+        dom.style.borderLeftColor = col;
+        dom.style.borderTopColor = col;
+        dom.style.borderBottomColor = col;
+        dom.style.borderRightColor = col;
+    }
+    void SetBorderWidth(VisualElement dom, float width)
+    {
+        dom.style.borderLeftWidth = width;
+        dom.style.borderTopWidth = width;
+        dom.style.borderBottomWidth = width;
+        dom.style.borderRightWidth = width;
+    }
     public void ClearAnnotation()
     {
     }
-    public void GenerateAnnotation()
+    public void GenerateAnnotation(List<TokenAnnotation> annotations=null)
     {
         Debug.Log($"generate annotation {annotationLoader.GetAnnotations(cullentFilename).Count}");
         foreach (var i in annotationLoader.GetAnnotations(cullentFilename))
@@ -253,71 +291,10 @@ public class UIContentsController : MonoBehaviour
 
             var col = new Color(0.5f, 1, 0.5f);
             var borderWidth = 3f;
-
-            tokenMap[token1].style.borderLeftColor = col;
-            tokenMap[token1].style.borderLeftWidth = borderWidth;
-            tokenMap[token1].style.borderTopColor = col;
-            tokenMap[token1].style.borderTopWidth = borderWidth;
-            tokenMap[token1].style.borderBottomColor = col;
-            tokenMap[token1].style.borderBottomWidth = borderWidth;
-            tokenMap[token1].style.borderRightColor = col;
-            tokenMap[token1].style.borderRightWidth = borderWidth;
-
-            tokenMap[token2].style.borderLeftColor = col;
-            tokenMap[token2].style.borderLeftWidth = borderWidth;
-            tokenMap[token2].style.borderTopColor = col;
-            tokenMap[token2].style.borderTopWidth = borderWidth;
-            tokenMap[token2].style.borderBottomColor = col;
-            tokenMap[token2].style.borderBottomWidth = borderWidth;
-            tokenMap[token2].style.borderRightColor = col;
-            tokenMap[token2].style.borderRightWidth = borderWidth;
-
-            tokenMap[token1].RegisterCallback<MouseOverEvent>((type) =>
-            {
-                Debug.Log("on annotation hover");
-                HighlightRelation(tokenMap[token1], tokenMap[token2]);
-            });
-            tokenMap[token1].RegisterCallback<MouseOutEvent>((type) =>
-            {
-                Debug.Log("on annotation hover exit");
-                ResetHighlight(tokenMap[token1], tokenMap[token2]);
-            });
-            tokenMap[token2].RegisterCallback<MouseOverEvent>((type) =>
-            {
-                Debug.Log("on annotation hover");
-                HighlightRelation(tokenMap[token1], tokenMap[token2]);
-            });
-            tokenMap[token2].RegisterCallback<MouseOutEvent>((type) =>
-            {
-                Debug.Log("on annotation hover exit");
-                ResetHighlight(tokenMap[token1], tokenMap[token2]);
-            });
+            SetBorderColor(tokenMap[token1], col);
+            SetBorderWidth(tokenMap[token1], borderWidth);
+            SetBorderColor(tokenMap[token2], col);
+            SetBorderWidth(tokenMap[token2], borderWidth);
         }
-        OnTokenDragging.AddListener((token, tokenDOM) =>
-        {
-            var col = new Color( 1, 0.5f, 0.5f);
-            var borderWidth = 3f;
-            tokenDOM.style.borderLeftColor = col;
-            tokenDOM.style.borderLeftWidth = borderWidth;
-            tokenDOM.style.borderTopColor = col;
-            tokenDOM.style.borderTopWidth = borderWidth;
-            tokenDOM.style.borderBottomColor = col;
-            tokenDOM.style.borderBottomWidth = borderWidth;
-            tokenDOM.style.borderRightColor = col;
-            tokenDOM.style.borderRightWidth = borderWidth;
-        });
-        OnTokenDragged.AddListener((token, tokenDOM, targetToken, targetDOM) =>
-        {
-            var col = new Color(0,0,0);
-            var borderWidth = 0f;
-            tokenDOM.style.borderLeftColor = col;
-            tokenDOM.style.borderLeftWidth = borderWidth;
-            tokenDOM.style.borderTopColor = col;
-            tokenDOM.style.borderTopWidth = borderWidth;
-            tokenDOM.style.borderBottomColor = col;
-            tokenDOM.style.borderBottomWidth = borderWidth;
-            tokenDOM.style.borderRightColor = col;
-            tokenDOM.style.borderRightWidth = borderWidth;
-        });
     }
 }

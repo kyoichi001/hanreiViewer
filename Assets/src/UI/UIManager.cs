@@ -6,15 +6,17 @@ using UnityEngine.UIElements;
 
 public class UIManager : MonoBehaviour
 {
-    UIDocument uIDocument;
-    public DataLoader dataLoader;
-    public AnnotationLoader annotationLoader;
-    [Header("DOM")]
-    public VisualTreeAsset hanreiUXML;
 
+    [SerializeField] DataLoader dataLoader;
+    [SerializeField] AnnotationLoader annotationLoader;
+    [Header("DOM")]
+    [SerializeField] VisualTreeAsset hanreiUXML;
+
+    UIDocument uIDocument;
     UIFilesController uIFilesController;
     UIContentsController uContentsController;
     UIContentsTableController uContentsTableController;
+    UIAnnotationsController uAnnotationsController;
 
     PopoverManager popoverManager;
 
@@ -25,6 +27,7 @@ public class UIManager : MonoBehaviour
         uContentsController = GetComponent<UIContentsController>();
         uContentsTableController = GetComponent<UIContentsTableController>();
         popoverManager = GetComponent<PopoverManager>();
+        uAnnotationsController=GetComponent<UIAnnotationsController>();
 
         var submenuElement = uIDocument.rootVisualElement.Q("subMenu");
         dataLoader.OnDataLoaded.AddListener((dat) =>
@@ -59,7 +62,7 @@ public class UIManager : MonoBehaviour
         uContentsController.generateSectionsDOM(
             t.Q<VisualElement>("mainTextContents"), 
             data.filename,
-            data.contents.main_text.sections, new List<TokenAnnotation>());
+            data.contents.main_text.sections);
         uContentsController.OnTokenMouseOver.AddListener((token,tokenDOM) =>
         {
             //popoverManager.AddPopover();
@@ -74,11 +77,13 @@ public class UIManager : MonoBehaviour
         uContentsController.generateSectionsDOM(
             t.Q<VisualElement>("factReasonContents"),
             data.filename,
-            data.contents.fact_reason.sections,new List<TokenAnnotation>());
+            data.contents.fact_reason.sections);
         container.Add(t);
         uContentsTableController.generateTableOfContentDOM(
             uIDocument.rootVisualElement.Q<ScrollView>("tableContainer"), data.contents.fact_reason.sections
             );
         uContentsController.GenerateAnnotation();
+        var annotationContainer=uIDocument.rootVisualElement.Q<ScrollView>("annotationContainer");
+        uAnnotationsController.GenerateAnnotations(annotationContainer,data.filename, annotationLoader.GetAnnotations(data.filename));
     }
 }

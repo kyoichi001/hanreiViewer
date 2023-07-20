@@ -138,6 +138,7 @@ GameObject:
   - component: {fileID: 14265317}
   - component: {fileID: 14265316}
   - component: {fileID: 14265315}
+  - component: {fileID: 14265319}
   m_Layer: 5
   m_Name: UIDocument
   m_TagString: Untagged
@@ -207,8 +208,8 @@ MonoBehaviour:
   sectionUXML: {fileID: 9197481963319205126, guid: cfbaa9fe74fcdac4eb44dc043189d73c, type: 3}
   bunsetsuUXML: {fileID: 9197481963319205126, guid: b58c946ed4d904d41a9051d4ed64284d, type: 3}
   tokenUXML: {fileID: 9197481963319205126, guid: 6fa62afecd993354e98b1825676c5d3c, type: 3}
-  arrowUXML: {fileID: 9197481963319205126, guid: 43188a5f56b625842824f8f8e6eede05, type: 3}
   annotationLoader: {fileID: 48626620}
+  arrowUXML: {fileID: 9197481963319205126, guid: 43188a5f56b625842824f8f8e6eede05, type: 3}
 --- !u!114 &14265316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,9 +236,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c994cb68701810b489a1e01196f2235d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnButtonClicked:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &14265318
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,6 +248,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc9849c34f8b0734d87ce9f1f3663886, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &14265319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 14265311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c27072571a1ec084288cf555c1c90c55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dataLoader: {fileID: 48626618}
+  annotationLoader: {fileID: 48626620}
+  annotationRow: {fileID: 9197481963319205126, guid: 974a8ddca376f2743990ce1bf1ddb6f5, type: 3}
 --- !u!1 &48626617
 GameObject:
   m_ObjectHideFlags: 0
@@ -282,9 +295,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DataPath: Assets/hanreiData
   hanreiDatas: []
-  OnDataLoaded:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &48626619
 Transform:
   m_ObjectHideFlags: 0
@@ -314,9 +324,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dirPath: Assets/annotationData
   anotationDatas: []
-  OnDataLoaded:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
