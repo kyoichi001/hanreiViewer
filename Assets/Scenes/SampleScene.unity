@@ -188,8 +188,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da5f1a742890bd7479edca7c1f8cfd61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dataLoader: {fileID: 48626618}
-  annotationLoader: {fileID: 48626620}
   hanreiUXML: {fileID: 9197481963319205126, guid: 04649bbe81b67de43a0cee9362f72561, type: 3}
 --- !u!114 &14265315
 MonoBehaviour:
@@ -249,8 +247,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c27072571a1ec084288cf555c1c90c55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dataLoader: {fileID: 48626618}
-  annotationLoader: {fileID: 48626620}
   annotationRow: {fileID: 9197481963319205126, guid: 974a8ddca376f2743990ce1bf1ddb6f5, type: 3}
 --- !u!1 &48626617
 GameObject:
@@ -632,7 +628,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PanelSettings: {fileID: 11400000, guid: 0815a3ac42a00af4e9f61f88e8843c22, type: 2}
   m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: ec96267bf0bb64d4cb39d8f76a622c5b, type: 3}
   m_SortingOrder: 1
 --- !u!4 &1321283783
 Transform:

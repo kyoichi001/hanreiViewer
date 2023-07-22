@@ -89,12 +89,6 @@ public class AnnotationLoader : SingletonMonoBehaviour<AnnotationLoader>
             SaveData(d.annotations,d.filename);
         });
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     private void OnApplicationQuit()
     {
         foreach(var d in anotationDatas)
