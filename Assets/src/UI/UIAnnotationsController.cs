@@ -10,7 +10,8 @@ public class UIAnnotationsController : MonoBehaviour
     [SerializeField] VisualTreeAsset annotationRow;
     public void GenerateAnnotations(VisualElement root,string filename,List<TokenAnnotation> annotations,Action<TokenAnnotation> deleteClicked=null)
     {
-        foreach(var i in annotations)
+        root.Clear();
+        foreach (var i in annotations)
         {
             var dom= annotationRow.CloneTree();
             var button = dom.Q<Button>("deleteButton");

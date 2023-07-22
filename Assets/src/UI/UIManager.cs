@@ -39,7 +39,7 @@ public class UIManager : MonoBehaviour
         });
         AnnotationLoader.Instance.OnDataCanged.AddListener((d) =>
         {
-
+            RenewHanrei();
         });
         uIFilesController.OnButtonClicked.AddListener((dat) => ShowHanrei(dat));
     }
@@ -103,6 +103,7 @@ public class UIManager : MonoBehaviour
     }
     void RenewHanrei()
     {
+        uContentsController.ClearAnnotation();
         uContentsController.GenerateAnnotation();
         var annotationContainer = uIDocument.rootVisualElement.Q<ScrollView>("annotationContainer");
         uAnnotationsController.GenerateAnnotations(

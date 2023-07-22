@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 public class UIContentsTableController : MonoBehaviour
 {
-
+    [Header("DOM")]
     [SerializeField] VisualTreeAsset foldableSectionUXML;
     [SerializeField] VisualTreeAsset sectionUXML;
 
