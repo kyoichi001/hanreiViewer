@@ -9,11 +9,13 @@ using static System.Collections.Specialized.BitVector32;
 
 public class UIContentsController : MonoBehaviour
 {
+    [SerializeField] PopoverManager popoverManager;
     [Header("DOM")]
     [SerializeField] VisualTreeAsset foldableSectionUXML;
     [SerializeField] VisualTreeAsset sectionUXML;
     [SerializeField] VisualTreeAsset bunsetsuUXML;
     [SerializeField] VisualTreeAsset tokenUXML;
+    [SerializeField] VisualTreeAsset tokenContextUXML;
     [Header("annotation")]
     [SerializeField] AnnotationLoader annotationLoader;
     [SerializeField] VisualTreeAsset arrowUXML;
@@ -23,28 +25,28 @@ public class UIContentsController : MonoBehaviour
     Dictionary<VisualElement, (int, int)> domMap = new Dictionary<VisualElement, (int, int)>();
 
     public class OnTokenMouseOverEvent : UnityEvent<Token, VisualElement> { }
-    public OnTokenMouseOverEvent OnTokenMouseOver = new OnTokenMouseOverEvent();
+    public OnTokenMouseOverEvent OnTokenMouseOver { get; } = new OnTokenMouseOverEvent();
     public class OnTokenMouseOutEvent : UnityEvent<Token, VisualElement> { }
-    public OnTokenMouseOutEvent OnTokenMouseOut = new OnTokenMouseOutEvent();
+    public OnTokenMouseOutEvent OnTokenMouseOut { get; } = new OnTokenMouseOutEvent();
     public class OnTokenClickedEvent : UnityEvent<Token, VisualElement> { }
-    public OnTokenClickedEvent OnTokenClicked = new OnTokenClickedEvent();
+    public OnTokenClickedEvent OnTokenClicked { get; } = new OnTokenClickedEvent();
     public class OnTokenDraggingEvent : UnityEvent<Token, VisualElement> { }
-    public OnTokenDraggingEvent OnTokenDragging = new OnTokenDraggingEvent();
+    public OnTokenDraggingEvent OnTokenDragging { get; } = new OnTokenDraggingEvent();
     public class OnTokenDraggedEvent : UnityEvent<Token, VisualElement, Token, VisualElement> { }
-    public OnTokenDraggedEvent OnTokenDragged = new OnTokenDraggedEvent();
-
+    public OnTokenDraggedEvent OnTokenDragged { get; } = new OnTokenDraggedEvent();
 
     private void Start()
     {
         OnTokenDragged.AddListener((token, tokenDOM, target, targetDOM) =>
         {
-            Debug.Log("add relation");
             if (!domMap.ContainsKey(tokenDOM) || !domMap.ContainsKey(targetDOM))
             {
                 Debug.LogError($"key does not found token1:{tokenDOM} token2:{targetDOM}");
                 return;
             }
+            if (token.id == target.id) return;
             var textID = domMap[tokenDOM].Item1;
+            Debug.Log("add relation");
             annotationLoader.AddRelation(cullentFilename, textID, token.id, target.id, TokenRelationType.None);
             GenerateAnnotation();
         });
@@ -112,12 +114,20 @@ public class UIContentsController : MonoBehaviour
                 });
                 tokenDOM.RegisterCallback<PointerDownEvent>((type) =>
                 {
-                    //Debug.Log($"token coord : {tokenDOM.worldBound}");
-                    var dom = type.target as VisualElement;
-                    OnTokenClicked.Invoke(token, dom);
-                    dragging = true;
-                    currentToken = token;
-                    currentTokenDOM = tokenDOM;
+                    //Debug.Log($"token clicked ({type.button})");
+                    if (type.button == 0) //left click
+                    {
+                        var dom = type.target as VisualElement;
+
+                        OnTokenClicked.Invoke(token, dom);
+                        dragging = true;
+                        currentToken = token;
+                        currentTokenDOM = tokenDOM;
+                    }
+                    else if (type.button == 1) // right click
+                    {
+                        popoverManager.AddPopover(tokenContextUXML, $"{token.text}");
+                    }
                 });
                 tokenDOM.RegisterCallback<PointerMoveEvent>((type) =>
                 {
@@ -129,11 +139,14 @@ public class UIContentsController : MonoBehaviour
                 });
                 tokenDOM.RegisterCallback<PointerUpEvent>((type) =>
                 {
-                    //var dom = type.target as VisualElement; //これだとうまくDictionaryのkeyと一致しない。参照先は同じだが別物扱い？キャストしているから？
-                    OnTokenDragged.Invoke(currentToken, currentTokenDOM, token, tokenDOM);
-                    dragging = false;
-                    currentToken = null;
-                    currentTokenDOM = null;
+                    if (dragging)
+                    {
+                        //var dom = type.target as VisualElement; //これだとうまくDictionaryのkeyと一致しない。参照先は同じだが別物扱い？キャストしているから？
+                        OnTokenDragged.Invoke(currentToken, currentTokenDOM, token, tokenDOM);
+                        dragging = false;
+                        currentToken = null;
+                        currentTokenDOM = null;
+                    }
                 });
                 tokenDOM.RegisterCallback<PointerEnterEvent>((type) => { });
                 if (text.GetTokenEntity(token.id) == EntityType.Date)
@@ -275,6 +288,22 @@ public class UIContentsController : MonoBehaviour
     }
     public void ClearAnnotation()
     {
+        foreach (var i in annotationLoader.GetAnnotations(cullentFilename))
+        {
+            var token1 = (i.textID, i.tokenID);
+            var token2 = (i.textID, i.targetID);
+            if (!tokenMap.ContainsKey(token1) || !tokenMap.ContainsKey(token2))
+            {
+                Debug.LogError($"key does not found token1:{token1} token2:{token2}");
+                continue;
+            }
+            var col = new Color(0f, 0, 0f,0);
+            var borderWidth = 0f;
+            SetBorderColor(tokenMap[token1], col);
+            SetBorderWidth(tokenMap[token1], borderWidth);
+            SetBorderColor(tokenMap[token2], col);
+            SetBorderWidth(tokenMap[token2], borderWidth);
+        }
     }
     public void GenerateAnnotation(List<TokenAnnotation> annotations=null)
     {

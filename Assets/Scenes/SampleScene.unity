@@ -133,7 +133,6 @@ GameObject:
   m_Component:
   - component: {fileID: 14265313}
   - component: {fileID: 14265312}
-  - component: {fileID: 14265318}
   - component: {fileID: 14265314}
   - component: {fileID: 14265317}
   - component: {fileID: 14265316}
@@ -204,10 +203,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 759da58208444dd4c80e4c4d1ca05350, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  popoverManager: {fileID: 1321283784}
   foldableSectionUXML: {fileID: 9197481963319205126, guid: 9863ab9b3747c0b40aaf16880107cce8, type: 3}
   sectionUXML: {fileID: 9197481963319205126, guid: cfbaa9fe74fcdac4eb44dc043189d73c, type: 3}
   bunsetsuUXML: {fileID: 9197481963319205126, guid: b58c946ed4d904d41a9051d4ed64284d, type: 3}
   tokenUXML: {fileID: 9197481963319205126, guid: 6fa62afecd993354e98b1825676c5d3c, type: 3}
+  tokenContextUXML: {fileID: 9197481963319205126, guid: fc21f8d515e5a5b45a38c6acc0c7e838, type: 3}
   annotationLoader: {fileID: 48626620}
   arrowUXML: {fileID: 9197481963319205126, guid: 43188a5f56b625842824f8f8e6eede05, type: 3}
 --- !u!114 &14265316
@@ -234,18 +235,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c994cb68701810b489a1e01196f2235d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &14265318
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 14265311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc9849c34f8b0734d87ce9f1f3663886, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &14265319
@@ -308,7 +297,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &48626620
 MonoBehaviour:
@@ -609,5 +598,66 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1321283781
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1321283783}
+  - component: {fileID: 1321283782}
+  - component: {fileID: 1321283784}
+  m_Layer: 0
+  m_Name: PopoverUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1321283782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1321283781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: 0815a3ac42a00af4e9f61f88e8843c22, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 0}
+  m_SortingOrder: 1
+--- !u!4 &1321283783
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1321283781}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1321283784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1321283781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc9849c34f8b0734d87ce9f1f3663886, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

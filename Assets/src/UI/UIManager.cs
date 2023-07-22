@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+[RequireComponent(typeof(UIDocument))]
+[RequireComponent(typeof(UIFilesController))]
+[RequireComponent(typeof(UIContentsController))]
+[RequireComponent(typeof(UIContentsTableController))]
+[RequireComponent(typeof(UIAnnotationsController))]
 public class UIManager : MonoBehaviour
 {
-
-    [SerializeField] DataLoader dataLoader;
-    [SerializeField] AnnotationLoader annotationLoader;
     [Header("DOM")]
     [SerializeField] VisualTreeAsset hanreiUXML;
 
@@ -19,6 +21,7 @@ public class UIManager : MonoBehaviour
     UIAnnotationsController uAnnotationsController;
 
     PopoverManager popoverManager;
+    HanreiData currentData;
 
     private void Awake()
     {
@@ -27,18 +30,23 @@ public class UIManager : MonoBehaviour
         uContentsController = GetComponent<UIContentsController>();
         uContentsTableController = GetComponent<UIContentsTableController>();
         popoverManager = GetComponent<PopoverManager>();
-        uAnnotationsController=GetComponent<UIAnnotationsController>();
+        uAnnotationsController = GetComponent<UIAnnotationsController>();
 
         var submenuElement = uIDocument.rootVisualElement.Q("subMenu");
-        dataLoader.OnDataLoaded.AddListener((dat) =>
+        DataLoader.Instance.OnDataLoaded.AddListener((dat) =>
         {
-            uIFilesController.GenerateButton(dat);
+            uIFilesController.GenerateButton(submenuElement,dat);
+        });
+        AnnotationLoader.Instance.OnDataCanged.AddListener((d) =>
+        {
+
         });
         uIFilesController.OnButtonClicked.AddListener((dat) => ShowHanrei(dat));
     }
 
     void ShowHanrei(HanreiData data)
     {
+        currentData = data;
         var container = uIDocument.rootVisualElement.Q<ScrollView>("contentContainer");
         container.Clear();
         var t = hanreiUXML.CloneTree();
@@ -60,10 +68,10 @@ public class UIManager : MonoBehaviour
         //éÂï∂ê∂ê¨
         t.Q<Foldout>("mainTextLabel").text = data.contents.main_text.header_text;
         uContentsController.generateSectionsDOM(
-            t.Q<VisualElement>("mainTextContents"), 
+            t.Q<VisualElement>("mainTextContents"),
             data.filename,
             data.contents.main_text.sections);
-        uContentsController.OnTokenMouseOver.AddListener((token,tokenDOM) =>
+        uContentsController.OnTokenMouseOver.AddListener((token, tokenDOM) =>
         {
             //popoverManager.AddPopover();
         });
@@ -83,7 +91,27 @@ public class UIManager : MonoBehaviour
             uIDocument.rootVisualElement.Q<ScrollView>("tableContainer"), data.contents.fact_reason.sections
             );
         uContentsController.GenerateAnnotation();
-        var annotationContainer=uIDocument.rootVisualElement.Q<ScrollView>("annotationContainer");
-        uAnnotationsController.GenerateAnnotations(annotationContainer,data.filename, annotationLoader.GetAnnotations(data.filename));
+        var annotationContainer = uIDocument.rootVisualElement.Q<ScrollView>("annotationContainer");
+        uAnnotationsController.GenerateAnnotations(
+            annotationContainer, data.filename,
+            AnnotationLoader.Instance.GetAnnotations(data.filename),
+            (annotation) =>
+            {
+                AnnotationLoader.Instance.RemoveRelation(data.filename, annotation.textID, annotation.tokenID, annotation.targetID);
+            }
+            );
+    }
+    void RenewHanrei()
+    {
+        uContentsController.GenerateAnnotation();
+        var annotationContainer = uIDocument.rootVisualElement.Q<ScrollView>("annotationContainer");
+        uAnnotationsController.GenerateAnnotations(
+            annotationContainer, currentData.filename,
+            AnnotationLoader.Instance.GetAnnotations(currentData.filename),
+            (annotation) =>
+            {
+                AnnotationLoader.Instance.RemoveRelation(currentData.filename, annotation.textID, annotation.tokenID, annotation.targetID);
+            }
+            );
     }
 }

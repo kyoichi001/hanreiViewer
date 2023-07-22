@@ -3,21 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+[RequireComponent(typeof(UIDocument))]
 public class PopoverManager : MonoBehaviour
 {
      UIDocument popoverContainer;
-    Dictionary<string, VisualElement> popoverMap;
+    Dictionary<string, VisualElement> popoverMap=new Dictionary<string, VisualElement>();
 
     private void Awake()
     {
         popoverContainer = GetComponent<UIDocument>();  
     }
 
-    public void AddPopover(VisualTreeAsset popover,string id,Vector2 position)
+    public void AddPopover(VisualTreeAsset popover,string id,Vector2? position=null)
     {
         var dom = popover.CloneTree();
-        dom.style.left=position.x;
-        dom.style.top=position.y;
+        if(position.HasValue)
+        {
+            dom.transform.position = position.Value;
+        }
+        else
+        {
+            dom.transform.position = new Vector3(0,0,0);
+        }
         popoverContainer.rootVisualElement.Add(dom);
         popoverMap[id] = dom;
     }

@@ -1,18 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class AnnotationLoader : MonoBehaviour
+public class AnnotationLoader : SingletonMonoBehaviour<AnnotationLoader>
 {
     public string dirPath;
     private DataLoader loader;
     public List<AnotationData> anotationDatas = new List<AnotationData>();
 
     public class OnDataLoadedEvent : UnityEvent<AnotationData> { }
-    public OnDataLoadedEvent OnDataLoaded = new OnDataLoadedEvent();
+    public OnDataLoadedEvent OnDataLoaded { get; } = new OnDataLoadedEvent();
+    public class OnDataCangedEvent : UnityEvent<AnotationData> { }
+    public OnDataCangedEvent OnDataCanged { get; }=new OnDataCangedEvent();
+
 
     List<TokenAnnotation> LoadData(string path)
     {
@@ -80,6 +84,10 @@ public class AnnotationLoader : MonoBehaviour
             anotationDatas.Add(d);
             OnDataLoaded.Invoke(d);
         }
+        OnDataCanged.AddListener((d) =>
+        {
+            SaveData(d.annotations,d.filename);
+        });
     }
 
     // Update is called once per frame
@@ -132,7 +140,7 @@ public class AnnotationLoader : MonoBehaviour
             a.targetID=targetID;
             a.type=type;
             d.annotations.Add(a);
-            SaveData(d.annotations, d.filename);
+            OnDataCanged.Invoke(d);
         }
     }
 
@@ -157,7 +165,9 @@ public class AnnotationLoader : MonoBehaviour
         Debug.Log("remove relation");
         foreach (var d in anotationDatas)
         {
-            SaveData(d.annotations, d.filename);
+            if (d.filename != filename) continue;
+            d.annotations.RemoveAll(x => x.textID == textID && x.tokenID == tokenID && x.targetID == targetID);
+            OnDataCanged.Invoke(d);
         }
     }
     public void UpdateRelation(string filename, int textID, int tokenID, int targetID, TokenRelationType type)
@@ -166,7 +176,7 @@ public class AnnotationLoader : MonoBehaviour
 
         foreach (var d in anotationDatas)
         {
-            SaveData(d.annotations, d.filename);
+            OnDataCanged.Invoke(d);
         }
     }
 }

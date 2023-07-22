@@ -10,16 +10,14 @@ public class UIFilesController : MonoBehaviour
 
     public OnButtonClickedEvent OnButtonClicked=new OnButtonClickedEvent();
 
-    public void GenerateButton(HanreiData dat)
+    public void GenerateButton(VisualElement root,HanreiData dat)
     {
-        UIDocument uIDocument = GetComponent<UIDocument>();
-        var submenuElement = uIDocument.rootVisualElement.Q("subMenu");
         var newVisualElement = new Button();
         newVisualElement.name = "AddButton";
         newVisualElement.AddToClassList("sample-button");
         newVisualElement.text = dat.filename;
         newVisualElement.clicked += () => OnButtonClicked.Invoke(dat);
-        submenuElement.Add(newVisualElement);
+        root.Add(newVisualElement);
     }
 
 }

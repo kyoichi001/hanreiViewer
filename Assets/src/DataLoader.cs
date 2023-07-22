@@ -6,13 +6,13 @@ using UnityEngine;
 using static System.Net.Mime.MediaTypeNames;
 using UnityEngine.Events;
 
-public class DataLoader : MonoBehaviour
+public class DataLoader : SingletonMonoBehaviour<DataLoader>
 {
     public class OnDataLoadedEvent:UnityEvent<HanreiData>{}
 
     public string DataPath;
     public List<HanreiData> hanreiDatas=new List<HanreiData>();
-    public OnDataLoadedEvent OnDataLoaded =new OnDataLoadedEvent();
+    public OnDataLoadedEvent OnDataLoaded { get; } =new OnDataLoadedEvent();
 
     HanreiData LoadData(string filePath)
     {
