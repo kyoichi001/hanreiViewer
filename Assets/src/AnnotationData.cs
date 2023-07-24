@@ -8,7 +8,13 @@ public enum TokenRelationType
 }
 public enum TokenTagType
 {
-    None
+    None,
+    Person,
+    Time,
+    Act,
+    PersonN,
+    TimeN,
+    ActN
 }
 
 
@@ -20,6 +26,7 @@ public class TokenRelation
     public int targetID;
     public TokenRelationType type;
 }
+[System.Serializable]
 public class TokenTag
 {
     public int textID;

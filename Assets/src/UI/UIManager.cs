@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static Unity.VisualScripting.AnnotationUtility;
 
 [RequireComponent(typeof(UIDocument))]
 [RequireComponent(typeof(UIFilesController))]
@@ -20,7 +21,6 @@ public class UIManager : MonoBehaviour
     UIContentsTableController uContentsTableController;
     UIAnnotationsController uAnnotationsController;
 
-    PopoverManager popoverManager;
     HanreiData currentData;
 
     private void Awake()
@@ -29,22 +29,40 @@ public class UIManager : MonoBehaviour
         uIFilesController = GetComponent<UIFilesController>();
         uContentsController = GetComponent<UIContentsController>();
         uContentsTableController = GetComponent<UIContentsTableController>();
-        popoverManager = GetComponent<PopoverManager>();
         uAnnotationsController = GetComponent<UIAnnotationsController>();
 
         var submenuElement = uIDocument.rootVisualElement.Q("subMenu");
         DataLoader.Instance.OnDataLoaded.AddListener((dat) =>
         {
-            uIFilesController.GenerateButton(submenuElement,dat);
+            uIFilesController.GenerateButton(submenuElement, dat);
         });
-        AnnotationLoader.Instance.OnDataCanged.AddListener((d) =>
+        AnnotationLoader.Instance.OnDataChanged.AddListener((d) =>
         {
             RenewHanrei();
         });
         uIFilesController.OnButtonClicked.AddListener((dat) => ShowHanrei(dat));
+
+        uAnnotationsController.OnRelationDeleted.AddListener((dat) =>
+        {
+            AnnotationLoader.Instance.RemoveRelation(currentData.filename, dat.textID, dat.tokenID, dat.targetID);
+        });
+        uAnnotationsController.OnTagDeleted.AddListener((dat) =>
+        {
+            AnnotationLoader.Instance.RemoveTag(currentData.filename, dat.textID, dat.tokenID);
+        });
+        uAnnotationsController.OnRelationTypeChanged.AddListener((dat, e) =>
+        {
+            if (e.HasValue)
+                AnnotationLoader.Instance.UpdateRelation(currentData.filename, dat.textID, dat.tokenID, dat.targetID, e.Value);
+        });
+        uAnnotationsController.OnTagTypeChanged.AddListener((dat, e) =>
+        {
+            if (e.HasValue)
+                AnnotationLoader.Instance.UpdateTag(currentData.filename, dat.textID, dat.tokenID, e.Value);
+        });
     }
 
-    void GenerateStatistics(VisualElement root,HanreiData data)
+    void GenerateStatistics(VisualElement root, HanreiData data)
     {
         var wordsCount = 0;
         var textsCount = 0;
@@ -52,11 +70,11 @@ public class UIManager : MonoBehaviour
         var annotationsCount = AnnotationLoader.Instance.GetAnnotations(data.filename).Count;
         foreach (var i in data.contents.fact_reason.sections)
         {
-            foreach(var j in i.texts)
+            foreach (var j in i.texts)
             {
-                foreach(var k in j.bunsetu)
+                foreach (var k in j.bunsetu)
                 {
-                    foreach(var l in k.tokens)
+                    foreach (var l in k.tokens)
                     {
                         wordsCount += l.text.Length;
                         tokensCount++;
@@ -66,9 +84,9 @@ public class UIManager : MonoBehaviour
             }
         }
         root.Q<Label>("wordsCount").text = wordsCount.ToString();
-        root.Q<Label>("textsCount").text= textsCount.ToString();
-        root.Q<Label>("tokensCount").text= tokensCount.ToString();
-        root.Q<Label>("annotationsCount").text= annotationsCount.ToString();
+        root.Q<Label>("textsCount").text = textsCount.ToString();
+        root.Q<Label>("tokensCount").text = tokensCount.ToString();
+        root.Q<Label>("annotationsCount").text = annotationsCount.ToString();
     }
 
     void ShowHanrei(HanreiData data)
@@ -120,12 +138,8 @@ public class UIManager : MonoBehaviour
         uContentsController.GenerateAnnotation();
         var annotationContainer = uIDocument.rootVisualElement.Q<ScrollView>("annotationContainer");
         uAnnotationsController.GenerateAnnotations(
-            annotationContainer, data.filename,
-            AnnotationLoader.Instance.GetAnnotations(data.filename),
-            (annotation) =>
-            {
-                AnnotationLoader.Instance.RemoveRelation(data.filename, annotation.textID, annotation.tokenID, annotation.targetID);
-            }
+            annotationContainer,
+            AnnotationLoader.Instance.GetAnotationData(data.filename)
             );
         GenerateStatistics(uIDocument.rootVisualElement, data);
     }
@@ -135,12 +149,8 @@ public class UIManager : MonoBehaviour
         uContentsController.GenerateAnnotation();
         var annotationContainer = uIDocument.rootVisualElement.Q<ScrollView>("annotationContainer");
         uAnnotationsController.GenerateAnnotations(
-            annotationContainer, currentData.filename,
-            AnnotationLoader.Instance.GetAnnotations(currentData.filename),
-            (annotation) =>
-            {
-                AnnotationLoader.Instance.RemoveRelation(currentData.filename, annotation.textID, annotation.tokenID, annotation.targetID);
-            }
+            annotationContainer,
+            AnnotationLoader.Instance.GetAnotationData(currentData.filename)
             );
         GenerateStatistics(uIDocument.rootVisualElement, currentData);
     }

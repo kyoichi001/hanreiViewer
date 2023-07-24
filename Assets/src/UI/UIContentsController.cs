@@ -132,7 +132,13 @@ public class UIContentsController : MonoBehaviour
                         };
                         contextDOM.Q<DropdownField>().RegisterValueChangedCallback((e) =>
                         {
-                            
+                            Debug.Log($"value changed {e.newValue}");
+                            var type = e.newValue switch
+                            {
+                                "None" => TokenTagType.None,
+                                _=>TokenTagType.None
+                            };
+                            AnnotationLoader.Instance.AddTag(cullentFilename,text.text_id,token.id,type);
                         });
                         popoverManager.AddPopover(contextDOM, $"{token.text}");
                     }
