@@ -8,7 +8,7 @@ public class UIAnnotationsController : MonoBehaviour
 {
     [Header("DOM")]
     [SerializeField] VisualTreeAsset annotationRow;
-    public void GenerateAnnotations(VisualElement root,string filename,List<TokenAnnotation> annotations,Action<TokenAnnotation> deleteClicked=null)
+    public void GenerateAnnotations(VisualElement root,string filename,List<TokenRelation> annotations,Action<TokenRelation> deleteClicked=null)
     {
         root.Clear();
         foreach (var i in annotations)
@@ -27,8 +27,8 @@ public class UIAnnotationsController : MonoBehaviour
             targetIDDOM.text = i.targetID.ToString();
             var targetTextDOM = dom.Q<Label>("targetText");
             targetTextDOM.text = DataLoader.Instance.GetToken(filename, i.textID, i.targetID).text;
-            var typeDOM = dom.Q<Label>("type");
-            typeDOM.text = i.type.ToString();
+            var typeDOM = dom.Q<EnumField>("type");
+            typeDOM.Init(i.type);
             root.Add(dom);
         }
     }

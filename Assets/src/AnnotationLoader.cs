@@ -5,6 +5,7 @@ using System.Linq;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
+using static UnityEngine.GraphicsBuffer;
 
 public class AnnotationLoader : SingletonMonoBehaviour<AnnotationLoader>
 {
@@ -18,16 +19,16 @@ public class AnnotationLoader : SingletonMonoBehaviour<AnnotationLoader>
     public OnDataCangedEvent OnDataCanged { get; }=new OnDataCangedEvent();
 
 
-    List<TokenAnnotation> LoadData(string path)
+    List<TokenRelation> LoadData(string path)
     {
-        if (!System.IO.File.Exists(path)) return new List<TokenAnnotation>();
+        if (!System.IO.File.Exists(path)) return new List<TokenRelation>();
         string content = "";
         using(var sr=new StreamReader(path))
         {
             content = sr.ReadToEnd();
         }
         Debug.Log(content);
-        var list = new List<TokenAnnotation>();
+        var list = new List<TokenRelation>();
         bool header = true;
         foreach (var row in content.Split("\n"))
         {
@@ -38,7 +39,7 @@ public class AnnotationLoader : SingletonMonoBehaviour<AnnotationLoader>
             }
             var l = row.Split(",");
             if (l.Length < 4) break;
-            var anno = new TokenAnnotation();
+            var anno = new TokenRelation();
             anno.textID = int.Parse(l[0]);
             anno.tokenID = int.Parse(l[1]);
             anno.targetID = int.Parse(l[2]);
@@ -48,7 +49,7 @@ public class AnnotationLoader : SingletonMonoBehaviour<AnnotationLoader>
         return list;
     }
 
-    void SaveData(List<TokenAnnotation> data, string filename)
+    void SaveData(List<TokenRelation> data, string filename)
     {
         if (data == null) return;
         Debug.Log($"save relation filepath : {dirPath}/{filename}.csv");
@@ -103,7 +104,7 @@ public class AnnotationLoader : SingletonMonoBehaviour<AnnotationLoader>
         return false;
     }
 
-    public List<TokenAnnotation> GetAnnotations(string filename)
+    public List<TokenRelation> GetAnnotations(string filename)
     {
         //var res=new List<TokenAnnotation>();
         foreach (var d in anotationDatas)
@@ -111,7 +112,7 @@ public class AnnotationLoader : SingletonMonoBehaviour<AnnotationLoader>
             if (d.filename != filename) continue;
             return d.annotations;
         }
-        return new List<TokenAnnotation>();
+        return new List<TokenRelation>();
     }
 
     public void AddRelation(string filename,int textID, int tokenID, int targetID, TokenRelationType type)
@@ -119,7 +120,7 @@ public class AnnotationLoader : SingletonMonoBehaviour<AnnotationLoader>
         Debug.Log("add relation");
         if (!ExistsData(filename))
         {
-            var dat= new List<TokenAnnotation>();
+            var dat= new List<TokenRelation>();
             var d = new AnotationData();
             d.annotations = dat;
             d.filename = filename;
@@ -128,7 +129,7 @@ public class AnnotationLoader : SingletonMonoBehaviour<AnnotationLoader>
         foreach (var d in anotationDatas)
         {
             if(d.filename != filename) continue;
-            var a = new TokenAnnotation();
+            var a = new TokenRelation();
             a.textID=textID;
             a.tokenID=tokenID;
             a.targetID=targetID;
@@ -170,6 +171,31 @@ public class AnnotationLoader : SingletonMonoBehaviour<AnnotationLoader>
 
         foreach (var d in anotationDatas)
         {
+            OnDataCanged.Invoke(d);
+        }
+    }
+
+    public void AddTag(string filename, int textID, int tokenID,TokenTagType type)
+    {
+        if (!ExistsData(filename)) return;
+        foreach (var d in anotationDatas)
+        {
+            if (d.filename != filename) continue;
+            var a = new TokenTag();
+            a.textID = textID;
+            a.tokenID = tokenID;
+            a.type = type;
+            d.tags.Add(a);
+            OnDataCanged.Invoke(d);
+        }
+    }
+    public void RemoveTag(string filename, int textID, int tokenID, TokenTagType type)
+    {
+        if (!ExistsData(filename)) return;
+        foreach (var d in anotationDatas)
+        {
+            if (d.filename != filename) continue; 
+            d.tags.RemoveAll(x => x.textID == textID && x.tokenID == tokenID);
             OnDataCanged.Invoke(d);
         }
     }

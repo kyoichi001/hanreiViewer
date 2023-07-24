@@ -45,22 +45,18 @@ public class UIContentsController : MonoBehaviour
                 return;
             }
             if (token.id == target.id) return;
+            var col = new Color(0, 0, 0);
+            var borderWidth = 0f;
+            SetBorderColor(tokenDOM, col);
+            SetBorderWidth(tokenDOM, borderWidth);
             var textID = domMap[tokenDOM].Item1;
             Debug.Log("add relation");
             annotationLoader.AddRelation(cullentFilename, textID, token.id, target.id, TokenRelationType.None);
-            GenerateAnnotation();
         });
         OnTokenDragging.AddListener((token, tokenDOM) =>
         {
             var col = new Color(1, 0.5f, 0.5f);
             var borderWidth = 3f;
-            SetBorderColor(tokenDOM, col);
-            SetBorderWidth(tokenDOM, borderWidth);
-        });
-        OnTokenDragged.AddListener((token, tokenDOM, targetToken, targetDOM) =>
-        {
-            var col = new Color(0, 0, 0);
-            var borderWidth = 0f;
             SetBorderColor(tokenDOM, col);
             SetBorderWidth(tokenDOM, borderWidth);
         });
@@ -126,7 +122,19 @@ public class UIContentsController : MonoBehaviour
                     }
                     else if (type.button == 1) // right click
                     {
-                        popoverManager.AddPopover(tokenContextUXML, $"{token.text}");
+                        var contextDOM = tokenContextUXML.CloneTree();
+                        contextDOM.Q<Label>("textID").text = text.text_id.ToString();
+                        contextDOM.Q<Label>("tokenID").text = token.id.ToString();
+                        contextDOM.Q<Label>("tokenText").text = token.text;
+                        contextDOM.Q<DropdownField>().value = "None";
+                        contextDOM.Q<DropdownField>().choices =new List<string>() { 
+                            "None","時間", "人物", "行動" ,"時間-N", "人物-N", "行動-N" ,
+                        };
+                        contextDOM.Q<DropdownField>().RegisterValueChangedCallback((e) =>
+                        {
+                            
+                        });
+                        popoverManager.AddPopover(contextDOM, $"{token.text}");
                     }
                 });
                 tokenDOM.RegisterCallback<PointerMoveEvent>((type) =>
@@ -217,7 +225,7 @@ public class UIContentsController : MonoBehaviour
     {
         return next.indent == target.indent + 1;
     }
-    bool HasAnnotation(SectionText text, List<TokenAnnotation> annotations)
+    bool HasAnnotation(SectionText text, List<TokenRelation> annotations)
     {
         foreach (var annotation in annotations)
         {
@@ -288,24 +296,15 @@ public class UIContentsController : MonoBehaviour
     }
     public void ClearAnnotation()
     {
-        foreach (var i in annotationLoader.GetAnnotations(cullentFilename))
+        foreach (var i in tokenMap.Values)
         {
-            var token1 = (i.textID, i.tokenID);
-            var token2 = (i.textID, i.targetID);
-            if (!tokenMap.ContainsKey(token1) || !tokenMap.ContainsKey(token2))
-            {
-                Debug.LogError($"key does not found token1:{token1} token2:{token2}");
-                continue;
-            }
             var col = new Color(0f, 0, 0f,0);
             var borderWidth = 0f;
-            SetBorderColor(tokenMap[token1], col);
-            SetBorderWidth(tokenMap[token1], borderWidth);
-            SetBorderColor(tokenMap[token2], col);
-            SetBorderWidth(tokenMap[token2], borderWidth);
+            SetBorderColor(i, col);
+            SetBorderWidth(i, borderWidth);
         }
     }
-    public void GenerateAnnotation(List<TokenAnnotation> annotations=null)
+    public void GenerateAnnotation(List<TokenRelation> annotations=null)
     {
         Debug.Log($"generate annotation {annotationLoader.GetAnnotations(cullentFilename).Count}");
         foreach (var i in annotationLoader.GetAnnotations(cullentFilename))

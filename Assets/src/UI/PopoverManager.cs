@@ -15,31 +15,32 @@ public class PopoverManager : MonoBehaviour
     }
     private void Start()
     {
-        popoverContainer.rootVisualElement.Q<Button>("background").clicked+=(() =>
+        popoverContainer.rootVisualElement.Q<VisualElement>("background").RegisterCallback<PointerDownEvent>((e) =>
         {
             Debug.Log("popover BG clicked");
             ClearPopover();
         });
-        popoverContainer.rootVisualElement.Q<Button>("background").pickingMode = PickingMode.Ignore;
-        popoverContainer.rootVisualElement.Q<Button>("background").style.display = DisplayStyle.None;
+        popoverContainer.rootVisualElement.Q<VisualElement>("background").pickingMode = PickingMode.Ignore;
+        popoverContainer.rootVisualElement.Q<VisualElement>("background").style.display = DisplayStyle.None;
         popoverContainer.rootVisualElement.Q<VisualElement>("container").pickingMode = PickingMode.Ignore;
     }
 
-    public void AddPopover(VisualTreeAsset popover, string id, Vector2? position = null)
+    public void AddPopover(VisualElement popover, string id, Vector2? position = null)
     {
         var root = popoverContainer.rootVisualElement.Q<VisualElement>("container");
-        var dom = popover.CloneTree();
+        var dom = popover;
         if (position.HasValue)
         {
             dom.transform.position = position.Value;
         }
         else
         {
-            dom.transform.position = new Vector3(0, 0, 0);
+            var pos = Input.mousePosition;
+            dom.transform.position = new Vector3(pos.x,Screen.height- pos.y);
         }
         popoverMap[id] = dom;
-        popoverContainer.rootVisualElement.Q<Button>("background").pickingMode = PickingMode.Position;
-        popoverContainer.rootVisualElement.Q<Button>("background").style.display = DisplayStyle.Flex;
+        popoverContainer.rootVisualElement.Q<VisualElement>("background").pickingMode = PickingMode.Position;
+        popoverContainer.rootVisualElement.Q<VisualElement>("background").style.display = DisplayStyle.Flex;
         root.Add(dom);
     }
 
@@ -50,14 +51,14 @@ public class PopoverManager : MonoBehaviour
         popoverMap.Remove(id);
         if (root.childCount == 0)
         {
-            popoverContainer.rootVisualElement.Q<Button>("background").pickingMode = PickingMode.Ignore;
-        popoverContainer.rootVisualElement.Q<Button>("background").style.display = DisplayStyle.None;
+            popoverContainer.rootVisualElement.Q<VisualElement>("background").pickingMode = PickingMode.Ignore;
+        popoverContainer.rootVisualElement.Q<VisualElement>("background").style.display = DisplayStyle.None;
         }
     }
     void ClearPopover()
     {
         popoverContainer.rootVisualElement.Q<VisualElement>("container").Clear();
-        popoverContainer.rootVisualElement.Q<Button>("background").pickingMode = PickingMode.Ignore;
-        popoverContainer.rootVisualElement.Q<Button>("background").style.display = DisplayStyle.None;
+        popoverContainer.rootVisualElement.Q<VisualElement>("background").pickingMode = PickingMode.Ignore;
+        popoverContainer.rootVisualElement.Q<VisualElement>("background").style.display = DisplayStyle.None;
     }
 }

@@ -6,33 +6,31 @@ public enum TokenRelationType
 {
     None
 }
+public enum TokenTagType
+{
+    None
+}
+
 
 [System.Serializable]
-public class TokenAnnotation
+public class TokenRelation
 {
     public int textID;
     public int tokenID;
     public int targetID;
     public TokenRelationType type;
 }
+public class TokenTag
+{
+    public int textID;
+    public int tokenID;
+    public TokenTagType type;
+}
 
 [System.Serializable]
 public class AnotationData
 {
     public string filename;
-    public List<TokenAnnotation> annotations;
-
-
-    void AddRelation(int textID,int tokenID,int targetID,TokenRelationType type)
-    {
-
-    }
-    void RemoveRelation()
-    {
-
-    }
-    void UpdateRelation()
-    {
-
-    }
+    public List<TokenRelation> annotations=new List<TokenRelation>();
+    public List<TokenTag> tags=new List<TokenTag>();
 }

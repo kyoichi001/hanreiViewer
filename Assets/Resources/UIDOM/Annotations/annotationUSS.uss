@@ -1,0 +1,27 @@
+.unity-popup-field__label {
+    display: none;
+}
+
+.unity-enum-field__label {
+    display: none;
+}
+
+.unity-enum-field__text {
+    display: flex;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.unity-enum-field__input {
+    display: flex;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
