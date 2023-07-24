@@ -248,6 +248,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   annotationRow: {fileID: 9197481963319205126, guid: 974a8ddca376f2743990ce1bf1ddb6f5, type: 3}
+  tagRow: {fileID: 9197481963319205126, guid: e99e9745a93e0ba47bcd26c94ea988ee, type: 3}
 --- !u!1 &48626617
 GameObject:
   m_ObjectHideFlags: 0
