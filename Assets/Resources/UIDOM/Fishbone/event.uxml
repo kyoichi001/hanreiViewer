@@ -1,0 +1,33 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="event" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+        <ui:VisualElement name="person" style="flex-grow: 0; background-color: rgb(178, 108, 108); min-height: 0;">
+            <ui:Label tabindex="-1" text="原告" display-tooltip-when-elided="true" name="Label" style="-unity-font-style: bold; font-size: 28px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 12px; padding-right: 12px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="acts" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: stretch;">
+            <ui:VisualElement name="actsContainer" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: flex-end;">
+                <ui:VisualElement name="act" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; width: 410px;">
+                    <ui:VisualElement name="actTextContainer" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); width: 218px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
+                        <ui:Label tabindex="-1" text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" display-tooltip-when-elided="true" style="white-space: normal;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="arrow" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-width: 3px; border-bottom-width: 3px; width: auto; height: 0;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="act" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; width: 385px;">
+                    <ui:VisualElement name="actTextContainer" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); width: 301px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
+                        <ui:Label tabindex="-1" text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" display-tooltip-when-elided="true" style="white-space: normal;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="arrow" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-width: 3px; border-bottom-width: 3px; width: auto; height: 0;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="act" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; width: 357px;">
+                    <ui:VisualElement name="actTextContainer" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); width: 301px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
+                        <ui:Label tabindex="-1" text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" display-tooltip-when-elided="true" style="white-space: normal;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="arrow" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-width: 3px; border-bottom-width: 3px; width: auto; height: 0;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="arrow" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 3px; border-right-width: 0; width: 50%; max-width: none;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="time" style="flex-grow: 0; background-color: rgb(122, 168, 150); align-items: center; flex-shrink: 1; min-width: 0;">
+            <ui:Label tabindex="-1" text="*月*日" display-tooltip-when-elided="true" style="-unity-text-align: middle-center; width: auto; height: auto; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-font-style: bold; font-size: 24px; flex-shrink: 1; align-items: flex-start; padding-left: 12px; padding-right: 12px; padding-top: 4px; padding-bottom: 4px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

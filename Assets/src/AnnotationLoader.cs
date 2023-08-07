@@ -5,9 +5,6 @@ using System.Linq;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
-using static UnityEngine.GraphicsBuffer;
-using static Unity.VisualScripting.AnnotationUtility;
-using static UnityEngine.Rendering.DebugUI.Table;
 
 public class AnnotationLoader : SingletonMonoBehaviour<AnnotationLoader>
 {

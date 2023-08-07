@@ -8,3 +8,8 @@
     align-items: flex-start;
     flex-direction: row;
 }
+
+.unity-text-element {
+    -unity-font: url('project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&guid=1bd89a97d920da4429cd80b173a55b1f&type=3#NotInter-Regular');
+    -unity-font-definition: url('project://database/Assets/UI%20Toolkit/UnityThemes/Japanese-NotInter-Regular%20SDF.asset?fileID=11400000&guid=78b25ca603b181f4287ed75ef7d84720&type=2#Japanese-NotInter-Regular SDF');
+}
