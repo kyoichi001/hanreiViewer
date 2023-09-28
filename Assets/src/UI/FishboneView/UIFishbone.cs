@@ -7,17 +7,11 @@ public class UIFishbone : MonoBehaviour
 
     [SerializeField] GameObject timeLine;
     [SerializeField] Transform timeStampsContainer;
-    [SerializeField] GameObject timeStampPrefab; 
+    [SerializeField] GameObject timeStampPrefab;
+    [SerializeField] List<HanreiEvent> data=new List<HanreiEvent>();
 
-    // Start is called before the first frame update
-    void Start()
+    public void SetData(List<HanreiEvent> data)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        this.data = data;
     }
 }
