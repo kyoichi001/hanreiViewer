@@ -771,9 +771,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 0, y: 0, z: 0}
+    m_Target: {x: 126.27484, y: 216.45486, z: 0.5308101}
     speed: 2
-    m_Value: {x: 0, y: 0, z: 0}
+    m_Value: {x: 126.27484, y: 216.45486, z: 0.5308101}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -823,9 +823,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 10
+    m_Target: 166.76369
     speed: 2
-    m_Value: 10
+    m_Value: 166.76369
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1002,7 +1002,7 @@ MonoBehaviour:
   m_LastFolders:
   - Assets/src
   m_LastFoldersGridSize: 16
-  m_LastProjectPath: D:\tanaka\UnityProjects\HanreiViewer
+  m_LastProjectPath: C:\Users\tanso\Documents\UnityProjects\hanreiViewer
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
