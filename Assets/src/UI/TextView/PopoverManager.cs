@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [RequireComponent(typeof(UIDocument))]
-public class PopoverManager : MonoBehaviour
+public class PopoverManager : SingletonMonoBehaviour<PopoverManager>
 {
     UIDocument popoverContainer;
     Dictionary<string, VisualElement> popoverMap = new Dictionary<string, VisualElement>();

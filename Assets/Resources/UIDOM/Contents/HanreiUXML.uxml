@@ -1,5 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/HanreiUSS.uss?fileID=7433441132597879392&amp;guid=a984d7bd5cdbb8c43babaf3d0577a320&amp;type=3#HanreiUSS" />
+    <Style src="project://database/Assets/Resources/UIDOM/Contents/HanreiUSS.uss?fileID=7433441132597879392&amp;guid=a984d7bd5cdbb8c43babaf3d0577a320&amp;type=3#HanreiUSS" />
+    <Style src="project://database/Assets/Resources/UIDOM/CommonUSS.uss?fileID=7433441132597879392&amp;guid=53812a8bc1354a34d90d3523bf6c40a5&amp;type=3#CommonUSS" />
     <ui:Label tabindex="-1" text="Title" display-tooltip-when-elided="true" name="title" />
     <ui:Foldout text="Foldout" name="signatureLabel">
         <ui:VisualElement name="signatureContents" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />

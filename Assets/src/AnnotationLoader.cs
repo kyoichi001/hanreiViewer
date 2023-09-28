@@ -8,7 +8,7 @@ using UnityEngine.Events;
 
 public class AnnotationLoader : SingletonMonoBehaviour<AnnotationLoader>
 {
-    public string dirPath;
+    [SerializeField] string dirPath;
     private DataLoader loader;
     public List<AnotationData> anotationDatas = new List<AnotationData>();
 

@@ -4,12 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
-using static System.Collections.Specialized.BitVector32;
 
 
 public class UIContentsController : MonoBehaviour
 {
-    [SerializeField] PopoverManager popoverManager;
     [Header("DOM")]
     [SerializeField] VisualTreeAsset foldableSectionUXML;
     [SerializeField] VisualTreeAsset sectionUXML;
@@ -140,7 +138,7 @@ public class UIContentsController : MonoBehaviour
                             };
                             AnnotationLoader.Instance.AddTag(cullentFilename,text.text_id,token.id,type);
                         });
-                        popoverManager.AddPopover(contextDOM, $"{token.text}");
+                        PopoverManager.Instance.AddPopover(contextDOM, $"{token.text}");
                     }
                 });
                 tokenDOM.RegisterCallback<PointerMoveEvent>((type) =>

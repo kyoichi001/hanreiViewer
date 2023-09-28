@@ -201,7 +201,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 759da58208444dd4c80e4c4d1ca05350, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  popoverManager: {fileID: 1321283784}
   foldableSectionUXML: {fileID: 9197481963319205126, guid: 9863ab9b3747c0b40aaf16880107cce8, type: 3}
   sectionUXML: {fileID: 9197481963319205126, guid: cfbaa9fe74fcdac4eb44dc043189d73c, type: 3}
   bunsetsuUXML: {fileID: 9197481963319205126, guid: b58c946ed4d904d41a9051d4ed64284d, type: 3}
@@ -279,7 +278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 349cf13f8d8f13a4299bce8e9e777911, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DataPath: Assets/hanreiData
+  DataPath: Assets/Datas/hanreiData
   hanreiDatas: []
 --- !u!4 &48626619
 Transform:
@@ -308,7 +307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7fbeebaa1cd53e4397ed3031b84b72c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dirPath: Assets/annotationData
+  dirPath: Assets/Datas/annotationData
   anotationDatas: []
 --- !u!1 &519420028
 GameObject:

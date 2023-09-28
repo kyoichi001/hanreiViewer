@@ -1,5 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/Resources/UIDOM/Annotations/annotationUSS.uss?fileID=7433441132597879392&amp;guid=9b522a0e47beef34fab4e77cd5edbbc5&amp;type=3#annotationUSS" />
+    <Style src="project://database/Assets/Resources/UIDOM/CommonUSS.uss?fileID=7433441132597879392&amp;guid=53812a8bc1354a34d90d3523bf6c40a5&amp;type=3#CommonUSS" />
     <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row; width: 100%; align-items: center;">
         <ui:Button text="x" display-tooltip-when-elided="true" enable-rich-text="false" name="deleteButton" style="width: 15px; height: 15px; margin-left: 4px; margin-right: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
         <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">

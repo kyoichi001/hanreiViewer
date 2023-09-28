@@ -1,5 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/sectionUSS.uss?fileID=7433441132597879392&amp;guid=48424ffee8ab6ea4d9b7142adaa12629&amp;type=3#sectionUSS" />
+    <Style src="project://database/Assets/Resources/UIDOM/Contents/sectionUSS.uss?fileID=7433441132597879392&amp;guid=48424ffee8ab6ea4d9b7142adaa12629&amp;type=3#sectionUSS" />
+    <Style src="project://database/Assets/Resources/UIDOM/CommonUSS.uss?fileID=7433441132597879392&amp;guid=53812a8bc1354a34d90d3523bf6c40a5&amp;type=3#CommonUSS" />
     <ui:VisualElement name="sectionContainer" class="sectionContainer" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
         <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="header" />
         <ui:VisualElement name="rightContainer" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
