@@ -37,12 +37,12 @@ public class DrawArrow : MonoBehaviour
         if (toHead != null)
         {
             toHead.position= drawLine.GetToPos();
-            toHead.rotation=Quaternion.Euler(0,0,drawLine.GetAngle()*Mathf.Rad2Deg);
+            toHead.rotation=Quaternion.Euler(0,0,drawLine.GetAngle()*Mathf.Rad2Deg+90);
         }
         if (fromHead != null)
         {
             fromHead.position = drawLine.GetFromPos();
-            fromHead.rotation=Quaternion.Euler(0,0,drawLine.GetAngle() * Mathf.Rad2Deg);
+            fromHead.rotation=Quaternion.Euler(0,0,drawLine.GetAngle() * Mathf.Rad2Deg-90);
         }
 
     }
