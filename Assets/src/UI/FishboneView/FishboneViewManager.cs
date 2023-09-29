@@ -32,7 +32,7 @@ public class FishboneViewManager : SingletonMonoBehaviour<FishboneViewManager>
         var item1 = new HanreiEvent();
         item1.person = "å¥çê";
         item1.time = "1999îN";
-        item1.acts = "ï‡Ç¢ÇΩ";
+        item1.acts = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         dat.events = new List<HanreiEvent>
         {
             item1

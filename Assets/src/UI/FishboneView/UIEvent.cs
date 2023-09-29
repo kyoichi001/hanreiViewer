@@ -22,14 +22,16 @@ public class UIEvent : MonoBehaviour
     }
     public void SetBoneWidth(float width)
     {
-
+        var rt = boneLine.transform as RectTransform;
+        rt.sizeDelta=new Vector2 (width,rt.sizeDelta.y);
     }
+
     public void SetData(string act)
     {
         actText.text = act;
+        var height = actText.preferredHeight;
+
+        var rt= actNode.transform as RectTransform;
+        rt.sizeDelta=new Vector2(rt.sizeDelta.x,height);
     }
-
-
-
-
 }
