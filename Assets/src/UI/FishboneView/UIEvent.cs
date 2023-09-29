@@ -5,8 +5,12 @@ using UnityEngine;
 public class UIEvent : MonoBehaviour
 {
     [SerializeField] GameObject actNode;
+    TMPro.TextMeshProUGUI actText;
     [SerializeField] GameObject boneLine;
-
+    private void Awake()
+    {
+        actText=actNode.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+    }
 
     public float CalcHeight()
     {
@@ -20,16 +24,12 @@ public class UIEvent : MonoBehaviour
     {
 
     }
-
-    // Start is called before the first frame update
-    void Start()
+    public void SetData(string act)
     {
-        
+        actText.text = act;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
+
+
 }
