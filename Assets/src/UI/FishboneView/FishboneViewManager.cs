@@ -29,17 +29,30 @@ public class FishboneViewManager : SingletonMonoBehaviour<FishboneViewManager>
         //テスト用
         var dat = new FishboneData();
         dat.filename = "test";
-        var item1 = new HanreiEvent();
-        item1.person = "原告";
-        item1.time = "1999年";
-        item1.acts = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-        var item2 = new HanreiEvent();
-        item2.person = "原告";
-        item2.time = "1999年";
-        item2.acts = "bbbbbbbbbbbbbbbbbbbbbbb";
+        var item1 = new HanreiEvent
+        {
+            person = "原告",
+            time = "1999年",
+            value = 1999,
+            acts = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        };
+        var item2 = new HanreiEvent
+        {
+            person = "原告",
+            time = "1999年",
+            value = 1999,
+            acts = "bbbbbbbbbbbbbbbbbbbbbbb"
+        };
+        var item3 = new HanreiEvent
+        {
+            person = "被告",
+            time = "2001年",
+            value = 2001,
+            acts = "cccc"
+        };
         dat.events = new List<HanreiEvent>
         {
-            item1,item2
+            item1,item2,item3
         };
 
         OnDataLoaded.Invoke(dat);

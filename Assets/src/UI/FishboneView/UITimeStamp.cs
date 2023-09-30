@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class TimeStampData
 {
     public string person;
     public string time;
+    public int time_value;
     public List<string> acts;
 }
 
@@ -25,6 +27,8 @@ public class UITimeStamp : MonoBehaviour
     [SerializeField] float eventsGap;
     [SerializeField] float eventsWidth;
 
+    public int timeValue { get; private set; }
+
     List<UIEvent> events = new List<UIEvent>();
 
     private void Awake()
@@ -41,7 +45,25 @@ public class UITimeStamp : MonoBehaviour
     }
     public void SetHeight(float height)
     {
+        personNode.transform.localPosition = timeNode.transform.localPosition + new Vector3(0,height);
     }
+
+    public void SetAngle(float angle)
+    {
+        var vec = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle));
+        var height = personNode.transform.localPosition.y - timeNode.transform.localPosition.y;
+        personNode.transform.localPosition = timeNode.transform.localPosition+ vec * height / Mathf.Sin(angle);
+    }
+
+    /// <summary>
+    /// timeNodeのグローバル座標を指定するとともに、それを基準に他のObjectの位置も相対的に移動させる
+    /// </summary>
+    public void SetPosition(Vector3 position)
+    {
+        var offset = position-timeNode.transform.position;
+        transform.localPosition += offset;
+    }
+
     public Rect CalcRect()
     {
         var timeRect = timeNode.transform as RectTransform;
@@ -64,6 +86,7 @@ public class UITimeStamp : MonoBehaviour
     public void SetData(TimeStampData data)
     {
         personText.text = data.person;
+        timeValue = data.time_value;
         timeText.text = data.time;
         foreach (var act in data.acts)
         {
