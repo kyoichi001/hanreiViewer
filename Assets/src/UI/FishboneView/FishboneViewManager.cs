@@ -33,9 +33,13 @@ public class FishboneViewManager : SingletonMonoBehaviour<FishboneViewManager>
         item1.person = "å¥çê";
         item1.time = "1999îN";
         item1.acts = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        var item2 = new HanreiEvent();
+        item2.person = "å¥çê";
+        item2.time = "1999îN";
+        item2.acts = "bbbbbbbbbbbbbbbbbbbbbbb";
         dat.events = new List<HanreiEvent>
         {
-            item1
+            item1,item2
         };
 
         OnDataLoaded.Invoke(dat);

@@ -441,6 +441,9 @@ MonoBehaviour:
   eventsContainer: {fileID: 910691317918833931}
   eventPrefab: {fileID: 6678113315623104585, guid: 97cd1cfdc7650fd489c98efecfff5131, type: 3}
   boneLine: {fileID: 7068307518752340074}
+  boneAnchor: 0
+  eventsGap: 5
+  eventsWidth: 100
 --- !u!1 &6745972082919335847
 GameObject:
   m_ObjectHideFlags: 0
