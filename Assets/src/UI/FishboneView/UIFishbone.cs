@@ -66,7 +66,7 @@ public class UIFishbone : MonoBehaviour
         float centerTime = (yearMax + yearMin) / 2;
         foreach (var i in eventMap)
         {
-            i.Value.SetPosition(center + new Vector3(yearUnitLength * (i.Key.Item2 - centerTime), rc.rect.height / 2 + 30));
+            i.Value.SetPosition(center + new Vector3(yearUnitLength * (i.Key.Item2 - centerTime), rc.rect.height / 2 +10));
         }
     }
     public void PinchTimeline(float unitLength)
