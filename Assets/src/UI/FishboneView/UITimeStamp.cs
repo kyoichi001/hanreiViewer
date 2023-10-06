@@ -61,7 +61,7 @@ public class UITimeStamp : MonoBehaviour
     public void SetPosition(Vector3 position)
     {
         var offset = position-timeNode.transform.position;
-        transform.localPosition += offset;
+        transform.position += offset;
     }
 
     public Rect CalcRect()

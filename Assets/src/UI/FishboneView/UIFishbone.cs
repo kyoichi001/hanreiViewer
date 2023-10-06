@@ -11,11 +11,14 @@ public class UIFishbone : MonoBehaviour
     [SerializeField] GameObject timeStampPrefab;
     [SerializeField] List<HanreiEvent> data = new List<HanreiEvent>();
 
+     UITimeline uiTimeLine;
+
     [SerializeField] float yearUnitLength = 100;//TimeLineè„ÇÃ1îNÇÃãóó£
 
     [SerializeField] Slider pinchSlider;
 
     Dictionary<(string, int), UITimeStamp> eventMap = new Dictionary<(string, int), UITimeStamp>();
+    Dictionary<(string, int), int> timeMap = new Dictionary<(string, int), int>();
 
     public void SetData(List<HanreiEvent> data)
     {
@@ -36,13 +39,17 @@ public class UIFishbone : MonoBehaviour
                 dat.acts = new List<string> { hanreiEvent.acts };
                 timeStampObj.SetData(dat);
                 eventMap[(hanreiEvent.person, hanreiEvent.value)] = timeStampObj;
+                var time_id = uiTimeLine.AddTime(hanreiEvent.value, hanreiEvent.time);
+                timeMap[(hanreiEvent.person, hanreiEvent.value)] = time_id;
             }
         }
+        uiTimeLine.GenerateUI();
         SetEventsPosition();
     }
 
     private void Awake()
     {
+        uiTimeLine = timeLine.GetComponent<UITimeline>();
         FishboneViewManager.Instance.OnDataLoaded.AddListener((data) =>
         {
             SetData(data.events);
@@ -55,18 +62,9 @@ public class UIFishbone : MonoBehaviour
     }
     void SetEventsPosition()
     {
-        var center = timeLine.transform.position;
-        int yearMax = 0, yearMin = 3000;
-        var rc = timeLine.transform as RectTransform;
         foreach (var i in eventMap)
         {
-            yearMax = Mathf.Max(yearMax, i.Key.Item2);
-            yearMin = Mathf.Min(yearMin, i.Key.Item2);
-        }
-        float centerTime = (yearMax + yearMin) / 2;
-        foreach (var i in eventMap)
-        {
-            i.Value.SetPosition(center + new Vector3(yearUnitLength * (i.Key.Item2 - centerTime), rc.rect.height / 2 +10));
+            i.Value.SetPosition(uiTimeLine.GetTimeTransform(timeMap[i.Key]).position);
         }
     }
     public void PinchTimeline(float unitLength)
