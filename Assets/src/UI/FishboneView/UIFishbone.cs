@@ -32,11 +32,13 @@ public class UIFishbone : MonoBehaviour
             else
             {
                 var timeStampObj = Instantiate(timeStampPrefab, timeStampsContainer).GetComponent<UITimeStamp>();
-                var dat = new TimeStampData();
-                dat.person = hanreiEvent.person;
-                dat.time = hanreiEvent.time;
-                dat.time_value = hanreiEvent.value;
-                dat.acts = new List<string> { hanreiEvent.acts };
+                var dat = new TimeStampData
+                {
+                    person = hanreiEvent.person,
+                    time = hanreiEvent.time,
+                    time_value = hanreiEvent.value,
+                    acts = new List<string> { hanreiEvent.acts }
+                };
                 timeStampObj.SetData(dat);
                 eventMap[(hanreiEvent.person, hanreiEvent.value)] = timeStampObj;
                 var time_id = uiTimeLine.AddTime(hanreiEvent.value, hanreiEvent.time);
