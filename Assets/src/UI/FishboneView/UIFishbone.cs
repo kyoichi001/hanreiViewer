@@ -11,9 +11,9 @@ public class UIFishbone : MonoBehaviour
     [SerializeField] GameObject timeStampPrefab;
     [SerializeField] List<HanreiEvent> data = new List<HanreiEvent>();
 
-     UITimeline uiTimeLine;
+    UITimeline uiTimeLine;
 
-    [SerializeField] float yearUnitLength = 100;//TimeLineã‚Ì1”N‚Ì‹——£
+    [SerializeField] float yearUnitLength = 100;//TimeLineï¿½ï¿½ï¿½1ï¿½Nï¿½Ì‹ï¿½ï¿½ï¿½
 
     [SerializeField] Slider pinchSlider;
 
@@ -58,6 +58,10 @@ public class UIFishbone : MonoBehaviour
         pinchSlider.onValueChanged.AddListener((value) =>
         {
             PinchTimeline(value);
+        });
+        EventDataLoader.Instance.OnDataLoaded.AddListener((path, data) =>
+        {
+
         });
     }
     void SetEventsPosition()
