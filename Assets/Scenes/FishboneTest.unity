@@ -600,8 +600,10 @@ MonoBehaviour:
   times_bottom: {fileID: 879830428}
   arrow: {fileID: 81582670}
   timePrefab: {fileID: 1939429629146820336, guid: 2d287739691e4824bab058a100717254, type: 3}
+  yearUnitLength: 20
   topTimes: []
   bottomTimes: []
+  pinchSlider: {fileID: 1533903260}
 --- !u!1 &646770246
 GameObject:
   m_ObjectHideFlags: 0
@@ -1023,7 +1025,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2094483879}
   m_HandleRect: {fileID: 2094483878}
   m_Direction: 0
-  m_Value: 587897.5
+  m_Value: 601653
   m_Size: 0.90207374
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -1850,10 +1852,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 1693268646}
   m_HandleRect: {fileID: 2105205742}
   m_Direction: 0
-  m_MinValue: 100
+  m_MinValue: 20
   m_MaxValue: 300
   m_WholeNumbers: 0
-  m_Value: 100
+  m_Value: 20
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1961,7 +1963,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -49971684, y: 461.28632}
+  m_AnchoredPosition: {x: -51140896, y: 461.28625}
   m_SizeDelta: {x: 866.81824, y: 461.2863}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1688820446

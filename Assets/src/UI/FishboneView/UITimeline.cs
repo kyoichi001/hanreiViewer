@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public class UITimeline : MonoBehaviour
 {
@@ -10,8 +11,8 @@ public class UITimeline : MonoBehaviour
     public class UITimeData
     {
         public int ID;
-        public int begin_time;
-        public int end_time;
+        public System.DateTime begin_time;
+        public System.DateTime end_time;
         public string text;
         public bool is_range;
         public int layer;
@@ -23,18 +24,25 @@ public class UITimeline : MonoBehaviour
     [SerializeField] RectTransform arrow;
     [Header("Prefabs")]
     [SerializeField] GameObject timePrefab;
+    [SerializeField] float yearUnitLength = 100;
 
     [Header("Debug")]
     [SerializeField]List<UITimeData> topTimes = new List<UITimeData>();
     [SerializeField]List<UITimeData> bottomTimes = new List<UITimeData>();
+    [SerializeField] Slider pinchSlider;
 
     RectTransform rectTransform;
     private void Awake()
     {
         rectTransform = transform as RectTransform;
+        pinchSlider.value = yearUnitLength;
+        pinchSlider.onValueChanged.AddListener((value) =>
+        {
+            PinchTimeline(value);
+        });
     }
     int time_id = 0;
-    public int AddTime(int begin_time, int end_time, string text, bool isTop = true)
+    public int AddTime(System.DateTime begin_time, System.DateTime end_time, string text, bool isTop = true)
     {
         int layer = 0;
         while (!isCapable(begin_time, end_time, layer, isTop))
@@ -43,7 +51,7 @@ public class UITimeline : MonoBehaviour
         }
         return AddTimeToLayer(begin_time, end_time, text, layer, isTop);
     }
-    public int AddTime(int time, string text, bool isTop = true)
+    public int AddTime(System.DateTime time, string text, bool isTop = true)
     {
         int layer = 0;
         while (!isCapable(time, layer, isTop))
@@ -53,7 +61,7 @@ public class UITimeline : MonoBehaviour
         return AddTimeToLayer(time, text, layer, isTop);
     }
 
-    bool isCapable(int beginTime, int endTime, int layer, bool is_top)
+    bool isCapable(System.DateTime beginTime, System.DateTime endTime, int layer, bool is_top)
     {
         var arr = is_top ? topTimes : bottomTimes;
         foreach (var i in arr)
@@ -73,7 +81,7 @@ public class UITimeline : MonoBehaviour
         }
         return true;
     }
-    bool isCapable(int time, int layer, bool isTop)
+    bool isCapable(System.DateTime time, int layer, bool isTop)
     {
         var arr = isTop ? topTimes : bottomTimes;
         foreach (var i in arr)
@@ -90,7 +98,7 @@ public class UITimeline : MonoBehaviour
         }
         return true;
     }
-    int AddTimeToLayer(int beginTime, int endTime, string text, int layer, bool isTop)
+    int AddTimeToLayer(System.DateTime beginTime, System.DateTime endTime, string text, int layer, bool isTop)
     {
         var arr = isTop ? topTimes : bottomTimes;
         arr.Add(new UITimeData
@@ -105,7 +113,7 @@ public class UITimeline : MonoBehaviour
         time_id++;
         return time_id - 1;
     }
-    int AddTimeToLayer(int time, string text, int layer, bool isTop)
+    int AddTimeToLayer(System.DateTime time, string text, int layer, bool isTop)
     {
         var arr = isTop ? topTimes : bottomTimes;
         arr.Add(new UITimeData
@@ -120,41 +128,40 @@ public class UITimeline : MonoBehaviour
         return time_id - 1;
     }
 
-    void GenerateTimeUI(int minTime, int maxTime, UITimeData data, bool isTop)
+    void GenerateTimeUI(UITimeData data, bool isTop)
     {
-        if(minTime==maxTime){
-            Debug.LogWarning("Zero dividing?",gameObject);
-        }
         //https://nekosuko.jp/1792/
-        var time_height = 25;
         var parent = isTop ? times_top : times_bottom;
+        var a = Instantiate(timePrefab, parent).GetComponent<UITime>();
+        a.gameObject.name = data.ID.ToString();
+        a.Init(data.begin_time,data.end_time,data.is_range,data.layer,data.text);
+    }
+    void SetPosition(System.DateTime minTime, System.DateTime maxTime, UITime data, bool isTop){
+        var yearUnit = 200;
+        //単位を年にするために1000で割る
+        rectTransform.sizeDelta = new Vector2((float)(maxTime - minTime).TotalDays/1000 * yearUnit, 50);
+        var time_height = 25;
         var time_layer_offset = isTop ? time_height : -time_height;
         var padding = isTop ? 30 : -30;
+        var beginRatio = (float)(data.begin - minTime).TotalDays / (float)(maxTime - minTime).TotalDays;
+        var endRatio = (float)(data.end - minTime).TotalDays / (float)(maxTime - minTime).TotalDays;
         if (data.is_range)
         {
-            float beginRatio = (data.begin_time - minTime) / (float)(maxTime - minTime);
-            float endRatio = (data.end_time - minTime) / (float)(maxTime - minTime);
             beginRatio=Mathf.Clamp(beginRatio,0f,1f);
             endRatio=Mathf.Clamp(endRatio,0f,1f);
-            Debug.Log($"time {minTime},{maxTime}, time {data.begin_time},{data.end_time}, ratio {beginRatio},{endRatio}");
-            var a = Instantiate(timePrefab, parent).GetComponent<UITime>();
-            a.gameObject.name = data.ID.ToString();
-            a.Init(data.text);
-            var rc = a.transform as RectTransform;
+            Debug.Log($"time {minTime},{maxTime}, time {data.begin},{data.end}, ratio {beginRatio},{endRatio}");
+            var rc = data.gameObject.transform as RectTransform;
             rc.localPosition = new Vector3(
                 rectTransform.rect.xMin + rectTransform.rect.width * (endRatio + beginRatio) / 2,
                  data.layer * time_layer_offset+ padding
                 );
             var widthRatio =endRatio-beginRatio;
+            Debug.Log($"{rectTransform.rect.width}:{widthRatio},{widthRatio*rectTransform.rect.width}",gameObject);
             rc.sizeDelta = new Vector2(widthRatio * rectTransform.rect.width, time_height);
         }
         else
         {
-            var beginRatio = (data.begin_time - minTime) / (maxTime - minTime);
-            var a = Instantiate(timePrefab, parent).GetComponent<UITime>();
-            a.gameObject.name = data.ID.ToString();
-            a.Init(data.text);
-            var rc = a.transform as RectTransform;
+            var rc = data.gameObject.transform as RectTransform;
             rc.localPosition = new Vector3(
                 rectTransform.rect.xMin + rectTransform.rect.width * beginRatio,
                  data.layer * time_layer_offset+ padding
@@ -162,44 +169,54 @@ public class UITimeline : MonoBehaviour
         }
     }
 
-    public void GenerateUI()
-    {
-        var min_value = 90000000;
-        var max_value = 0;
+(System.DateTime,System.DateTime) CalcMinMax(){
+        var min_value = System.DateTime.MaxValue;
+        var max_value = System.DateTime.MinValue;
+        
         foreach (var i in topTimes)
         {
             //TODO: �Е�������Ԃ��Ȃ�������point�̂Ƃ�MinMax���v�Z���Ȃ��悤��
-            if(i.begin_time!=0){
-                min_value = Mathf.Min(min_value, i.begin_time);
-                max_value = Mathf.Max(max_value, i.begin_time);
+            if(i.begin_time!=null){
+                min_value = min_value> i.begin_time? i.begin_time:min_value;
+                max_value = max_value< i.begin_time? i.begin_time:max_value;
             }
-            if (i.end_time!=0)
+            if (i.end_time!=null)
             {
-                min_value = Mathf.Min(min_value, i.end_time);
-                max_value = Mathf.Max(max_value, i.end_time);
+                min_value = min_value> i.end_time? i.end_time:min_value;
+                max_value = max_value< i.end_time? i.end_time:max_value;
             }
         }
         foreach (var i in bottomTimes)
         {
-            if(i.begin_time!=0){
-            min_value = Mathf.Min(min_value, i.begin_time);
-            max_value = Mathf.Max(max_value, i.begin_time);
+            if(i.begin_time!=null){
+                min_value = min_value> i.begin_time? i.begin_time:min_value;
+                max_value = max_value< i.begin_time? i.begin_time:max_value;
             }
-            if (i.end_time!=0)
+            if (i.end_time!=null)
             {
-                min_value = Mathf.Min(min_value, i.end_time);
-                max_value = Mathf.Max(max_value, i.end_time);
+                min_value = min_value> i.end_time? i.end_time:min_value;
+                max_value = max_value< i.end_time? i.end_time:max_value;
             }
         }
-        var yearUnit = 200;
-        rectTransform.sizeDelta = new Vector2((max_value - min_value) * yearUnit, 50);
+    return (min_value,max_value);
+}
+
+    public void GenerateUI()
+    {
+        var (min_value,max_value) = CalcMinMax();
         foreach (var i in topTimes)
         {
-            GenerateTimeUI(min_value, max_value, i, true);
+            GenerateTimeUI( i, true);
         }
         foreach (var i in bottomTimes)
         {
-            GenerateTimeUI(min_value, max_value, i, false);
+            GenerateTimeUI( i, false);
+        }
+        foreach(Transform child in times_top){
+        SetPosition(min_value,max_value,child.GetComponent<UITime>(),true);
+        }
+        foreach(Transform child in times_bottom){
+        SetPosition(min_value,max_value,child.GetComponent<UITime>(),false);
         }
     }
 
@@ -229,6 +246,18 @@ public class UITimeline : MonoBehaviour
         foreach (Transform i in times_bottom)
             if (i.gameObject.name == ID.ToString()) return i as RectTransform;
     return null;
+    }
+
+    public void PinchTimeline(float unitLength)
+    {
+        var (min_value,max_value) = CalcMinMax();
+        yearUnitLength = unitLength;
+        foreach(Transform child in times_top){
+        SetPosition(min_value,max_value,child.GetComponent<UITime>(),true);
+        }
+        foreach(Transform child in times_bottom){
+        SetPosition(min_value,max_value,child.GetComponent<UITime>(),false);
+        }
     }
 
 }

@@ -7,8 +7,8 @@ public class TimeStampData
 {
     public string person;
     public string time;
-    public int begin_value;
-    public int end_value;
+    public System.DateTime begin_value;
+    public System.DateTime end_value;
     public bool is_range;
     public List<string> acts;
 }
@@ -29,8 +29,8 @@ public class UITimeStamp : MonoBehaviour
     [SerializeField] float eventsGap;
     [SerializeField] float eventsWidth;
 
-    public int beginValue { get; private set; }
-    public int endValue { get; private set; }
+    public System.DateTime beginValue { get; private set; }
+    public System.DateTime endValue { get; private set; }
     public bool is_range { get; private set; }
 
 
