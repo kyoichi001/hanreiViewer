@@ -17,9 +17,7 @@ public class UIDraggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
 
     public void OnDrag(PointerEventData eventData)
     {
-        // Overlay ‚Ìê‡
         _rectTransform.anchoredPosition += eventData.delta;
-        // ‚»‚êˆÈŠO‚Ìê‡
         Vector2 outPos = Vector2.zero;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 (RectTransform)_rectTransform.parent,

@@ -13,7 +13,7 @@ public class EventDataLoader : SingletonMonoBehaviour<EventDataLoader>
     public OnDataLoadedEvent OnDataLoaded { get; } = new OnDataLoadedEvent();
     HanreiTokenizedData LoadData(string path)
     {
-        StreamReader reader = new StreamReader(path);
+        StreamReader reader = new StreamReader(path,System.Text.Encoding.UTF8);
         string datastr = reader.ReadToEnd();
         reader.Close();
         Debug.Log(datastr);

@@ -7,7 +7,9 @@ public class TimeStampData
 {
     public string person;
     public string time;
-    public int time_value;
+    public int begin_value;
+    public int end_value;
+    public bool is_range;
     public List<string> acts;
 }
 
@@ -23,11 +25,14 @@ public class UITimeStamp : MonoBehaviour
     [SerializeField] GameObject eventPrefab;
     [SerializeField] GameObject boneLine;
 
-    [SerializeField] float boneAnchor;//time‚©‚ç‚Ç‚ê‚¾‚¯—£‚ê‚Ä‚¢‚é‚©
+    [SerializeField] float boneAnchor;//timeã‹ã‚‰ã©ã‚Œã ã‘é›¢ã‚Œã¦ã„ã‚‹ã‹
     [SerializeField] float eventsGap;
     [SerializeField] float eventsWidth;
 
-    public int timeValue { get; private set; }
+    public int beginValue { get; private set; }
+    public int endValue { get; private set; }
+    public bool is_range { get; private set; }
+
 
     List<UIEvent> events = new List<UIEvent>();
 
@@ -56,7 +61,7 @@ public class UITimeStamp : MonoBehaviour
     }
 
     /// <summary>
-    /// timeNode‚ÌƒOƒ[ƒoƒ‹À•W‚ğw’è‚·‚é‚Æ‚Æ‚à‚ÉA‚»‚ê‚ğŠî€‚É‘¼‚ÌObject‚ÌˆÊ’u‚à‘Š‘Î“I‚ÉˆÚ“®‚³‚¹‚é
+    /// timeNodeã®ã‚°ãƒ­ãƒ¼ãƒãƒ«åº§æ¨™ã‚’æŒ‡å®šã™ã‚‹ã¨ã¨ã‚‚ã«ã€ãã‚Œã‚’åŸºæº–ã«ä»–ã®Objectã®ä½ç½®ã‚‚ç›¸å¯¾çš„ã«ç§»å‹•ã•ã›ã‚‹
     /// </summary>
     public void SetPosition(Vector3 position)
     {
@@ -86,7 +91,9 @@ public class UITimeStamp : MonoBehaviour
     public void SetData(TimeStampData data)
     {
         personText.text = data.person;
-        timeValue = data.time_value;
+        beginValue = data.begin_value;
+        endValue = data.end_value;
+        is_range = data.is_range;
         timeText.text = data.time;
         foreach (var act in data.acts)
         {
@@ -119,7 +126,7 @@ public class UITimeStamp : MonoBehaviour
         var pos = timeNode.transform.localPosition + vec * (anchor+ rc.rect.height/2) / Mathf.Sin(angle);
         foreach (var i in events)
         {
-            Debug.Log($"height : {timeNode.transform.localPosition}, {rc.rect.height}, {i.CalcRect().height}, {angle} , {vec}");
+            //Debug.Log($"height : {timeNode.transform.localPosition}, {rc.rect.height}, {i.CalcRect().height}, {angle} , {vec}");
             pos += (i.CalcRect().height / 2) / Mathf.Sin(angle) * vec;
             i.transform.localPosition = pos;
             pos += (i.CalcRect().height / 2 + gap) / Mathf.Sin(angle) * vec;

@@ -4,33 +4,37 @@ using UnityEngine.UI;
 
 public class PinchableScrollView : MonoBehaviour
 {
-    private RectTransform contentRect;//ƒRƒ“ƒeƒ“ƒc‚ÌRectTransform‚ÌQÆ
-    private Transform wrapper;			//ƒRƒ“ƒeƒ“ƒc‚Ìƒ‰ƒbƒp[
+    private RectTransform contentRect;//ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ã®RectTransformã®å‚ç…§
+    private Transform wrapper;			//ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ã®ãƒ©ãƒƒãƒ‘ãƒ¼
     [SerializeField]
     float scrollSensitivity = 1f;
     [SerializeField]
-    private float scale;    //Œ»İ‚ÌŠg‘å—¦
+    private float scale;    //ç¾åœ¨ã®æ‹¡å¤§ç‡
     [SerializeField]
-    private float TweenSecond;      //û‘©‚·‚é‚Ü‚Å‚É‚©‚©‚éŠÔ
+    private float TweenSecond;      //åæŸã™ã‚‹ã¾ã§ã«ã‹ã‹ã‚‹æ™‚é–“
     [SerializeField]
-    private float RangeScaleMin;          //Šg‘åk¬‚Ì”ÍˆÍ
+    private float RangeScaleMin;          //æ‹¡å¤§ç¸®å°ã®ç¯„å›²
     [SerializeField]
-    private float RangeScaleMax;          //Šg‘åk¬‚Ì”ÍˆÍ
+    private float RangeScaleMax;          //æ‹¡å¤§ç¸®å°ã®ç¯„å›²
     [SerializeField]
-    private float RangeLimitedScaleMin;   //û‘©‚·‚é”ÍˆÍ
+    private float RangeLimitedScaleMin;   //åæŸã™ã‚‹ç¯„å›²
     [SerializeField]
-    private float RangeLimitedScaleMax;   //û‘©‚·‚é”ÍˆÍ
+    private float RangeLimitedScaleMax;   //åæŸã™ã‚‹ç¯„å›²
+	private Vector3 center;				//ç¾åœ¨ã®ä¸­å¿ƒåº§æ¨™
 
     // Start is called before the first frame update
     void Start()
     {
         wrapper = transform;
+        contentRect=wrapper as RectTransform;
+		center = contentRect.localPosition / scale;
+		contentRect.anchoredPosition *= scale;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //ƒXƒNƒ[ƒ‹I—¹‚Ìˆ—
+        //ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«çµ‚äº†æ™‚ã®å‡¦ç†
         if (Input.GetKeyUp(KeyCode.LeftControl))
         {
             StartTweenCoroutine();
@@ -43,11 +47,14 @@ public class PinchableScrollView : MonoBehaviour
             SetNewScale(scale);
             UpdateScaling();
         }
+        if(Input.GetKeyDown(KeyCode.LeftControl)){
+			center = contentRect.localPosition / scale;
+        }
     }
 
 
     /// <summary>
-    /// V‚µ‚¢Šg‘å—¦‚ÌƒoƒŠƒf[ƒg‚ÆXV‚ğ‚·‚é
+    /// æ–°ã—ã„æ‹¡å¤§ç‡ã®ãƒãƒªãƒ‡ãƒ¼ãƒˆã¨æ›´æ–°ã‚’ã™ã‚‹
     /// </summary>
     private void SetNewScale(float new_scale)
     {
@@ -56,17 +63,17 @@ public class PinchableScrollView : MonoBehaviour
 
 
     /// <summary>
-    /// û‘©‚³‚¹‚éŠg‘å—¦‚ğ‹‚ßAƒRƒ‹[ƒ`ƒ“‚ğŠJn‚·‚é
+    /// åæŸã•ã›ã‚‹æ‹¡å¤§ç‡ã‚’æ±‚ã‚ã€ã‚³ãƒ«ãƒ¼ãƒãƒ³ã‚’é–‹å§‹ã™ã‚‹
     /// </summary>
     private void StartTweenCoroutine()
     {
-        // min < û‘©‚³‚¹‚éŠg‘å—¦ < max ‚Éİ’è‚·‚é
+        // min < åæŸã•ã›ã‚‹æ‹¡å¤§ç‡ < max ã«è¨­å®šã™ã‚‹
         float limited_scale = Mathf.Clamp(scale, RangeLimitedScaleMin, RangeLimitedScaleMax);
         StartCoroutine(TweenLimitedScale(limited_scale));
     }
 
     /// <summary>
-    /// Šg‘å—¦‚ğİ’è‚³‚ê‚½’l‚Éû‘©‚³‚¹‚é
+    /// æ‹¡å¤§ç‡ã‚’è¨­å®šã•ã‚ŒãŸå€¤ã«åæŸã•ã›ã‚‹
     /// https://kohki.hatenablog.jp/entry/Unity-uGUI-Pinch-Scaling-forMobile
     /// </summary>
     IEnumerator TweenLimitedScale(float limited_scale)
@@ -78,7 +85,7 @@ public class PinchableScrollView : MonoBehaviour
         float timer = 0;
         float def_scale = scale - limited_scale;
 
-        //scale‚ğTweenSecond•bˆÈ“à‚Élimited_rate‚É‚·‚é
+        //scaleã‚’TweenSecondç§’ä»¥å†…ã«limited_rateã«ã™ã‚‹
         while (timer < TweenSecond)
         {
             timer += Time.deltaTime;
@@ -89,11 +96,11 @@ public class PinchableScrollView : MonoBehaviour
     }
 
     /// <summary>
-    /// İ’è‚³‚ê‚½Šg‘å—¦‚ÉŠî‚Ã‚¢‚ÄƒIƒuƒWƒFƒNƒg‚Ì‘å‚«‚³‚ğXV‚·‚é
+    /// è¨­å®šã•ã‚ŒãŸæ‹¡å¤§ç‡ã«åŸºã¥ã„ã¦ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å¤§ãã•ã‚’æ›´æ–°ã™ã‚‹
     /// </summary>
     private void UpdateScaling()
     {
-       // contentRect.localPosition = center * scale;         //Šg‘å—¦‚ª•Ï‚í‚Á‚½‚É’†SÀ•W‚ª‚¸‚ê‚È‚¢‚æ‚¤‚ÉÄİ’è‚·‚é
-        wrapper.localScale = new Vector3(scale, scale, 1);  //‘S‘Ì‚ğŠg‘åk¬‚·‚é
+        //contentRect.localPosition = center * scale;         //æ‹¡å¤§ç‡ãŒå¤‰ã‚ã£ãŸæ™‚ã«ä¸­å¿ƒåº§æ¨™ãŒãšã‚Œãªã„ã‚ˆã†ã«å†è¨­å®šã™ã‚‹
+        wrapper.localScale = new Vector3(scale, scale, 1);  //å…¨ä½“ã‚’æ‹¡å¤§ç¸®å°ã™ã‚‹
     }
 }

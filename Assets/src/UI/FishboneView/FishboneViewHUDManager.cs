@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class FishboneViewHUDManager : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] TMPro.TextMeshProUGUI dataName;
     [SerializeField] Button backButton;
 

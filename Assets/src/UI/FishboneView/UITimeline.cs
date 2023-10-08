@@ -6,6 +6,7 @@ using UnityEngine.Rendering.Universal;
 
 public class UITimeline : MonoBehaviour
 {
+    [System.Serializable]
     public class UITimeData
     {
         public int ID;
@@ -16,13 +17,16 @@ public class UITimeline : MonoBehaviour
         public int layer;
     }
 
-
+    [Header("References")]
     [SerializeField] RectTransform times_top;
     [SerializeField] RectTransform times_bottom;
     [SerializeField] RectTransform arrow;
+    [Header("Prefabs")]
     [SerializeField] GameObject timePrefab;
-    List<UITimeData> topTimes = new List<UITimeData>();
-    List<UITimeData> bottomTimes = new List<UITimeData>();
+
+    [Header("Debug")]
+    [SerializeField]List<UITimeData> topTimes = new List<UITimeData>();
+    [SerializeField]List<UITimeData> bottomTimes = new List<UITimeData>();
 
     RectTransform rectTransform;
     private void Awake()
@@ -116,8 +120,11 @@ public class UITimeline : MonoBehaviour
         return time_id - 1;
     }
 
-    void GenerateTimeUI(int beginTime, int endTime, UITimeData data, bool isTop)
+    void GenerateTimeUI(int minTime, int maxTime, UITimeData data, bool isTop)
     {
+        if(minTime==maxTime){
+            Debug.LogWarning("Zero dividing?",gameObject);
+        }
         //https://nekosuko.jp/1792/
         var time_height = 25;
         var parent = isTop ? times_top : times_bottom;
@@ -125,8 +132,11 @@ public class UITimeline : MonoBehaviour
         var padding = isTop ? 30 : -30;
         if (data.is_range)
         {
-            var beginRatio = (data.begin_time - beginTime) / (endTime - beginTime);
-            var endRatio = (data.end_time - beginTime) / (endTime - beginTime);
+            float beginRatio = (data.begin_time - minTime) / (float)(maxTime - minTime);
+            float endRatio = (data.end_time - minTime) / (float)(maxTime - minTime);
+            beginRatio=Mathf.Clamp(beginRatio,0f,1f);
+            endRatio=Mathf.Clamp(endRatio,0f,1f);
+            Debug.Log($"time {minTime},{maxTime}, time {data.begin_time},{data.end_time}, ratio {beginRatio},{endRatio}");
             var a = Instantiate(timePrefab, parent).GetComponent<UITime>();
             a.gameObject.name = data.ID.ToString();
             a.Init(data.text);
@@ -135,12 +145,12 @@ public class UITimeline : MonoBehaviour
                 rectTransform.rect.xMin + rectTransform.rect.width * (endRatio + beginRatio) / 2,
                  data.layer * time_layer_offset+ padding
                 );
-            var widthRatio = (data.end_time - data.begin_time) / (endTime - beginTime);
+            var widthRatio =endRatio-beginRatio;
             rc.sizeDelta = new Vector2(widthRatio * rectTransform.rect.width, time_height);
         }
         else
         {
-            var beginRatio = (data.begin_time - beginTime) / (endTime - beginTime);
+            var beginRatio = (data.begin_time - minTime) / (maxTime - minTime);
             var a = Instantiate(timePrefab, parent).GetComponent<UITime>();
             a.gameObject.name = data.ID.ToString();
             a.Init(data.text);
@@ -158,9 +168,12 @@ public class UITimeline : MonoBehaviour
         var max_value = 0;
         foreach (var i in topTimes)
         {
-            min_value = Mathf.Min(min_value, i.begin_time);
-            max_value = Mathf.Max(max_value, i.begin_time);
-            if (i.is_range)
+            //TODO: ï¿½Ð•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½pointï¿½Ì‚Æ‚ï¿½MinMaxï¿½ï¿½ï¿½vï¿½Zï¿½ï¿½ï¿½È‚ï¿½ï¿½æ‚¤ï¿½ï¿½
+            if(i.begin_time!=0){
+                min_value = Mathf.Min(min_value, i.begin_time);
+                max_value = Mathf.Max(max_value, i.begin_time);
+            }
+            if (i.end_time!=0)
             {
                 min_value = Mathf.Min(min_value, i.end_time);
                 max_value = Mathf.Max(max_value, i.end_time);
@@ -168,9 +181,11 @@ public class UITimeline : MonoBehaviour
         }
         foreach (var i in bottomTimes)
         {
+            if(i.begin_time!=0){
             min_value = Mathf.Min(min_value, i.begin_time);
             max_value = Mathf.Max(max_value, i.begin_time);
-            if (i.is_range)
+            }
+            if (i.end_time!=0)
             {
                 min_value = Mathf.Min(min_value, i.end_time);
                 max_value = Mathf.Max(max_value, i.end_time);
@@ -189,7 +204,7 @@ public class UITimeline : MonoBehaviour
     }
 
     /// <summary>
-    /// a‚Æb‚Ì•ïŠÜŠÖŒW‚Æ‚È‚éRect‚ðŽæ“¾
+    /// a??b?????W????Rect???ï¿½ï¿½
     /// </summary>
     public static Rect GetContainsRect(Rect a, Rect b)
     {

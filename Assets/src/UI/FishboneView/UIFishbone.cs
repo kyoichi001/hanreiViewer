@@ -3,59 +3,86 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+using DataType=HanreiTokenizedData.HanreiTextTokenData.HanreiEventsData;
+
 public class UIFishbone : MonoBehaviour
 {
 
+[Header("References")]
     [SerializeField] GameObject timeLine;
     [SerializeField] Transform timeStampsContainer;
     [SerializeField] GameObject timeStampPrefab;
-    [SerializeField] List<HanreiEvent> data = new List<HanreiEvent>();
+    [SerializeField] Slider pinchSlider;
+
+[Header("YearUnit")]
+    [SerializeField] float yearUnitLength = 100;
+    
+    [Header("Debug")]
+    [SerializeField] List<DataType> data = new List<DataType>();
+
+
 
     UITimeline uiTimeLine;
 
-    [SerializeField] float yearUnitLength = 100;//TimeLine���1�N�̋���
+    Dictionary<(string, int,int), UITimeStamp> eventMap = new Dictionary<(string, int,int), UITimeStamp>();
+    Dictionary<(string, int,int), int> timeMap = new Dictionary<(string, int,int), int>();
 
-    [SerializeField] Slider pinchSlider;
 
-    Dictionary<(string, int), UITimeStamp> eventMap = new Dictionary<(string, int), UITimeStamp>();
-    Dictionary<(string, int), int> timeMap = new Dictionary<(string, int), int>();
-
-    public void SetData(List<HanreiEvent> data)
+    public void AddData(DataType data_)
     {
-        this.data = data;
-        foreach (var hanreiEvent in this.data)
-        {
-            if (eventMap.ContainsKey((hanreiEvent.person, hanreiEvent.value)))
-            {
-                eventMap[(hanreiEvent.person, hanreiEvent.value)].AddAct(hanreiEvent.acts);
-            }
-            else
-            {
-                var timeStampObj = Instantiate(timeStampPrefab, timeStampsContainer).GetComponent<UITimeStamp>();
-                var dat = new TimeStampData
-                {
-                    person = hanreiEvent.person,
-                    time = hanreiEvent.time,
-                    time_value = hanreiEvent.value,
-                    acts = new List<string> { hanreiEvent.acts }
-                };
-                timeStampObj.SetData(dat);
-                eventMap[(hanreiEvent.person, hanreiEvent.value)] = timeStampObj;
-                var time_id = uiTimeLine.AddTime(hanreiEvent.value, hanreiEvent.time);
-                timeMap[(hanreiEvent.person, hanreiEvent.value)] = time_id;
-            }
+        if(data_.person=="" || data_.acts=="")return;
+
+        var time_text="";
+        var begin_value=0;
+        var end_value=0;
+        var is_range=false;
+        if(data_.time.point!=null&&data_.time.point.value!=0){
+            time_text+=data_.time.point.text;
+            begin_value=data_.time.point.value;
         }
-        uiTimeLine.GenerateUI();
-        SetEventsPosition();
+        if(data_.time.begin!=null&&data_.time.begin.value!=0){
+            time_text+=data_.time.begin.text;
+            begin_value=data_.time.begin.value;
+            is_range=true;
+        }
+        if(data_.time.end!=null&&data_.time.end.value!=0){
+            time_text+=data_.time.end.text;
+            end_value=data_.time.end.value;
+            is_range=true;
+        }
+        
+        if(begin_value==0&&end_value==0){
+            Debug.Log($"???????????? {data_.time.begin.text}{data_.time.begin.value},{data_.time.end.text}{data_.time.end.value},{data_.time.point.text}{data_.time.point.value}",gameObject);
+        return;
+        }
+        data.Add(data_);
+        var map_key=(data_.person, begin_value,end_value);
+        if (eventMap.ContainsKey(map_key))
+        {
+            eventMap[(data_.person, begin_value,end_value)].AddAct(data_.acts);
+        }
+        else
+        {
+            var timeStampObj = Instantiate(timeStampPrefab, timeStampsContainer).GetComponent<UITimeStamp>();
+            var dat = new TimeStampData
+            {
+                person = data_.person,
+                time = time_text,
+                begin_value = begin_value,
+                end_value = end_value,
+                is_range = is_range,
+                acts = new List<string> { data_.acts }
+            };
+            timeStampObj.SetData(dat);
+            eventMap[map_key] = timeStampObj;
+            var time_id = uiTimeLine.AddTime(begin_value,end_value, time_text);
+            timeMap[map_key] = time_id;
+        }
     }
 
     private void Awake()
     {
         uiTimeLine = timeLine.GetComponent<UITimeline>();
-        FishboneViewManager.Instance.OnDataLoaded.AddListener((data) =>
-        {
-            SetData(data.events);
-        });
         pinchSlider.value = yearUnitLength;
         pinchSlider.onValueChanged.AddListener((value) =>
         {
@@ -63,7 +90,13 @@ public class UIFishbone : MonoBehaviour
         });
         EventDataLoader.Instance.OnDataLoaded.AddListener((path, data) =>
         {
-
+            foreach(var d in data.datas){
+                foreach(var e in d.events){
+                    AddData(e);
+                }
+            }
+            uiTimeLine.GenerateUI();
+            SetEventsPosition();
         });
     }
     void SetEventsPosition()
