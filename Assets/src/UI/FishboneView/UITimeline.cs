@@ -4,22 +4,23 @@ using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
+using System.Linq;
 
 public class UITimeline : MonoBehaviour
 {
 
+    [SerializeField] float yearUnitLength = 100;
     [Header("References")]
     [SerializeField] RectTransform times_top;
     [SerializeField] RectTransform times_bottom;
     [SerializeField] RectTransform arrow;
+    [SerializeField] Slider pinchSlider;
     [Header("Prefabs")]
     [SerializeField] GameObject timePrefab;
-    [SerializeField] float yearUnitLength = 100;
 
     [Header("Debug")]
     [SerializeField] List<UITimeData> topTimes = new List<UITimeData>();
     [SerializeField] List<UITimeData> bottomTimes = new List<UITimeData>();
-    [SerializeField] Slider pinchSlider;
 
     RectTransform rectTransform;
     int time_id = 0;
@@ -198,20 +199,19 @@ public class UITimeline : MonoBehaviour
     {
         var min_value = System.DateTime.MaxValue;
         var max_value = System.DateTime.MinValue;
-
         foreach (var i in topTimes)
         {
             var b = i.begin_time ?? System.DateTime.MinValue;
             var e = i.end_time ?? System.DateTime.MaxValue;
             if (i.begin_time != null)
             {
-                min_value = min_value > b ? b : min_value;
-                max_value = max_value < b ? b : max_value;
+                min_value = Utility.Min(min_value, b);
+                max_value = Utility.Max(max_value, b);
             }
             if (i.end_time != null)
             {
-                min_value = min_value > e ? e : min_value;
-                max_value = max_value < e ? e : max_value;
+                min_value = Utility.Min(min_value, e);
+                max_value = Utility.Max(max_value, e);
             }
         }
         foreach (var i in bottomTimes)
@@ -220,13 +220,13 @@ public class UITimeline : MonoBehaviour
             var e = i.end_time ?? System.DateTime.MaxValue;
             if (i.begin_time != null)
             {
-                min_value = min_value > b ? b : min_value;
-                max_value = max_value < b ? b : max_value;
+                min_value = Utility.Min(min_value, b);
+                max_value = Utility.Max(max_value, b);
             }
             if (i.end_time != null)
             {
-                min_value = min_value > e ? e : min_value;
-                max_value = max_value < e ? e : max_value;
+                min_value = Utility.Min(min_value, e);
+                max_value = Utility.Max(max_value, e);
             }
         }
         return (min_value, max_value);

@@ -25,4 +25,22 @@ public class Utility
         }
         return rect;
     }
+    public static System.DateTime Min(System.DateTime a, System.DateTime b)
+    {
+        return a > b ? b : a;
+    }
+    public static System.DateTime Max(System.DateTime a, System.DateTime b)
+    {
+        return a < b ? b : a;
+    }
+    public static System.DateTime Convert(int date)
+    {
+        var year = date / 10000;
+        var month = date / 100 % 100;
+        var day = date % 100;
+        if (month < 1) month = 1;
+        if (day < 1) day = 1;
+        Debug.Log($"{date}:{year}/{month}/{day}");
+        return new System.DateTime(year, month, day);
+    }
 }

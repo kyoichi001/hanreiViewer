@@ -31,16 +31,10 @@ public class EventLoader : MonoBehaviour
             var d = new EventFileData
             {
                 filename = Path.GetFileName(file).Split(".")[0],
-                data= events
+                data = events
             };
             OnDataLoaded.Invoke(d);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }
 

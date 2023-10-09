@@ -24,16 +24,6 @@ public class UIFishbone : MonoBehaviour
     Dictionary<(string, System.DateTime, System.DateTime), TimeStampData> eventMap = new Dictionary<(string, System.DateTime, System.DateTime), TimeStampData>();
     Dictionary<(string, System.DateTime, System.DateTime), int> timeMap = new Dictionary<(string, System.DateTime, System.DateTime), int>();
 
-    System.DateTime Convert(int date)
-    {
-        var year = date / 10000;
-        var month = date / 100 % 100;
-        var day = date % 100;
-        if (month < 1) month = 1;
-        if (day < 1) day = 1;
-        Debug.Log($"{date}:{year}/{month}/{day}");
-        return new System.DateTime(year, month, day);
-    }
 
     public void AddData(DataType data_)
     {
@@ -47,18 +37,18 @@ public class UIFishbone : MonoBehaviour
         if (data_.time.point != null && data_.time.point.value != 0)
         {
             time_text += data_.time.point.text;
-            begin_value = Convert(data_.time.point.value);
+            begin_value = Utility.Convert(data_.time.point.value);
         }
         if (data_.time.begin != null && data_.time.begin.value != 0)
         {
             time_text += data_.time.begin.text;
-            begin_value = Convert(data_.time.begin.value);
+            begin_value = Utility.Convert(data_.time.begin.value);
             is_range = true;
         }
         if (data_.time.end != null && data_.time.end.value != 0)
         {
             time_text += data_.time.end.text;
-            end_value = Convert(data_.time.end.value);
+            end_value = Utility.Convert(data_.time.end.value);
             is_range = true;
         }
 
@@ -102,7 +92,7 @@ public class UIFishbone : MonoBehaviour
             var time_id = timeMap[i.Key];
             var obj = uiTimeLine.GetTimeTransform(time_id).gameObject;
             i.Value.time_node = obj.transform as RectTransform;
-            Debug.Log($"{time_id}", uiTimeLine.GetTimeTransform(time_id).gameObject);
+            Debug.Log($"GenerateUI : {i.Key} {time_id} {obj.name}:{obj.transform.position}");
             var timeStampObj = Instantiate(timeStampPrefab, timeStampsContainer).GetComponent<UITimeStamp>();
             timeStampObj.SetData(i.Value);
             timeStampObj.SetPosition(uiTimeLine.GetTimeTransform(timeMap[i.Key]).position);

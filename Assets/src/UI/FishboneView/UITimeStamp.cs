@@ -53,6 +53,7 @@ public class UITimeStamp : MonoBehaviour
     /// </summary>
     public void SetPosition(Vector3 position)
     {
+        Debug.Log($"set position {position} -> {data.time_node.position}");
         var offset = position - data.time_node.position;
         transform.position += offset;
     }
