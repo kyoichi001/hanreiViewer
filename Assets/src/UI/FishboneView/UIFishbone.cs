@@ -91,11 +91,13 @@ public class UIFishbone : MonoBehaviour
         {
             var time_id = timeMap[i.Key];
             var obj = uiTimeLine.GetTimeTransform(time_id).gameObject;
-            i.Value.time_node = obj.transform as RectTransform;
             Debug.Log($"GenerateUI : {i.Key} {time_id} {obj.name}:{obj.transform.position}");
+            i.Value.time_node = obj.transform as RectTransform;
+            Debug.Log("debug A");
             var timeStampObj = Instantiate(timeStampPrefab, timeStampsContainer).GetComponent<UITimeStamp>();
+            Debug.Log($"timestamp data {i.Value.time_node.position}");
             timeStampObj.SetData(i.Value);
-            timeStampObj.SetPosition(uiTimeLine.GetTimeTransform(timeMap[i.Key]).position);
+            timeStampObj.SetPosition();
         }
     }
     void ClearData()

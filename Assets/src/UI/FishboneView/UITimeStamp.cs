@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+[System.Serializable]
 public class TimeStampData
 {
     public string person;
@@ -12,16 +13,21 @@ public class TimeStampData
 
 public class UITimeStamp : MonoBehaviour
 {
-    TimeStampData data;
-    [SerializeField] GameObject personNode;
-    TMPro.TextMeshProUGUI personText;
-    [SerializeField] Transform eventsContainer;
-    [SerializeField] GameObject eventPrefab;
-    [SerializeField] GameObject boneLine;
-
     [SerializeField] float boneAnchor;//timeからどれだけ離れているか
     [SerializeField] float eventsGap;
     [SerializeField] float eventsWidth;
+
+    [Header("prefabs")]
+    [SerializeField] GameObject eventPrefab;
+
+    [Header("References")]
+    [SerializeField] GameObject personNode;
+    TMPro.TextMeshProUGUI personText;
+    [SerializeField] Transform eventsContainer;
+    [SerializeField] GameObject boneLine;
+
+    [Header("Debug")]
+    [SerializeField] TimeStampData data;
 
     List<UIEvent> events = new List<UIEvent>();
 
@@ -51,11 +57,10 @@ public class UITimeStamp : MonoBehaviour
     /// <summary>
     /// timeNodeのグローバル座標を指定するとともに、それを基準に他のObjectの位置も相対的に移動させる
     /// </summary>
-    public void SetPosition(Vector3 position)
+    public void SetPosition()
     {
-        Debug.Log($"set position {position} -> {data.time_node.position}");
-        var offset = position - data.time_node.position;
-        transform.position += offset;
+        Debug.Log($"set position {data.time_node.position}");
+        transform.position = data.time_node.position;
     }
 
     public Rect CalcRect()
@@ -99,11 +104,11 @@ public class UITimeStamp : MonoBehaviour
 
     public void SetActsPos(float anchor, float gap)
     {
-        var offset = personNode.transform.localPosition - data.time_node.localPosition;
+        var offset = personNode.transform.localPosition;
         float angle = Mathf.Atan2(offset.y, offset.x);
         var vec = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle));
         var rc = data.time_node;
-        var pos = data.time_node.localPosition + vec * (anchor + rc.rect.height / 2) / Mathf.Sin(angle);
+        var pos = vec * (anchor + rc.rect.height / 2) / Mathf.Sin(angle);
         foreach (var i in events)
         {
             //Debug.Log($"height : {timeNode.transform.localPosition}, {rc.rect.height}, {i.CalcRect().height}, {angle} , {vec}");

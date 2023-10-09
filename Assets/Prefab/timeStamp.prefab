@@ -223,6 +223,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b5b90025afa1754083b1c9e68582fe6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data:
+    person: 
+    time_node: {fileID: 0}
+    acts: []
   personNode: {fileID: 6745972082919335847}
   eventsContainer: {fileID: 910691317918833931}
   eventPrefab: {fileID: 6678113315623104585, guid: 97cd1cfdc7650fd489c98efecfff5131, type: 3}
