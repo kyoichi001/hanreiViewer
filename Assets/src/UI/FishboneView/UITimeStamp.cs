@@ -6,21 +6,15 @@ using UnityEngine.UIElements;
 public class TimeStampData
 {
     public string person;
-    public string time;
-    public System.DateTime begin_value;
-    public System.DateTime end_value;
-    public bool is_range;
+    public RectTransform time_node;
     public List<string> acts;
 }
 
-
 public class UITimeStamp : MonoBehaviour
 {
-
+    TimeStampData data;
     [SerializeField] GameObject personNode;
     TMPro.TextMeshProUGUI personText;
-    [SerializeField] GameObject timeNode;
-    TMPro.TextMeshProUGUI timeText;
     [SerializeField] Transform eventsContainer;
     [SerializeField] GameObject eventPrefab;
     [SerializeField] GameObject boneLine;
@@ -29,17 +23,11 @@ public class UITimeStamp : MonoBehaviour
     [SerializeField] float eventsGap;
     [SerializeField] float eventsWidth;
 
-    public System.DateTime beginValue { get; private set; }
-    public System.DateTime endValue { get; private set; }
-    public bool is_range { get; private set; }
-
-
     List<UIEvent> events = new List<UIEvent>();
 
     private void Awake()
     {
         personText = personNode.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-        timeText = timeNode.GetComponentInChildren<TMPro.TextMeshProUGUI>();
     }
     public void SetEventsWidth(float width)
     {
@@ -50,14 +38,14 @@ public class UITimeStamp : MonoBehaviour
     }
     public void SetHeight(float height)
     {
-        personNode.transform.localPosition = timeNode.transform.localPosition + new Vector3(0,height);
+        personNode.transform.localPosition = data.time_node.localPosition + new Vector3(0, height);
     }
 
     public void SetAngle(float angle)
     {
         var vec = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle));
-        var height = personNode.transform.localPosition.y - timeNode.transform.localPosition.y;
-        personNode.transform.localPosition = timeNode.transform.localPosition+ vec * height / Mathf.Sin(angle);
+        var height = personNode.transform.localPosition.y - data.time_node.localPosition.y;
+        personNode.transform.localPosition = data.time_node.localPosition + vec * height / Mathf.Sin(angle);
     }
 
     /// <summary>
@@ -65,36 +53,27 @@ public class UITimeStamp : MonoBehaviour
     /// </summary>
     public void SetPosition(Vector3 position)
     {
-        var offset = position-timeNode.transform.position;
+        var offset = position - data.time_node.position;
         transform.position += offset;
     }
 
     public Rect CalcRect()
     {
-        var timeRect = timeNode.transform as RectTransform;
+        var timeRect = data.time_node;
         var personRect = personNode.transform as RectTransform;
         var res = new Rect(timeRect.rect);
         foreach (var act in events)
         {
             var rc = act.CalcRect();
-            res.yMin = Mathf.Min(res.yMin, rc.yMin);
-            res.yMax = Mathf.Max(res.yMax, rc.yMax);
-            res.xMin = Mathf.Min(res.xMin, rc.xMin);
-            res.xMax = Mathf.Max(res.xMax, rc.xMax);
+            res = Utility.GetContainsRect(res, rc);
         }
-        res.yMin = Mathf.Min(res.yMin, personRect.rect.yMin);
-        res.yMax = Mathf.Max(res.yMax, personRect.rect.yMax);
-        res.xMin = Mathf.Min(res.xMin, personRect.rect.xMin);
-        res.xMax = Mathf.Max(res.xMax, personRect.rect.xMax);
+        res = Utility.GetContainsRect(res, personRect.rect);
         return res;
     }
     public void SetData(TimeStampData data)
     {
+        this.data = data;
         personText.text = data.person;
-        beginValue = data.begin_value;
-        endValue = data.end_value;
-        is_range = data.is_range;
-        timeText.text = data.time;
         foreach (var act in data.acts)
         {
             var eventSrc = Instantiate(eventPrefab, eventsContainer).GetComponent<UIEvent>();
@@ -119,11 +98,11 @@ public class UITimeStamp : MonoBehaviour
 
     public void SetActsPos(float anchor, float gap)
     {
-        var offset = personNode.transform.localPosition - timeNode.transform.localPosition;
+        var offset = personNode.transform.localPosition - data.time_node.localPosition;
         float angle = Mathf.Atan2(offset.y, offset.x);
         var vec = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle));
-        var rc = timeNode.transform as RectTransform;
-        var pos = timeNode.transform.localPosition + vec * (anchor+ rc.rect.height/2) / Mathf.Sin(angle);
+        var rc = data.time_node;
+        var pos = data.time_node.localPosition + vec * (anchor + rc.rect.height / 2) / Mathf.Sin(angle);
         foreach (var i in events)
         {
             //Debug.Log($"height : {timeNode.transform.localPosition}, {rc.rect.height}, {i.CalcRect().height}, {angle} , {vec}");

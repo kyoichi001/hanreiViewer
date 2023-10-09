@@ -13,17 +13,20 @@ public class FishboneData
 public class FishboneViewManager : SingletonMonoBehaviour<FishboneViewManager>
 {
     [System.Serializable]
-    public class OnDataLoadedEvent : UnityEvent<FishboneData> { }
-    public OnDataLoadedEvent OnDataLoaded { get; } = new OnDataLoadedEvent();
+    public class OnShowDataEvent : UnityEvent<string, HanreiTokenizedData> { }
+    public OnShowDataEvent OnShowData { get; } = new OnShowDataEvent();
+    Dictionary<string, HanreiTokenizedData> data = new Dictionary<string, HanreiTokenizedData>();
     UIFishbone fishbone;
     private void Awake()
     {
         fishbone = FindObjectOfType<UIFishbone>();
+        EventDataLoader.Instance.OnDataLoaded.AddListener((path, data_) =>
+        {
+            data[path] = data_;
+        });
     }
-
-    // Start is called before the first frame update
-    void Start()
+    public void ShowFishboneUI(string path)
     {
-        
+        OnShowData.Invoke(path, data[path]);
     }
 }
