@@ -61,18 +61,17 @@ public class UIFishbone : MonoBehaviour
         else
         {
             var time_id = 0;
+            var is_top = data_.person.Contains("原告");
             if (is_range)
             {
                 System.DateTime? b = null;
                 if (begin_value != System.DateTime.MinValue) b = begin_value;
                 System.DateTime? e = null;
                 if (end_value != System.DateTime.MaxValue) e = end_value;
-                var is_top = data_.person.Contains("原告");
                 time_id = uiTimeLine.AddTime(b, e, time_text, is_top);
             }
             else
             {
-                var is_top = data_.person.Contains("原告");
                 time_id = uiTimeLine.AddTime(begin_value, time_text, is_top);
             }
             timeMap[map_key] = time_id;
@@ -80,7 +79,8 @@ public class UIFishbone : MonoBehaviour
             {
                 person = data_.person,
                 time_node = null,
-                acts = new List<string> { data_.acts }
+                acts = new List<string> { data_.acts },
+                is_top=is_top
             };
             eventMap[map_key] = dat;
         }

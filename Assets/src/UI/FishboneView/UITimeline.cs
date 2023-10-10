@@ -159,9 +159,8 @@ public class UITimeline : MonoBehaviour
     }
     void SetPosition(System.DateTime minTime, System.DateTime maxTime, UITime data, bool isTop)
     {
-        var yearUnit = 200;
         //単位を年にするために1000で割る
-        rectTransform.sizeDelta = new Vector2((float)(maxTime - minTime).TotalDays / 1000 * yearUnit, 50);
+        rectTransform.sizeDelta = new Vector2((float)(maxTime - minTime).TotalDays / 1000 * yearUnitLength, 50);
         var time_height = 25;
         var time_layer_offset = isTop ? time_height : -time_height;
         var padding = isTop ? 30 : -30;

@@ -9,10 +9,12 @@ public class TimeStampData
     public string person;
     public RectTransform time_node;
     public List<string> acts;
+    public bool is_top;
 }
 
 public class UITimeStamp : MonoBehaviour
 {
+    float height=300;
     [SerializeField] float boneAnchor;//timeからどれだけ離れているか
     [SerializeField] float eventsGap;
     [SerializeField] float eventsWidth;
@@ -31,10 +33,13 @@ public class UITimeStamp : MonoBehaviour
 
     List<UIEvent> events = new List<UIEvent>();
 
+DrawArrow ui_arrow;
+
     private void Awake()
     {
         personText = personNode.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-    }
+        ui_arrow=GetComponentInChildren<DrawArrow>();
+            }
     public void SetEventsWidth(float width)
     {
         foreach (var i in events)
@@ -44,14 +49,14 @@ public class UITimeStamp : MonoBehaviour
     }
     public void SetHeight(float height)
     {
-        personNode.transform.localPosition = data.time_node.localPosition + new Vector3(0, height);
+        this.height=height;
+        personNode.transform.localPosition =new Vector3(0, height);
     }
 
     public void SetAngle(float angle)
     {
         var vec = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle));
-        var height = personNode.transform.localPosition.y - data.time_node.localPosition.y;
-        personNode.transform.localPosition = data.time_node.localPosition + vec * height / Mathf.Sin(angle);
+        personNode.transform.localPosition = vec * height / Mathf.Sin(angle);
     }
 
     /// <summary>
@@ -61,6 +66,15 @@ public class UITimeStamp : MonoBehaviour
     {
         Debug.Log($"set position {data.time_node.position}");
         transform.position = data.time_node.position;
+        if(data.is_top){
+            SetHeight(300);
+            SetAngle(80*Mathf.Deg2Rad);
+            SetActsPos(boneAnchor, eventsGap);
+        }else{
+            SetHeight(-300);
+            SetAngle(-80*Mathf.Deg2Rad);
+            SetActsPos(-boneAnchor, eventsGap);
+        }
     }
 
     public Rect CalcRect()
@@ -86,7 +100,7 @@ public class UITimeStamp : MonoBehaviour
             eventSrc.SetData(act);
             events.Add(eventSrc);
         }
-        SetActsPos(boneAnchor, eventsGap);
+        ui_arrow.ui2=data.time_node;
     }
     public void AddAct(string act)
     {
@@ -98,23 +112,35 @@ public class UITimeStamp : MonoBehaviour
     private void Update()
     {
         SetEventsWidth(eventsWidth);
-        SetActsPos(boneAnchor, eventsGap);
+        //SetActsPos(boneAnchor, eventsGap);
     }
 
 
-    public void SetActsPos(float anchor, float gap)
+    void SetActsPos(float anchor, float gap)
     {
         var offset = personNode.transform.localPosition;
         float angle = Mathf.Atan2(offset.y, offset.x);
+        Debug.Log($"timestamp : {data.is_top}, {angle}");
         var vec = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle));
         var rc = data.time_node;
+        Debug.Log(rc);
         var pos = vec * (anchor + rc.rect.height / 2) / Mathf.Sin(angle);
-        foreach (var i in events)
-        {
-            //Debug.Log($"height : {timeNode.transform.localPosition}, {rc.rect.height}, {i.CalcRect().height}, {angle} , {vec}");
-            pos += (i.CalcRect().height / 2) / Mathf.Sin(angle) * vec;
-            i.transform.localPosition = pos;
-            pos += (i.CalcRect().height / 2 + gap) / Mathf.Sin(angle) * vec;
+        if(data.is_top){
+            foreach (var i in events)
+            {
+                //Debug.Log($"height : {timeNode.transform.localPosition}, {rc.rect.height}, {i.CalcRect().height}, {angle} , {vec}");
+                pos += (i.CalcRect().height / 2) / Mathf.Sin(angle) * vec;
+                i.transform.localPosition = pos;
+                pos += (i.CalcRect().height / 2 + gap) / Mathf.Sin(angle) * vec;
+            }
+        }else{
+            foreach (var i in events)
+            {
+                //Debug.Log($"height : {timeNode.transform.localPosition}, {rc.rect.height}, {i.CalcRect().height}, {angle} , {vec}");
+                pos -= (i.CalcRect().height / 2) / Mathf.Sin(angle) * vec;
+                i.transform.localPosition = pos;
+                pos -= (i.CalcRect().height / 2 + gap) / Mathf.Sin(angle) * vec;
+            }
         }
     }
 }

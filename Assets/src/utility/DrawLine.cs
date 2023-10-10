@@ -14,13 +14,13 @@ public class DrawLine : MonoBehaviour
     void CalcTransform()
     {
         if (ui1 == null || ui2 == null) return;
-        var rt = transform as RectTransform;
-        var offset = ui2.position - ui1.position;
+        var offset = transform.parent.InverseTransformPoint(ui2.position) - transform.parent.InverseTransformPoint(ui1.position);
         var angle = Mathf.Atan2(offset.y, offset.x);
         var posFrom = ui1.position + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * ui1Margin;
         var posTo = ui2.position - new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * ui2Margin;
         var middlePos = (posFrom + posTo) / 2;
         transform.position = middlePos;
+        var rt = transform as RectTransform;
         rt.sizeDelta = new Vector2(offset.magnitude - ui1Margin - ui2Margin, 16);
         transform.rotation = Quaternion.Euler(0, 0, angle * Mathf.Rad2Deg);
     }
