@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 
 using DataType = HanreiTokenizedData.HanreiTextTokenData.HanreiEventsData;
 
@@ -115,9 +116,10 @@ public class UIFishbone : MonoBehaviour
     private void Awake()
     {
         uiTimeLine = timeLine.GetComponent<UITimeline>();
-        FishboneViewManager.Instance.OnShowData.AddListener((path, data) =>
+        FishboneViewManager.Instance.OnShowData.AddListener(async (path, data) =>
         {
             ClearData();
+            await UniTask.DelayFrame(1);//ObjectがDestroyされるまで1フレーム待つ必要がある
             foreach (var d in data.datas)
             {
                 foreach (var e in d.events)
