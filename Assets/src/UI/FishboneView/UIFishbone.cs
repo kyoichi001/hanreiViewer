@@ -25,6 +25,10 @@ public class UIFishbone : MonoBehaviour
     Dictionary<(string, System.DateTime, System.DateTime), TimeStampData> eventMap = new Dictionary<(string, System.DateTime, System.DateTime), TimeStampData>();
     Dictionary<(string, System.DateTime, System.DateTime), int> timeMap = new Dictionary<(string, System.DateTime, System.DateTime), int>();
 
+    public bool is_top(DataType data_)
+    {
+        return data_.person.Contains("原告");
+    }
 
     public void AddData(DataType data_)
     {
@@ -62,7 +66,7 @@ public class UIFishbone : MonoBehaviour
         else
         {
             var time_id = 0;
-            var is_top = data_.person.Contains("原告");
+            var is_top = this.is_top(data_);
             if (is_range)
             {
                 System.DateTime? b = null;
