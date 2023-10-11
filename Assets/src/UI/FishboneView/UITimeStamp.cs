@@ -14,8 +14,7 @@ public class TimeStampData
 
 public class UITimeStamp : MonoBehaviour
 {
-    float height=300;
-    [SerializeField] float boneAnchor;//timeからどれだけ離れているか
+    float height = 300;
     [SerializeField] float eventsGap;
     [SerializeField] float eventsWidth;
 
@@ -33,13 +32,13 @@ public class UITimeStamp : MonoBehaviour
 
     List<UIEvent> events = new List<UIEvent>();
 
-DrawArrow ui_arrow;
+    DrawArrow ui_arrow;
 
     private void Awake()
     {
         personText = personNode.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-        ui_arrow=GetComponentInChildren<DrawArrow>();
-            }
+        ui_arrow = GetComponentInChildren<DrawArrow>();
+    }
     public void SetEventsWidth(float width)
     {
         foreach (var i in events)
@@ -49,8 +48,8 @@ DrawArrow ui_arrow;
     }
     public void SetHeight(float height)
     {
-        this.height=height;
-        personNode.transform.localPosition =new Vector3(0, height);
+        this.height = height;
+        personNode.transform.localPosition = new Vector3(0, height);
     }
 
     public void SetAngle(float angle)
@@ -66,14 +65,17 @@ DrawArrow ui_arrow;
     {
         Debug.Log($"set position {data.time_node.position}");
         transform.position = data.time_node.position;
-        if(data.is_top){
+        if (data.is_top)
+        {
             SetHeight(300);
-            SetAngle(80*Mathf.Deg2Rad);
-            SetActsPos(boneAnchor, eventsGap);
-        }else{
+            SetAngle(80 * Mathf.Deg2Rad);
+            SetActsPos(eventsGap);
+        }
+        else
+        {
             SetHeight(-300);
-            SetAngle(-80*Mathf.Deg2Rad);
-            SetActsPos(-boneAnchor, eventsGap);
+            SetAngle(-80 * Mathf.Deg2Rad);
+            SetActsPos(eventsGap);
         }
     }
 
@@ -100,14 +102,14 @@ DrawArrow ui_arrow;
             eventSrc.SetData(act);
             events.Add(eventSrc);
         }
-        ui_arrow.ui2=data.time_node;
+        ui_arrow.ui2 = data.time_node;
     }
     public void AddAct(string act)
     {
         var eventSrc = Instantiate(eventPrefab, eventsContainer).GetComponent<UIEvent>();
         eventSrc.SetData(act);
         events.Add(eventSrc);
-        SetActsPos(boneAnchor, eventsGap);
+        SetActsPos(eventsGap);
     }
     private void Update()
     {
@@ -116,16 +118,15 @@ DrawArrow ui_arrow;
     }
 
 
-    void SetActsPos(float anchor, float gap)
+    void SetActsPos(float gap)
     {
         var offset = personNode.transform.localPosition;
         float angle = Mathf.Atan2(offset.y, offset.x);
         Debug.Log($"timestamp : {data.is_top}, {angle}");
         var vec = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle));
-        var rc = data.time_node;
-        Debug.Log(rc);
-        var pos = vec * (anchor + rc.rect.height / 2) / Mathf.Sin(angle);
-        if(data.is_top){
+        var pos = Vector3.zero;
+        if (data.is_top)
+        {
             foreach (var i in events)
             {
                 //Debug.Log($"height : {timeNode.transform.localPosition}, {rc.rect.height}, {i.CalcRect().height}, {angle} , {vec}");
@@ -133,7 +134,9 @@ DrawArrow ui_arrow;
                 i.transform.localPosition = pos;
                 pos += (i.CalcRect().height / 2 + gap) / Mathf.Sin(angle) * vec;
             }
-        }else{
+        }
+        else
+        {
             foreach (var i in events)
             {
                 //Debug.Log($"height : {timeNode.transform.localPosition}, {rc.rect.height}, {i.CalcRect().height}, {angle} , {vec}");
@@ -141,6 +144,13 @@ DrawArrow ui_arrow;
                 i.transform.localPosition = pos;
                 pos -= (i.CalcRect().height / 2 + gap) / Mathf.Sin(angle) * vec;
             }
+        }
+        var mid = vec * pos.y / 2 / Mathf.Sin(angle);
+        var bone_mid = personNode.transform.localPosition.y / 2;
+        var offset2 = mid.y - bone_mid;
+        foreach (var i in events)
+        {
+            i.transform.localPosition -= new Vector3(0, offset2);
         }
     }
 }

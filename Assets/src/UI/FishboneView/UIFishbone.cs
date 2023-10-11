@@ -80,7 +80,7 @@ public class UIFishbone : MonoBehaviour
                 person = data_.person,
                 time_node = null,
                 acts = new List<string> { data_.acts },
-                is_top=is_top
+                is_top = is_top
             };
             eventMap[map_key] = dat;
         }
