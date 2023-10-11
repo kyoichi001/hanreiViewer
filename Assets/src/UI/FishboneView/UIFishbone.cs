@@ -14,9 +14,6 @@ public class UIFishbone : MonoBehaviour
     [SerializeField] Transform timeStampsContainer;
     [SerializeField] GameObject timeStampPrefab;
 
-    [Header("YearUnit")]
-    [SerializeField] float yearUnitLength = 100;
-
     [Header("Debug")]
     [SerializeField] List<DataType> data = new List<DataType>();
 
@@ -135,10 +132,5 @@ public class UIFishbone : MonoBehaviour
             GenerateUI();
             // SetEventsPosition();
         });
-    }
-    public void PinchTimeline(float unitLength)
-    {
-        yearUnitLength = unitLength;
-        //SetEventsPosition();
     }
 }

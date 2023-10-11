@@ -11,7 +11,6 @@ public class UIDraggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
     // Start is called before the first frame update
     void Awake()
     {
-
         _rectTransform = transform as RectTransform;
     }
 

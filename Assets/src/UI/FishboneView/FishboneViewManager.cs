@@ -16,10 +16,8 @@ public class FishboneViewManager : SingletonMonoBehaviour<FishboneViewManager>
     public class OnShowDataEvent : UnityEvent<string, HanreiTokenizedData> { }
     public OnShowDataEvent OnShowData { get; } = new OnShowDataEvent();
     Dictionary<string, HanreiTokenizedData> data = new Dictionary<string, HanreiTokenizedData>();
-    UIFishbone fishbone;
     private void Awake()
     {
-        fishbone = FindObjectOfType<UIFishbone>();
         EventDataLoader.Instance.OnDataLoaded.AddListener((path, data_) =>
         {
             data[path] = data_;
