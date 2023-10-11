@@ -28,7 +28,7 @@ public class UITimeStamp : MonoBehaviour
     [SerializeField] GameObject boneLine;
 
     [Header("Debug")]
-    [SerializeField] TimeStampData data;
+    [SerializeField, ReadOnly] TimeStampData data;
 
     List<UIEvent> events = new List<UIEvent>();
 

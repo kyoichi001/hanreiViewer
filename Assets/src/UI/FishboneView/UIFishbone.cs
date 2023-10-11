@@ -15,7 +15,7 @@ public class UIFishbone : MonoBehaviour
     [SerializeField] GameObject timeStampPrefab;
 
     [Header("Debug")]
-    [SerializeField] List<DataType> data = new List<DataType>();
+    [SerializeField, ReadOnly] List<DataType> data = new List<DataType>();
 
     UITimeline uiTimeLine;
 
@@ -70,11 +70,11 @@ public class UIFishbone : MonoBehaviour
                 if (begin_value != System.DateTime.MinValue) b = begin_value;
                 System.DateTime? e = null;
                 if (end_value != System.DateTime.MaxValue) e = end_value;
-                time_id = uiTimeLine.AddTime(b, e, time_text, is_top);
+                time_id = uiTimeLine.AddData(b, e, time_text, is_top);
             }
             else
             {
-                time_id = uiTimeLine.AddTime(begin_value, time_text, is_top);
+                time_id = uiTimeLine.AddData(begin_value, time_text, is_top);
             }
             timeMap[map_key] = time_id;
             var dat = new TimeStampData

@@ -17,6 +17,7 @@ public class UITimeData
     public System.DateTime? end_time;
     public string text;
     public TimeType timeType;
+    public bool is_top;
     public int layer;
 }
 
@@ -24,8 +25,8 @@ public class UITime : MonoBehaviour
 {
     public UITimeData data;
     [Header("Debug")]
-    [SerializeField] string begin_time;
-    [SerializeField] string end_time;
+    [SerializeField, ReadOnly] string begin_time;
+    [SerializeField, ReadOnly] string end_time;
 
     TMPro.TextMeshProUGUI textUI;
     private void Awake()
@@ -36,7 +37,7 @@ public class UITime : MonoBehaviour
     {
         data = data_;
         textUI.text = data.text;
-        begin_time=data.begin_time.ToString();
-        end_time=data.end_time.ToString();
+        begin_time = data.begin_time.ToString();
+        end_time = data.end_time.ToString();
     }
 }
