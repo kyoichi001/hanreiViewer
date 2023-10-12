@@ -1,15 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 public class UIEvent : MonoBehaviour
 {
     [SerializeField] GameObject actNode;
     TMPro.TextMeshProUGUI actText;
     [SerializeField] GameObject boneLine;
+    Canvas canvas;
     private void Awake()
     {
         actText = actNode.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+        canvas = GetComponent<Canvas>();
+        var button = actNode.GetComponent<Button>();
+        var trigger = actNode.GetComponent<EventTrigger>();
+
+        var enter_entry = new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.PointerEnter
+        };
+        enter_entry.callback.AddListener((data) =>
+        {
+            //Debug.Log($"hovering event! : {actText.text}");
+            canvas.sortingOrder = 10;
+        });
+        trigger.triggers.Add(enter_entry);
+        var exit_entry = new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.PointerExit
+        };
+        exit_entry.callback.AddListener((data) =>
+        {
+            canvas.sortingOrder = 9;
+        });
+        trigger.triggers.Add(exit_entry);
     }
 
     public Rect CalcRect()

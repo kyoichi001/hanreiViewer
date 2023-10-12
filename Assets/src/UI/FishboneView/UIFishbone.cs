@@ -18,7 +18,6 @@ public class UIFishbone : MonoBehaviour
     [SerializeField, ReadOnly] List<DataType> data = new List<DataType>();
 
     UITimeline uiTimeLine;
-
     Dictionary<(string, System.DateTime, System.DateTime), TimeStampData> eventMap = new Dictionary<(string, System.DateTime, System.DateTime), TimeStampData>();
     Dictionary<(string, System.DateTime, System.DateTime), int> timeMap = new Dictionary<(string, System.DateTime, System.DateTime), int>();
 
@@ -70,11 +69,11 @@ public class UIFishbone : MonoBehaviour
                 if (begin_value != System.DateTime.MinValue) b = begin_value;
                 System.DateTime? e = null;
                 if (end_value != System.DateTime.MaxValue) e = end_value;
-                time_id = uiTimeLine.AddData(b, e, time_text, is_top);
+                time_id = TimelineManager.Instance.AddTime(b, e, time_text, is_top);
             }
             else
             {
-                time_id = uiTimeLine.AddData(begin_value, time_text, is_top);
+                time_id = TimelineManager.Instance.AddTime(begin_value, time_text, is_top);
             }
             timeMap[map_key] = time_id;
             var dat = new TimeStampData
@@ -107,7 +106,7 @@ public class UIFishbone : MonoBehaviour
         data.Clear();
         eventMap.Clear();
         timeMap.Clear();
-        uiTimeLine.ClearUI();
+        //uiTimeLine.ClearUI();
         foreach (Transform child in timeStampsContainer)
         {
             Destroy(child.gameObject);

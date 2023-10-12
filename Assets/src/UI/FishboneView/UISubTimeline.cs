@@ -31,6 +31,27 @@ public class UISubTimeline : MonoBehaviour
     {
         return begin_time <= time && time < end_time;
     }
+    public bool Contains(System.DateTime? begin, System.DateTime? end, TimeType timeType, int offsetYear = 10)
+    {
+        switch (timeType)
+        {
+            case TimeType.point:
+                return Contains(begin ?? System.DateTime.MinValue);
+            case TimeType.begin_end:
+                return
+                begin_time <= (begin ?? System.DateTime.MinValue) &&
+                (end ?? System.DateTime.MaxValue) <= end_time;
+            case TimeType.begin:
+                return
+                begin_time <= (begin ?? System.DateTime.MinValue) &&
+                (begin?.AddYears(offsetYear) ?? System.DateTime.MaxValue) <= end_time;
+            case TimeType.end:
+                return
+                begin_time <= (end?.AddYears(-offsetYear) ?? System.DateTime.MinValue) &&
+                (end ?? System.DateTime.MaxValue) <= end_time;
+        }
+        return false;
+    }
     public void AddTime(UITimeData data)
     {
         var arr = data.is_top ? topTimes : bottomTimes;
@@ -93,47 +114,9 @@ public class UISubTimeline : MonoBehaviour
                 break;
         }
     }
-
-    (System.DateTime, System.DateTime) CalcMinMax()
-    {
-        var min_value = System.DateTime.MaxValue;
-        var max_value = System.DateTime.MinValue;
-        foreach (var i in topTimes)
-        {
-            var b = i.begin_time ?? System.DateTime.MinValue;
-            var e = i.end_time ?? System.DateTime.MaxValue;
-            if (i.begin_time != null)
-            {
-                min_value = Utility.Min(min_value, b);
-                max_value = Utility.Max(max_value, b);
-            }
-            if (i.end_time != null)
-            {
-                min_value = Utility.Min(min_value, e);
-                max_value = Utility.Max(max_value, e);
-            }
-        }
-        foreach (var i in bottomTimes)
-        {
-            var b = i.begin_time ?? System.DateTime.MinValue;
-            var e = i.end_time ?? System.DateTime.MaxValue;
-            if (i.begin_time != null)
-            {
-                min_value = Utility.Min(min_value, b);
-                max_value = Utility.Max(max_value, b);
-            }
-            if (i.end_time != null)
-            {
-                min_value = Utility.Min(min_value, e);
-                max_value = Utility.Max(max_value, e);
-            }
-        }
-        return (min_value, max_value);
-    }
-
     public void GenerateUI()
     {
-        var (min_value, max_value) = CalcMinMax();
+        var (min_value, max_value) = (begin_time, end_time);
         foreach (var i in topTimes)
         {
             GenerateTimeUI(i, true);

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -22,16 +21,16 @@ public class TokenView : VisualElement
     [Flags]
     public enum TokenFlags
     {
-        None                = 0b_00000000,
+        None = 0b_00000000,
         //HasAnnotationTime   = 0b_00000001,
         //HasAnnotationPerson = 0b_00000010,
         //HasAnnotationAct    = 0b_00000100,
-        HasAnnotation       = 0b_00000111,
-        HasEventTime        = 0b_00001000,
-        HasEventPerson      = 0b_00010000,
-        HasEventAct         = 0b_00100000,
+        HasAnnotation = 0b_00000111,
+        HasEventTime = 0b_00001000,
+        HasEventPerson = 0b_00010000,
+        HasEventAct = 0b_00100000,
     }
-    private TokenFlags flags { get; }=TokenFlags.None;
+    private TokenFlags flags { get; } = TokenFlags.None;
 
     public new class UxmlTraits : VisualElement.UxmlTraits
     {
@@ -86,7 +85,7 @@ public class TokenView : VisualElement
         contextDOM.Q<DropdownField>().value = "None";
         contextDOM.Q<DropdownField>().choices =
            new List<string>() {
-           "None","ŠÔ", "l•¨", "s“®" ,"ŠÔ-N", "l•¨-N", "s“®-N" ,
+           "None","ï¿½ï¿½ï¿½ï¿½", "ï¿½lï¿½ï¿½", "ï¿½sï¿½ï¿½" ,"ï¿½ï¿½ï¿½ï¿½-N", "ï¿½lï¿½ï¿½-N", "ï¿½sï¿½ï¿½-N" ,
         };
         contextDOM.Q<DropdownField>().RegisterValueChangedCallback((e) =>
         {
@@ -103,7 +102,7 @@ public class TokenView : VisualElement
 
     void setFlagsDOM(TokenFlags flags)
     {
-        if ((flags & TokenFlags.HasAnnotation) !=TokenFlags.None)
+        if ((flags & TokenFlags.HasAnnotation) != TokenFlags.None)
         {
 
         }

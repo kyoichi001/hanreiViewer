@@ -15,11 +15,9 @@ public class UITimeline : MonoBehaviour
     [SerializeField] GameObject subTimelinePrefab;
 
     List<UISubTimeline> subTimelines = new List<UISubTimeline>();
-    TimelineManager manager;
-
+    List<System.DateTime> splitTimes = new List<System.DateTime>();
     private void Awake()
     {
-        manager=GetComponent<TimelineManager>();
         pinchSlider.value = yearUnitLength;
         pinchSlider.onValueChanged.AddListener((value) =>
         {
@@ -27,10 +25,12 @@ public class UITimeline : MonoBehaviour
         });
     }
 
-    bool Splitable(System.DateTime splitTime){
-        var offsetYear = 10;
+    bool Splitable(System.DateTime splitTime, int offsetYear = 10)
+    {
+        var (min, max) = TimelineManager.Instance.CalcMinMax();
+        if (splitTime <= min || max <= splitTime) return false;
         //すでにある区間を横切って切ろうとするとエラー
-        foreach (var i in manager.data)
+        foreach (var i in TimelineManager.Instance.data)
         {
             switch (i.timeType)
             {
@@ -47,29 +47,19 @@ public class UITimeline : MonoBehaviour
                     break;
             }
         }
-return true;
+        return true;
     }
 
     public void SplitTimeline(System.DateTime splitTime)
     {
         //すでにある区間を横切って切ろうとするとエラー
-        if(!Splitable(splitTime))return;
-        foreach (var tl in subTimelines)
+        var offsetYear = 10;
+        if (!Splitable(splitTime, offsetYear)) return;
+        foreach (var t in splitTimes)
         {
-            if (splitTime == tl.begin_time || splitTime == tl.end_time) return;//境界だったら切らない
-            if (tl.begin_time < splitTime && splitTime < tl.end_time)
-            {
-                var new_left = Instantiate(subTimelinePrefab).GetComponent<UISubTimeline>();
-                var new_right = Instantiate(subTimelinePrefab).GetComponent<UISubTimeline>();
-                new_left.Init(tl.begin_time, splitTime);
-                new_right.Init(splitTime, tl.end_time);
-                //TODO: 当該Timelineの削除＆新しいものに置き換え
-                subTimelines.Add(new_left);
-                subTimelines.Add(new_right);
-
-                return;
-            }
+            if (splitTime == t) return;//境界だったら切らない
         }
+        splitTimes.Add(splitTime);
     }
     public RectTransform GetTimeTransform(int ID)
     {
@@ -78,12 +68,13 @@ return true;
             var res = tl.GetTimeTransform(ID);
             if (res != null) return res;
         }
+        Debug.LogWarning($"UITimeline : object not found ID:{ID}");
         return null;
     }
 
     public void ClearUI()
     {
-
+        splitTimes.Clear();
     }
 
     //TODO: subTimelineを並び替え、座標を計算
@@ -95,18 +86,56 @@ return true;
 
     public void GenerateUI()
     {
-        var subTL=Instantiate(subTimelinePrefab,transform).GetComponent<UISubTimeline>();
-        subTL.Init();
-        subTimelines.Add(subTL);
-        //TODO: timenodeをsubTL内に生成したうえでdata.time_nodeに登録する
-        foreach (var i in manager.data)
+        var offsetYear = 10;
+        var (min_value, max_value) = TimelineManager.Instance.CalcMinMax(offsetYear);
+        if (splitTimes.Count == 0)
         {
-
+            var a = Instantiate(subTimelinePrefab, transform).GetComponent<UISubTimeline>();
+            a.Init(min_value, max_value);
+            subTimelines.Add(a);
+        }
+        else
+        {
+            var a = Instantiate(subTimelinePrefab, transform).GetComponent<UISubTimeline>();
+            a.Init(min_value, splitTimes[0]);
+            subTimelines.Add(a);
+            for (int i = 1; i < splitTimes.Count - 1; i++)
+            {
+                var subTL = Instantiate(subTimelinePrefab, transform).GetComponent<UISubTimeline>();
+                subTL.Init(splitTimes[i], splitTimes[i - 1]);
+                subTimelines.Add(subTL);
+            }
+            if (splitTimes.Count > 1)
+            {
+                var b = Instantiate(subTimelinePrefab, transform).GetComponent<UISubTimeline>();
+                b.Init(splitTimes[splitTimes.Count - 1], max_value);
+                subTimelines.Add(b);
+            }
+        }
+        foreach (var i in TimelineManager.Instance.data)
+        {
+            foreach (var subTL in subTimelines)
+            {
+                if (subTL.Contains(i.begin_time, i.end_time, i.timeType, offsetYear))
+                {
+                    subTL.AddTime(i);
+                }
+                else
+                {
+                    var b = i.begin_time == null ? "null" : i.begin_time.ToString();
+                    var e = i.end_time == null ? "null" : i.begin_time.ToString();
+                    Debug.Log($"not contain {i.ID} {b} {e} in {subTL.begin_time} {subTL.end_time}");
+                }
+            }
+        }
+        foreach (var subTL in subTimelines)
+        {
+            subTL.GenerateUI();
         }
     }
     public void PinchTimeline(float unitLength)
     {
-        var (min_value, max_value) = manager.CalcMinMax();
+        var (min_value, max_value) = TimelineManager.Instance.CalcMinMax();
         yearUnitLength = unitLength;
     }
 

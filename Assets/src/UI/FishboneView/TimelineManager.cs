@@ -2,10 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimelineManager : MonoBehaviour
+public class TimelineManager : SingletonMonoBehaviour<TimelineManager>
 {
     int time_id = 0;
-   public List<UITimeData> data{get;private set;}
+    public List<UITimeData> data { get; private set; } = new List<UITimeData>();
+    [SerializeField] List<UITimeData> d = new List<UITimeData>();
+    void Awake()
+    {
+        EventDataLoader.Instance.OnDataLoaded.AddListener((path, data_) =>
+        {
+
+        });
+    }
+
     public int AddTime(System.DateTime? begin_time, System.DateTime? end_time, string text, bool isTop = true)
     {
         if (begin_time == null && end_time == null)
@@ -13,6 +22,9 @@ public class TimelineManager : MonoBehaviour
             Debug.LogError("both time is null!");
             return -1;
         }
+        var b = begin_time == null ? "null" : begin_time.ToString();
+        var e = end_time == null ? "null" : begin_time.ToString();
+        Debug.Log($"Timeline manager : AddTime {b} {e}");
         int layer = 0;
         while (!isCapable(begin_time, end_time, layer, isTop))
         {
@@ -36,7 +48,7 @@ public class TimelineManager : MonoBehaviour
         var e = endTime ?? beginTime?.AddYears(10) ?? System.DateTime.MaxValue;
         foreach (var i in data)
         {
-            if(i.is_top!=is_top)continue;
+            if (i.is_top != is_top) continue;
             if (i.layer != layer) continue;
             switch (i.timeType)
             {
@@ -59,7 +71,7 @@ public class TimelineManager : MonoBehaviour
     {
         foreach (var i in data)
         {
-            if(i.is_top!=isTop)continue;
+            if (i.is_top != isTop) continue;
             if (i.layer != layer) continue;
             switch (i.timeType)
             {
@@ -89,7 +101,17 @@ public class TimelineManager : MonoBehaviour
             text = text,
             timeType = timeType,
             layer = layer,
-            is_top=isTop,
+            is_top = isTop,
+        });
+        d.Add(new UITimeData
+        {
+            ID = time_id,
+            begin_time = beginTime,
+            end_time = endTime,
+            text = text,
+            timeType = timeType,
+            layer = layer,
+            is_top = isTop,
         });
         time_id++;
         return time_id - 1;
@@ -103,7 +125,16 @@ public class TimelineManager : MonoBehaviour
             text = text,
             timeType = TimeType.point,
             layer = layer,
-            is_top=isTop,
+            is_top = isTop,
+        });
+        d.Add(new UITimeData
+        {
+            ID = time_id,
+            begin_time = time,
+            text = text,
+            timeType = TimeType.point,
+            layer = layer,
+            is_top = isTop,
         });
         time_id++;
         return time_id - 1;
@@ -114,7 +145,7 @@ public class TimelineManager : MonoBehaviour
         time_id = 0;
     }
 
-    public (System.DateTime, System.DateTime) CalcMinMax()
+    public (System.DateTime, System.DateTime) CalcMinMax(int offsetYear = 0)
     {
         var min_value = System.DateTime.MaxValue;
         var max_value = System.DateTime.MinValue;
@@ -122,15 +153,24 @@ public class TimelineManager : MonoBehaviour
         {
             var b = i.begin_time ?? System.DateTime.MinValue;
             var e = i.end_time ?? System.DateTime.MaxValue;
-            if (i.begin_time != null)
+            switch (i.timeType)
             {
-                min_value = Utility.Min(min_value, b);
-                max_value = Utility.Max(max_value, b);
-            }
-            if (i.end_time != null)
-            {
-                min_value = Utility.Min(min_value, e);
-                max_value = Utility.Max(max_value, e);
+                case TimeType.point:
+                    min_value = Utility.Min(min_value, b);
+                    max_value = Utility.Max(max_value, b);
+                    break;
+                case TimeType.begin_end:
+                    min_value = Utility.Min(min_value, b);
+                    max_value = Utility.Max(max_value, e);
+                    break;
+                case TimeType.begin:
+                    min_value = Utility.Min(min_value, b);
+                    max_value = Utility.Max(max_value, b.AddYears(offsetYear));
+                    break;
+                case TimeType.end:
+                    min_value = Utility.Min(min_value, e.AddYears(-offsetYear));
+                    max_value = Utility.Max(max_value, e);
+                    break;
             }
         }
         return (min_value, max_value);
