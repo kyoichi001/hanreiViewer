@@ -31,32 +31,10 @@ public class UISubTimeline : MonoBehaviour
     {
         return begin_time <= time && time < end_time;
     }
-    public void AddTime(UITimeData data, bool extend = false)
+    public void AddTime(UITimeData data)
     {
         var arr = data.is_top ? topTimes : bottomTimes;
         arr.Add(data);
-        if (extend)
-        {
-            switch (data.timeType)
-            {
-                case TimeType.point:
-                    if (data.begin_time < begin_time) begin_time = data.begin_time ?? begin_time;
-                    if (end_time < data.end_time) end_time = data.end_time ?? end_time;
-                    break;
-                case TimeType.begin_end:
-                    if (data.begin_time < begin_time) begin_time = data.begin_time ?? begin_time;
-                    if (end_time < data.end_time) end_time = data.end_time ?? end_time;
-                    break;
-                case TimeType.begin:
-                    if (data.begin_time < begin_time) begin_time = data.begin_time ?? begin_time;
-                    if (end_time < data.begin_time) end_time = data.begin_time ?? end_time;
-                    break;
-                case TimeType.end:
-                    if (data.end_time < begin_time) begin_time = data.end_time ?? begin_time;
-                    if (end_time < data.end_time) end_time = data.end_time ?? end_time;
-                    break;
-            }
-        }
     }
     public void ClearUI()
     {
