@@ -11,7 +11,7 @@ public class UISubTimeline : MonoBehaviour
     [SerializeField] RectTransform arrow;
     [Header("Prefabs")]
     [SerializeField] GameObject timePrefab;
-
+    [SerializeField] GameObject timeBarPrefab;
     [Header("Debug")]
     [SerializeField, ReadOnly] List<UITimeData> topTimes = new List<UITimeData>();
     [SerializeField, ReadOnly] List<UITimeData> bottomTimes = new List<UITimeData>();
@@ -78,6 +78,26 @@ public class UISubTimeline : MonoBehaviour
         a.gameObject.name = data.ID.ToString();
         a.Init(data);
     }
+    void GenerateTimeBar(System.DateTime minTime, System.DateTime maxTime)
+    {
+        var timeTickYear = 2;
+
+        var t = minTime.AddYears(timeTickYear);
+        int max_count = 0;
+        while (t < maxTime && max_count < 100)
+        {
+            var timeRatio = (float)(t - minTime).TotalDays / (float)(maxTime - minTime).TotalDays;
+            var a = Instantiate(timeBarPrefab, arrow).GetComponent<UITimebar>();
+            a.Init(t);
+            a.transform.localPosition = new Vector3(
+                        rectTransform.rect.xMin + rectTransform.rect.width * timeRatio,
+                        0
+                        );
+            t = t.AddYears(timeTickYear);
+            max_count++;
+        }
+    }
+
     void SetPosition(System.DateTime minTime, System.DateTime maxTime, UITime data, bool isTop)
     {
         //単位を年にするために1000で割る
@@ -114,8 +134,9 @@ public class UISubTimeline : MonoBehaviour
                 break;
         }
     }
-    public void GenerateUI()
+    public void GenerateUI(float yearUnitLength)
     {
+        this.yearUnitLength = yearUnitLength;
         var (min_value, max_value) = (begin_time, end_time);
         foreach (var i in topTimes)
         {
@@ -133,6 +154,7 @@ public class UISubTimeline : MonoBehaviour
         {
             SetPosition(min_value, max_value, child.GetComponent<UITime>(), false);
         }
+        GenerateTimeBar(min_value, max_value);
     }
 
 

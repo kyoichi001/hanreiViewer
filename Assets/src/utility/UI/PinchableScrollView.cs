@@ -20,15 +20,15 @@ public class PinchableScrollView : MonoBehaviour
     private float RangeLimitedScaleMin;   //収束する範囲
     [SerializeField]
     private float RangeLimitedScaleMax;   //収束する範囲
-	private Vector3 center;				//現在の中心座標
+    private Vector3 center;				//現在の中心座標
 
     // Start is called before the first frame update
     void Start()
     {
         wrapper = transform;
-        contentRect=wrapper as RectTransform;
-		center = contentRect.localPosition / scale;
-		contentRect.anchoredPosition *= scale;
+        contentRect = wrapper as RectTransform;
+        center = contentRect.localPosition / scale;
+        contentRect.anchoredPosition *= scale;
     }
 
     // Update is called once per frame
@@ -42,13 +42,14 @@ public class PinchableScrollView : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.LeftControl))
         {
-            Debug.Log($"scaling... {Input.mouseScrollDelta.y}");
+            //Debug.Log($"scaling... {Input.mouseScrollDelta.y}");
             scale += Input.mouseScrollDelta.y * scrollSensitivity;
             SetNewScale(scale);
             UpdateScaling();
         }
-        if(Input.GetKeyDown(KeyCode.LeftControl)){
-			center = contentRect.localPosition / scale;
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            center = contentRect.localPosition / scale;
         }
     }
 

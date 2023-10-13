@@ -13,10 +13,10 @@ public class EventDataLoader : SingletonMonoBehaviour<EventDataLoader>
     public OnDataLoadedEvent OnDataLoaded { get; } = new OnDataLoadedEvent();
     HanreiTokenizedData LoadData(string path)
     {
-        StreamReader reader = new StreamReader(path,System.Text.Encoding.UTF8);
+        StreamReader reader = new StreamReader(path, System.Text.Encoding.UTF8);
         string datastr = reader.ReadToEnd();
         reader.Close();
-        Debug.Log(datastr);
+        //Debug.Log(datastr);
         return JsonUtility.FromJson<HanreiTokenizedData>(datastr);
     }
 
@@ -27,7 +27,7 @@ public class EventDataLoader : SingletonMonoBehaviour<EventDataLoader>
         foreach (var file in files)
         {
             if (!file.EndsWith(".json")) continue;
-            Debug.Log($"loading {file}");
+            //Debug.Log($"loading {file}");
             var dat = LoadData(file);
             datas.Add(dat);
             OnDataLoaded.Invoke(file, dat);

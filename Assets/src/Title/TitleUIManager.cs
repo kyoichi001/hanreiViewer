@@ -13,6 +13,7 @@ public class TitleUIManager : MonoBehaviour
     [SerializeField] GameObject pathPrefab;
     [SerializeField] RectTransform pathesContainer;
     [SerializeField] UnityEngine.UI.Button pathAddButton;
+    [SerializeField] UnityEngine.UI.Button quitButton;
     void Awake()
     {
         toHanreiViewerButton.onClick.AddListener(() =>
@@ -34,6 +35,10 @@ public class TitleUIManager : MonoBehaviour
         pathAddButton.onClick.AddListener(() =>
         {
             OpenDialog();
+        });
+        quitButton.onClick.AddListener(() =>
+        {
+            TitleScene.Instance.Quit();
         });
     }
     void OpenDialog()

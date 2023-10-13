@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
+using UnityEditor;
 
 public class TitleScene : SingletonMonoBehaviour<TitleScene>
 {
@@ -45,5 +46,13 @@ public class TitleScene : SingletonMonoBehaviour<TitleScene>
     public void AddFile(string path)
     {
         saveFile.recentFiles.Add(path);
+    }
+    public void Quit()
+    {
+#if UNITY_EDITOR
+        EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }

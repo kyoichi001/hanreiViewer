@@ -135,7 +135,7 @@ public class UITimeline : MonoBehaviour
         }
         foreach (var subTL in subTimelines)
         {
-            subTL.GenerateUI();
+            subTL.GenerateUI(yearUnitLength);
         }
     }
     public void PinchTimeline(float unitLength)
