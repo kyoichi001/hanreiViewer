@@ -42,46 +42,50 @@ public class TimelineManager : SingletonMonoBehaviour<TimelineManager>
         return AddTimeToLayer(time, text, layer, isTop);
     }
 
-    bool isCapable(System.DateTime? beginTime, System.DateTime? endTime, int layer, bool is_top)
+    bool isCapable(System.DateTime? beginTime, System.DateTime? endTime, int layer, bool is_top, int offsetYear = 10)
     {
-        var b = beginTime ?? endTime?.AddYears(-10) ?? System.DateTime.MinValue;
-        var e = endTime ?? beginTime?.AddYears(10) ?? System.DateTime.MaxValue;
+        var b = beginTime ?? endTime?.AddYears(-offsetYear) ?? System.DateTime.MinValue;
+        var e = endTime ?? beginTime?.AddYears(offsetYear) ?? System.DateTime.MaxValue;
         foreach (var i in data)
         {
+            var b2 = i.begin_time ?? i.end_time?.AddYears(-offsetYear) ?? System.DateTime.MinValue;
+            var e2 = i.end_time ?? i.begin_time?.AddYears(offsetYear) ?? System.DateTime.MaxValue;
             if (i.is_top != is_top) continue;
             if (i.layer != layer) continue;
             switch (i.timeType)
             {
                 case TimeType.point:
-                    if (b <= i.begin_time && i.begin_time <= endTime) return false;
+                    if (b <= b2 && b2 <= e) return false;
                     break;
                 case TimeType.begin:
                 case TimeType.begin_end:
                 case TimeType.end:
-                    if (b <= i.begin_time && i.begin_time <= e) return false;
-                    if (b <= i.end_time && i.end_time <= e) return false;
-                    if (i.begin_time <= b && b <= i.end_time) return false;
-                    if (i.begin_time <= e && e <= i.end_time) return false;
+                    if (b <= b2 && b2 <= e) return false;
+                    if (b <= e2 && e2 <= e) return false;
+                    if (b2 <= b && b <= e2) return false;
+                    if (b2 <= e && e <= e2) return false;
                     break;
             }
         }
         return true;
     }
-    bool isCapable(System.DateTime time, int layer, bool isTop)
+    bool isCapable(System.DateTime time, int layer, bool isTop, int offsetYear = 10)
     {
         foreach (var i in data)
         {
+            var b = i.begin_time ?? i.end_time?.AddYears(-offsetYear) ?? System.DateTime.MinValue;
+            var e = i.end_time ?? i.begin_time?.AddYears(offsetYear) ?? System.DateTime.MaxValue;
             if (i.is_top != isTop) continue;
             if (i.layer != layer) continue;
             switch (i.timeType)
             {
                 case TimeType.point:
-                    if (time == i.begin_time) return false;
+                    if (time == b) return false;
                     break;
                 case TimeType.begin:
                 case TimeType.begin_end:
                 case TimeType.end:
-                    if (i.begin_time <= time && time <= i.end_time) return false;
+                    if (b <= time && time <= e) return false;
                     break;
             }
         }

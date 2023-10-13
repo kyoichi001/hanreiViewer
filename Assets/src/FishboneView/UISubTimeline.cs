@@ -80,7 +80,7 @@ public class UISubTimeline : MonoBehaviour
     }
     void GenerateTimeBar(System.DateTime minTime, System.DateTime maxTime)
     {
-        var timeTickYear = 2;
+        var timeTickYear = 1;
 
         var t = minTime.AddYears(timeTickYear);
         int max_count = 0;

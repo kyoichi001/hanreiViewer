@@ -1042,7 +1042,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 338693ab8d5138343815a6e3aab5eb41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  yearUnitLength: 100
+  yearUnitLength: 300
   pinchSlider: {fileID: 1533903260}
   subTimelinePrefab: {fileID: 3849677134331512603, guid: 883e9e23b8f5f1f469b60cd63e9eb6fa, type: 3}
 --- !u!1 &1074286873

@@ -164,7 +164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16c10dd7007a2054a8a042b8ec89fd62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  yearUnitLength: 100
+  yearUnitLength: 300
   times_top: {fileID: 8419050644394238631}
   times_bottom: {fileID: 8729518089890800656}
   arrow: {fileID: 1428536794084036654}
