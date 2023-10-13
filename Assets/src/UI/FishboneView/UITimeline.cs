@@ -74,7 +74,12 @@ public class UITimeline : MonoBehaviour
 
     public void ClearUI()
     {
+        subTimelines.Clear();
         splitTimes.Clear();
+        foreach (Transform child in transform)
+        {
+            Destroy(child);
+        }
     }
 
     //TODO: subTimelineを並び替え、座標を計算

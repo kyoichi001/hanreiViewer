@@ -316,7 +316,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b5b90025afa1754083b1c9e68582fe6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boneAnchor: 0
   eventsGap: 5
   eventsWidth: 100
   eventPrefab: {fileID: 6678113315623104585, guid: 97cd1cfdc7650fd489c98efecfff5131, type: 3}
@@ -339,6 +338,7 @@ GameObject:
   - component: {fileID: 3107368256820503493}
   - component: {fileID: 5782704668411384029}
   - component: {fileID: 4035394276153637699}
+  - component: {fileID: 3836300412078538566}
   m_Layer: 5
   m_Name: person
   m_TagString: Untagged
@@ -405,6 +405,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3836300412078538566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6745972082919335847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 2, y: 2}
+  m_UseGraphicAlpha: 1
 --- !u!1 &7068307518752340074
 GameObject:
   m_ObjectHideFlags: 0

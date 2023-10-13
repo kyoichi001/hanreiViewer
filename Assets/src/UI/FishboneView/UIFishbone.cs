@@ -118,7 +118,9 @@ public class UIFishbone : MonoBehaviour
         uiTimeLine = timeLine.GetComponent<UITimeline>();
         FishboneViewManager.Instance.OnShowData.AddListener(async (path, data) =>
         {
+            TimelineManager.Instance.Clear();
             ClearData();
+            uiTimeLine.ClearUI();
             await UniTask.DelayFrame(1);//ObjectがDestroyされるまで1フレーム待つ必要がある
             foreach (var d in data.datas)
             {
