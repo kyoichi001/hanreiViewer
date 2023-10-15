@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class FishboneViewHUDManager : MonoBehaviour
@@ -14,6 +15,18 @@ public class FishboneViewHUDManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        FishboneViewManager.Instance.OnFilenamesLoaded.AddListener((filenames) =>
+        {
+            foreach (var (hanreiTitle, path) in filenames)
+            {
+                var obj = Instantiate(hanreiSelectorButtonPrefab, hanreiSelector);
+                obj.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = hanreiTitle;
+                obj.GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    FishboneViewManager.Instance.ShowFishboneUI(path);
+                });
+            }
+        });
         FishboneViewManager.Instance.OnShowData.AddListener((path, data) =>
         {
             dataName.text = path;
@@ -23,16 +36,11 @@ public class FishboneViewHUDManager : MonoBehaviour
             Debug.Log($"path : {path}");
             var arr = path.Split(new char[] { '/', '\\' });
             var filename = arr[arr.Length - 1];
-            var obj = Instantiate(hanreiSelectorButtonPrefab, hanreiSelector);
-            obj.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = filename;
-            obj.GetComponent<Button>().onClick.AddListener(() =>
-            {
-                FishboneViewManager.Instance.ShowFishboneUI(path);
-            });
         });
+
         backButton.onClick.AddListener(() =>
         {
-
+            SceneManager.LoadScene("Title");
         });
     }
 }

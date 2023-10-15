@@ -78,7 +78,9 @@ public class UITimeline : MonoBehaviour
         splitTimes.Clear();
         foreach (Transform child in transform)
         {
-            Destroy(child);
+            var s = child.gameObject.name;
+            Debug.Log($"Destroy {s}");
+            Destroy(child.gameObject);
         }
     }
 

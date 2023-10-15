@@ -23,7 +23,7 @@ public class EventDataLoader : SingletonMonoBehaviour<EventDataLoader>
     // Start is called before the first frame update
     void Start()
     {
-        string[] files = Directory.GetFiles(filepath);
+        string[] files = Directory.GetFiles(Application.dataPath + "/" + filepath);
         foreach (var file in files)
         {
             if (!file.EndsWith(".json")) continue;

@@ -33,7 +33,7 @@ public class Bunsetsu
 {
     public int id;
     public string text;
-    public List<Token> tokens=new List<Token>();
+    public List<Token> tokens = new List<Token>();
 
 }
 
@@ -71,21 +71,21 @@ public class Section
     public string header;
     public string header_text;
     public int indent;
-    public List<SectionText> texts=new List<SectionText>();
+    public List<SectionText> texts = new List<SectionText>();
 }
 
 [System.Serializable]
 public class Signature
 {
     public string header_text;
-    public  List<string> texts =new List<string>();
+    public List<string> texts = new List<string>();
 }
 
 [System.Serializable]
 public class Judgement
 {
     public string header_text;
-    public  List<string> texts = new List<string>();
+    public List<string> texts = new List<string>();
 }
 
 [System.Serializable]
@@ -112,9 +112,6 @@ public class HanreiContent
 [System.Serializable]
 public class HanreiData
 {
-    /// <summary>
-    /// ファイル名から拡張子を抜いたものが入る
-    /// </summary>
     public string filename;
     public HanreiContent contents;
 }
