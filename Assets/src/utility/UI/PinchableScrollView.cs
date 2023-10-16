@@ -104,4 +104,12 @@ public class PinchableScrollView : MonoBehaviour
         //contentRect.localPosition = center * scale;         //拡大率が変わった時に中心座標がずれないように再設定する
         wrapper.localScale = new Vector3(scale, scale, 1);  //全体を拡大縮小する
     }
+    /// <summary>
+    /// TODO: 任意のTransformを0,0にあわせる
+    /// </summary>
+    public void SetViewCenter(RectTransform target)
+    {
+        var localPoint = transform.InverseTransformPoint(target.position);
+        transform.localPosition -= localPoint;
+    }
 }

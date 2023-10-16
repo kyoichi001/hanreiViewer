@@ -115,7 +115,7 @@ public class UITimeline : MonoBehaviour
             if (splitTimes.Count > 1)
             {
                 var b = Instantiate(subTimelinePrefab, transform).GetComponent<UISubTimeline>();
-                b.Init(splitTimes[splitTimes.Count - 1], max_value);
+                b.Init(splitTimes[^1], max_value);
                 subTimelines.Add(b);
             }
         }

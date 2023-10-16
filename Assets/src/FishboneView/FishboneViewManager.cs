@@ -25,8 +25,8 @@ public class FishboneViewManager : SingletonMonoBehaviour<FishboneViewManager>
             Debug.Log($"Data loaded {path}");
             var a = path.Split("__");
             var b = a[0].Split("\\");
-            var c = b[b.Length - 1].Split("/");
-            data[c[c.Length - 1]] = data_;
+            var c = b[^1].Split("/");
+            data[c[^1]] = data_;
         });
     }
     void Start()

@@ -11,8 +11,11 @@ public class UIFishbone : MonoBehaviour
 
     [Header("References")]
     [SerializeField] GameObject timeLine;
-    [SerializeField] Transform timeStampsContainer;
+    [SerializeField] RectTransform timeStampsContainer;
     [SerializeField] GameObject timeStampPrefab;
+    [SerializeField] RectTransform eventsList;
+    [SerializeField] GameObject eventButtonPrefab;
+    [SerializeField] PinchableScrollView scrollView;
 
     [Header("Debug")]
     [SerializeField, ReadOnly] List<DataType> data = new List<DataType>();
@@ -20,6 +23,7 @@ public class UIFishbone : MonoBehaviour
     UITimeline uiTimeLine;
     Dictionary<(string, System.DateTime, System.DateTime), TimeStampData> eventMap = new Dictionary<(string, System.DateTime, System.DateTime), TimeStampData>();
     Dictionary<(string, System.DateTime, System.DateTime), int> timeMap = new Dictionary<(string, System.DateTime, System.DateTime), int>();
+
 
     public bool is_top(DataType data_)
     {
@@ -61,7 +65,7 @@ public class UIFishbone : MonoBehaviour
         }
         else
         {
-            var time_id = 0;
+            int time_id;
             var is_top = this.is_top(data_);
             if (is_range)
             {
@@ -84,8 +88,16 @@ public class UIFishbone : MonoBehaviour
                 is_top = is_top
             };
             eventMap[map_key] = dat;
+            var eventButtonScr = Instantiate(eventButtonPrefab, eventsList).GetComponent<UIEventButton>();
+            eventButtonScr.Init(time_id.ToString(), data_.person, time_text);
+            eventButtonScr.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                scrollView.SetViewCenter(dat.time_node);
+            });
         }
     }
+
+
     void GenerateUI()
     {
         foreach (var i in eventMap)
@@ -134,4 +146,5 @@ public class UIFishbone : MonoBehaviour
             // SetEventsPosition();
         });
     }
+
 }

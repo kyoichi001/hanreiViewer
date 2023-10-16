@@ -6,6 +6,7 @@ public class TimelineManager : SingletonMonoBehaviour<TimelineManager>
 {
     int time_id = 0;
     public List<UITimeData> data { get; private set; } = new List<UITimeData>();
+    [Header("Debug")]
     [SerializeField] List<UITimeData> d = new List<UITimeData>();
     void Awake()
     {

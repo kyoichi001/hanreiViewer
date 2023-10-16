@@ -35,7 +35,7 @@ public class FishboneViewHUDManager : MonoBehaviour
         {
             Debug.Log($"path : {path}");
             var arr = path.Split(new char[] { '/', '\\' });
-            var filename = arr[arr.Length - 1];
+            var filename = arr[^1];
         });
 
         backButton.onClick.AddListener(() =>

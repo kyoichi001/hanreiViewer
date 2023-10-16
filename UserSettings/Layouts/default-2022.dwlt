@@ -121,7 +121,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 100}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 17684
+  controlID: 581
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -146,7 +146,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 17567
+  controlID: 537
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -771,9 +771,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 100.160034, y: 270.40057, z: -17.634975}
+    m_Target: {x: 333.90677, y: 235.30914, z: 5.929345}
     speed: 2
-    m_Value: {x: 122.56401, y: 276.09338, z: -17.477047}
+    m_Value: {x: 333.90677, y: 235.30914, z: 5.929345}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -823,9 +823,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 366.74805
+    m_Target: 59.64026
     speed: 2
-    m_Value: 350.95508
+    m_Value: 59.64026
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -889,21 +889,21 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 2afcfaffd0fcfaff90fefaffaefefaffdefefaff680bfbff0c0cfbffc80dfbffe20dfbff0c0efbff101afbffb41afbff701cfbff8a1cfbffb41cfbff7029fbff142afbffe02bfbfffa2bfbff242cfbff9c37fbff4238fbfffe39fbff183afbff423afbfff64dfbff9c4efbff5850fbff7250fbff9c50fbff0e66fbffb466fbff7068fbff8a68fbffb468fbff5871fbfffe71fbffca73fbffe473fbff0e74fbffd2abfbffd427feff74f9ffff4a6100008461000096610000a8610000c4610000ca610000ea610000f86100000062000076890000068a00003aa100004aa300002ea8000034ae000048b400002cb9000010be00000cc20000
+      m_ExpandedIDs: 38fafffff4ffffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
-        m_Name: bg
-        m_OriginalName: bg
+        m_Name: 
+        m_OriginalName: 
         m_EditFieldRect:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
-        m_UserData: 47350
+        m_UserData: 0
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
-        m_OriginalEventType: 0
+        m_OriginalEventType: 11
         m_IsRenamingFilename: 0
         m_ClientGUIView: {fileID: 9}
       m_SearchString: 
@@ -992,7 +992,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets
+    - Assets/src/Annotation
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -1000,16 +1000,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets
+  - Assets/src/Annotation
   m_LastFoldersGridSize: 16
-  m_LastProjectPath: C:\Users\tanso\Documents\UnityProjects\hanreiViewer
+  m_LastProjectPath: D:\tanaka\UnityProjects\HanreiViewer
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 9a640000
-    m_LastClickedID: 25754
-    m_ExpandedIDs: 000000009a6400009c6400009e64000000ca9a3bffffff7f
+    m_SelectedIDs: fe630000
+    m_LastClickedID: 25598
+    m_ExpandedIDs: 00000000d2630000d4630000d6630000d8630000da63000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1037,7 +1037,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000009a6400009c6400009e64000000ca9a3bffffff7f
+    m_ExpandedIDs: 00000000d2630000d4630000d6630000d8630000da63000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
