@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 989
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Scene
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -121,7 +121,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 100}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 42710
+  controlID: 74
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -146,7 +146,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 42579
+  controlID: 30
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -771,9 +771,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 323.9249, y: 179.50755, z: 1.4027532}
+    m_Target: {x: 137.56969, y: 321.76013, z: 0.15423214}
     speed: 2
-    m_Value: {x: 323.9249, y: 179.50755, z: 1.4027532}
+    m_Value: {x: 140.65887, y: 319.23776, z: 0.105485156}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -823,9 +823,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 225.22752
+    m_Target: 103.451324
     speed: 2
-    m_Value: 225.22752
+    m_Value: 108.326
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -887,9 +887,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 8e670000
-      m_LastClickedID: 26510
-      m_ExpandedIDs: 4a35ecff7a35ecff04f1edff0ef1edff14f1edff44f1edffcc71f0ffea71f0ff5a74f0ff8a74f0ff4a75f0ffd475f0ff008cf0fff48cf0ff068df0ff20a4f2ff4ea4f2ffaa2ef4ff646bf4ff726bf4ff8e43f9ff9843f9ff92b4ffff14fbffff386000005c6000007e6000009e600000ac600000b4600000c26000006a6700007c6700008e670000ba670000e4670000fa67000002680000
+      m_SelectedIDs: e2600000
+      m_LastClickedID: 24802
+      m_ExpandedIDs: 14fbffffb860000046610000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -992,7 +992,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Prefab
+    - Assets/Datas
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -1000,16 +1000,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Prefab
+  - Assets/Datas
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Users\tanso\Documents\UnityProjects\hanreiViewer
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: be630000
-    m_LastClickedID: 25534
-    m_ExpandedIDs: 00000000a0630000a2630000a463000000ca9a3bffffff7f
+    m_SelectedIDs: 8e640000
+    m_LastClickedID: 25742
+    m_ExpandedIDs: 0000000074640000766400007864000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1037,7 +1037,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000a0630000a2630000a463000000ca9a3bffffff7f
+    m_ExpandedIDs: 00000000746400007664000078640000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1134,7 +1134,7 @@ MonoBehaviour:
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
   m_LastInspectedObjectInstanceID: -1
-  m_LastVerticalScrollValue: 64
+  m_LastVerticalScrollValue: 0
   m_GlobalObjectId: 
   m_InspectorMode: 0
   m_LockTracker:
