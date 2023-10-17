@@ -5,17 +5,18 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 public class UIEvent : MonoBehaviour
 {
+    [SerializeField] float maxHeight = 80;
     [SerializeField] GameObject actNode;
     TMPro.TextMeshProUGUI actText;
     [SerializeField] GameObject boneLine;
     Canvas canvas;
+
     private void Awake()
     {
         actText = actNode.GetComponentInChildren<TMPro.TextMeshProUGUI>();
         canvas = GetComponent<Canvas>();
         var button = actNode.GetComponent<Button>();
         var trigger = actNode.GetComponent<EventTrigger>();
-
         var enter_entry = new EventTrigger.Entry
         {
             eventID = EventTriggerType.PointerEnter
@@ -24,6 +25,9 @@ public class UIEvent : MonoBehaviour
         {
             //Debug.Log($"hovering event! : {actText.text}");
             canvas.sortingOrder = 10;
+            var height = actText.preferredHeight;
+            var rt = actNode.transform as RectTransform;
+            rt.sizeDelta = new Vector2(rt.sizeDelta.x, height);
         });
         trigger.triggers.Add(enter_entry);
         var exit_entry = new EventTrigger.Entry
@@ -33,6 +37,10 @@ public class UIEvent : MonoBehaviour
         exit_entry.callback.AddListener((data) =>
         {
             canvas.sortingOrder = 9;
+            var height = actText.preferredHeight;
+            height = Mathf.Min(height, maxHeight);
+            var rt = actNode.transform as RectTransform;
+            rt.sizeDelta = new Vector2(rt.sizeDelta.x, height);
         });
         trigger.triggers.Add(exit_entry);
     }
@@ -74,7 +82,7 @@ public class UIEvent : MonoBehaviour
     {
         actText.text = act;
         var height = actText.preferredHeight;
-
+        height = Mathf.Min(height, maxHeight);
         var rt = actNode.transform as RectTransform;
         rt.sizeDelta = new Vector2(rt.sizeDelta.x, height);
     }

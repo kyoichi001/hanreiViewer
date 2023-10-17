@@ -21,6 +21,8 @@ public class UISubTimeline : MonoBehaviour
     public System.DateTime end_time { get; private set; }
 
     RectTransform rectTransform;
+
+    int currentScaleLevel = 0;
     public void Init(System.DateTime begin, System.DateTime end)
     {
         rectTransform = transform as RectTransform;
@@ -78,13 +80,20 @@ public class UISubTimeline : MonoBehaviour
         a.gameObject.name = data.ID.ToString();
         a.Init(data);
     }
+    void ClearTimeBar()
+    {
+        foreach (Transform child in arrow)
+        {
+            Destroy(child.gameObject);
+        }
+    }
     void GenerateTimeBar(System.DateTime minTime, System.DateTime maxTime)
     {
-        var timeTickYear = 1;
+        var (timeTickYear, timeTickMonth) = GetPixelTime();
 
-        var t = minTime.AddYears(timeTickYear);
+        var t = minTime.AddYears(timeTickYear).AddMonths(timeTickMonth);
         int max_count = 0;
-        while (t < maxTime && max_count < 100)
+        while (t < maxTime && max_count < 500)
         {
             var timeRatio = (float)(t - minTime).TotalDays / (float)(maxTime - minTime).TotalDays;
             var a = Instantiate(timeBarPrefab, arrow).GetComponent<UITimebar>();
@@ -93,7 +102,7 @@ public class UISubTimeline : MonoBehaviour
                         rectTransform.rect.xMin + rectTransform.rect.width * timeRatio,
                         0
                         );
-            t = t.AddYears(timeTickYear);
+            t = t.AddYears(timeTickYear).AddMonths(timeTickMonth);
             max_count++;
         }
     }
@@ -136,6 +145,7 @@ public class UISubTimeline : MonoBehaviour
     }
     public void GenerateUI(float yearUnitLength)
     {
+        ClearTimeBar();
         this.yearUnitLength = yearUnitLength;
         var (min_value, max_value) = (begin_time, end_time);
         foreach (var i in topTimes)
@@ -155,6 +165,46 @@ public class UISubTimeline : MonoBehaviour
             SetPosition(min_value, max_value, child.GetComponent<UITime>(), false);
         }
         GenerateTimeBar(min_value, max_value);
+    }
+    void Update()
+    {
+        var lv = currentScaleLevel;
+        var (timeTickYear, timeTickMonth) = GetPixelTime();
+        if (lv != currentScaleLevel)
+        {
+            ClearTimeBar();
+            GenerateTimeBar(begin_time, end_time);
+        }
+    }
+
+    (int, int) GetPixelTime()
+    {
+        var scale = transform.lossyScale.x;
+        if (scale <= 0.2f + 0.1f)
+        {
+            currentScaleLevel = 0;
+            return (5, 0);
+        }
+        else if (scale <= 0.5f + .25f)
+        {
+            currentScaleLevel = 1;
+            return (1, 0);
+        }
+        else if (scale <= 1f + .25f)
+        {
+            currentScaleLevel = 2;
+            return (0, 6);
+        }
+        else if (scale <= 2.0f + .25f)
+        {
+            currentScaleLevel = 3;
+            return (0, 3);
+        }
+        else
+        {
+            currentScaleLevel = 4;
+            return (0, 1);
+        }
     }
 
 

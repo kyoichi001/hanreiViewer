@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1868656112362520343}
   - component: {fileID: 3218557486308573503}
   - component: {fileID: 1782278804149696221}
+  - component: {fileID: 510858697761267674}
   m_Layer: 5
   m_Name: time_bar
   m_TagString: Untagged
@@ -106,6 +107,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Delegates: []
+--- !u!114 &510858697761267674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 425860659988358930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b59306937ddb55e4b81f5749cd9be956, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scaleX: 1
+  scaleY: 0
 --- !u!1 &471257937878381088
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,6 +133,7 @@ GameObject:
   - component: {fileID: 7697187020247918754}
   - component: {fileID: 567230267373010866}
   - component: {fileID: 6042476260340489469}
+  - component: {fileID: 2857805425683153697}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -144,7 +160,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 2.55}
-  m_SizeDelta: {x: 82.3, y: 16.5}
+  m_SizeDelta: {x: 122.25, y: 33.9}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &7697187020247918754
 CanvasRenderer:
@@ -207,6 +223,20 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 20
   m_TargetDisplay: 0
+--- !u!114 &2857805425683153697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 471257937878381088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b59306937ddb55e4b81f5749cd9be956, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scaleX: 1
+  scaleY: 1
 --- !u!1 &8250766582737764934
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,13 +330,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
+  m_fontSize: 20.6
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 10
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535

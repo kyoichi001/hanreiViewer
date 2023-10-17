@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 [System.Serializable]
@@ -10,6 +11,8 @@ public class TimeStampData
     public RectTransform time_node;
     public List<string> acts;
     public bool is_top;
+    public string claim_state;
+    public int issue_num;
 }
 
 public class UITimeStamp : MonoBehaviour
@@ -31,11 +34,12 @@ public class UITimeStamp : MonoBehaviour
     [SerializeField] TimeStampData data;
 
     List<UIEvent> events = new List<UIEvent>();
-
+    CanvasGroup canvasGroup;
     DrawArrow ui_arrow;
 
     private void Awake()
     {
+        canvasGroup = GetComponent<CanvasGroup>();
         personText = personNode.GetComponentInChildren<TMPro.TextMeshProUGUI>();
         ui_arrow = GetComponentInChildren<DrawArrow>();
     }
@@ -153,4 +157,72 @@ public class UITimeStamp : MonoBehaviour
             i.transform.localPosition -= new Vector3(0, offset2);
         }
     }
+
+    public void Activate()
+    {
+        canvasGroup.alpha = 1f;
+        canvasGroup.interactable = true;
+        data.time_node.GetComponent<UITime>().Activate();
+        var canvases = GetComponentsInChildren<Canvas>();
+        foreach (var c in canvases)
+        {
+            c.sortingOrder = 3;
+        }
+        var raycasters = GetComponentsInChildren<GraphicRaycaster>();
+        foreach (var r in raycasters)
+        {
+            r.enabled = true;
+        }
+    }
+    public void Deactivate()
+    {
+        canvasGroup.alpha = 0.1f;
+        canvasGroup.interactable = false;
+        data.time_node.GetComponent<UITime>().Deactivate();
+        var canvases = GetComponentsInChildren<Canvas>();
+        foreach (var c in canvases)
+        {
+            c.sortingOrder = 0;
+        }
+        var raycasters = GetComponentsInChildren<GraphicRaycaster>();
+        foreach (var r in raycasters)
+        {
+            r.enabled = false;
+        }
+    }
+
+    public bool matchFilter(bool genkoku, bool hikoku, bool jijitsu)
+    {
+
+        /*if (claim == "")
+        {
+            if (data.claim_state == "" || data.claim_state == "saibanjo") return true;
+        }
+        else if (claim == "genkoku")
+        {
+            if (data.claim_state == claim) return true;
+        }
+        else if (claim == "hikoku")
+        {
+            if (data.claim_state == claim) return true;
+        }
+        else if (claim == "saibanjo")
+        {
+            if (data.claim_state == claim) return true;
+        }*/
+        if (genkoku && data.claim_state == "genkoku")
+        {
+            return true;
+        }
+        if (hikoku && data.claim_state == "hikoku")
+        {
+            return true;
+        }
+        if (jijitsu && (data.claim_state == "" || data.claim_state == "saibanjo"))
+        {
+            return true;
+        }
+        return false;
+    }
+
 }

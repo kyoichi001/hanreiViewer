@@ -46,11 +46,15 @@ public class HanreiTokenizedData
 
             public string person;
             public string acts;
+            public string claim_state;
+            public int issue_num;
             public HanreiEventTimeData time;
         }
 
         public int text_id;
         public string text;
+        public string claim_state;
+        public int issue_num;
         public List<HanreiTokenizedBunsetsuData> bunsetsu;
         public List<HanreiEventsData> events;
     }

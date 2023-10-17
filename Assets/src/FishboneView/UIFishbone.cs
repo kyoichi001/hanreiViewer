@@ -16,7 +16,9 @@ public class UIFishbone : MonoBehaviour
     [SerializeField] RectTransform eventsList;
     [SerializeField] GameObject eventButtonPrefab;
     [SerializeField] PinchableScrollView scrollView;
-
+    [SerializeField] Toggle genkokuToggle;
+    [SerializeField] Toggle hikokuToggle;
+    [SerializeField] Toggle jijitsuToggle;
     [Header("Debug")]
     [SerializeField, ReadOnly] List<DataType> data = new List<DataType>();
 
@@ -24,6 +26,39 @@ public class UIFishbone : MonoBehaviour
     Dictionary<(string, System.DateTime, System.DateTime), TimeStampData> eventMap = new Dictionary<(string, System.DateTime, System.DateTime), TimeStampData>();
     Dictionary<(string, System.DateTime, System.DateTime), int> timeMap = new Dictionary<(string, System.DateTime, System.DateTime), int>();
 
+    private void Awake()
+    {
+        uiTimeLine = timeLine.GetComponent<UITimeline>();
+        FishboneViewManager.Instance.OnShowData.AddListener(async (path, data) =>
+        {
+            TimelineManager.Instance.Clear();
+            ClearData();
+            uiTimeLine.ClearUI();
+            await UniTask.DelayFrame(1);//ObjectがDestroyされるまで1フレーム待つ必要がある
+            foreach (var d in data.datas)
+            {
+                foreach (var e in d.events)
+                {
+                    AddData(e);
+                }
+            }
+            uiTimeLine.GenerateUI();
+            GenerateUI();
+            // SetEventsPosition();
+        });
+        genkokuToggle.onValueChanged.AddListener((e) =>
+        {
+            FilterUI(genkokuToggle.isOn, hikokuToggle.isOn, jijitsuToggle.isOn);
+        });
+        hikokuToggle.onValueChanged.AddListener((e) =>
+        {
+            FilterUI(genkokuToggle.isOn, hikokuToggle.isOn, jijitsuToggle.isOn);
+        });
+        jijitsuToggle.onValueChanged.AddListener((e) =>
+        {
+            FilterUI(genkokuToggle.isOn, hikokuToggle.isOn, jijitsuToggle.isOn);
+        });
+    }
 
     public bool is_top(DataType data_)
     {
@@ -85,7 +120,9 @@ public class UIFishbone : MonoBehaviour
                 person = data_.person,
                 time_node = null,
                 acts = new List<string> { data_.acts },
-                is_top = is_top
+                is_top = is_top,
+                claim_state = data_.claim_state,
+                issue_num = data_.issue_num,
             };
             eventMap[map_key] = dat;
             var eventButtonScr = Instantiate(eventButtonPrefab, eventsList).GetComponent<UIEventButton>();
@@ -96,7 +133,6 @@ public class UIFishbone : MonoBehaviour
             });
         }
     }
-
 
     void GenerateUI()
     {
@@ -125,26 +161,22 @@ public class UIFishbone : MonoBehaviour
         }
     }
 
-    private void Awake()
+    public void FilterUI(bool genkoku, bool hikoku, bool jijitsu)
     {
-        uiTimeLine = timeLine.GetComponent<UITimeline>();
-        FishboneViewManager.Instance.OnShowData.AddListener(async (path, data) =>
+        foreach (Transform i in timeStampsContainer)
         {
-            TimelineManager.Instance.Clear();
-            ClearData();
-            uiTimeLine.ClearUI();
-            await UniTask.DelayFrame(1);//ObjectがDestroyされるまで1フレーム待つ必要がある
-            foreach (var d in data.datas)
+            var scr = i.GetComponent<UITimeStamp>();
+            if (scr.matchFilter(genkoku, hikoku, jijitsu))
             {
-                foreach (var e in d.events)
-                {
-                    AddData(e);
-                }
+                scr.Activate();
             }
-            uiTimeLine.GenerateUI();
-            GenerateUI();
-            // SetEventsPosition();
-        });
+            else
+            {
+                scr.Deactivate();
+            }
+        }
     }
+
+
 
 }

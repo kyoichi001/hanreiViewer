@@ -17,7 +17,16 @@ public class EventDataLoader : SingletonMonoBehaviour<EventDataLoader>
         string datastr = reader.ReadToEnd();
         reader.Close();
         //Debug.Log(datastr);
-        return JsonUtility.FromJson<HanreiTokenizedData>(datastr);
+        var jsonData = JsonUtility.FromJson<HanreiTokenizedData>(datastr);
+        foreach (var data in jsonData.datas)
+        {
+            foreach (var e in data.events)
+            {
+                e.issue_num = data.issue_num;
+                e.claim_state = data.claim_state ?? "";
+            }
+        }
+        return jsonData;
     }
 
     // Start is called before the first frame update

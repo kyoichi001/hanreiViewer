@@ -27,11 +27,12 @@ public class UITime : MonoBehaviour
     [Header("Debug")]
     [SerializeField, ReadOnly] string begin_time;
     [SerializeField, ReadOnly] string end_time;
-
+    CanvasGroup canvasGroup;
     TMPro.TextMeshProUGUI textUI;
     private void Awake()
     {
         textUI = GetComponentInChildren<TMPro.TextMeshProUGUI>();
+        canvasGroup = GetComponent<CanvasGroup>();
     }
     public void Init(UITimeData data_)
     {
@@ -39,5 +40,16 @@ public class UITime : MonoBehaviour
         textUI.text = data.text;
         begin_time = data.begin_time.ToString();
         end_time = data.end_time.ToString();
+    }
+    public void Activate()
+    {
+        canvasGroup.alpha = 1f;
+        canvasGroup.interactable = true;
+    }
+    public void Deactivate()
+    {
+        canvasGroup.alpha = 0.1f;
+        canvasGroup.interactable = false;
+
     }
 }
