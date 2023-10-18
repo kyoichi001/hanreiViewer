@@ -106,6 +106,14 @@ public class UISubTimeline : MonoBehaviour
             max_count++;
         }
     }
+    public float GetTimebarLength()
+    {
+        var (timeTickYear, timeTickMonth) = GetPixelTime();
+        var (min_value, max_value) = (begin_time, end_time);
+        var t2 = min_value.AddYears(timeTickYear).AddMonths(timeTickMonth);
+        var timeRatio2 = (float)(t2 - min_value).TotalDays / (float)(max_value - min_value).TotalDays;
+        return timeRatio2 * rectTransform.rect.width * transform.lossyScale.x;
+    }
 
     void SetPosition(System.DateTime minTime, System.DateTime maxTime, UITime data, bool isTop)
     {
@@ -177,7 +185,7 @@ public class UISubTimeline : MonoBehaviour
         }
     }
 
-    (int, int) GetPixelTime()
+    public (int, int) GetPixelTime()
     {
         var scale = transform.lossyScale.x;
         if (scale <= 0.2f + 0.1f)
@@ -202,8 +210,8 @@ public class UISubTimeline : MonoBehaviour
         }
         else
         {
-            currentScaleLevel = 4;
-            return (0, 1);
+            currentScaleLevel = 3;
+            return (0, 3);
         }
     }
 

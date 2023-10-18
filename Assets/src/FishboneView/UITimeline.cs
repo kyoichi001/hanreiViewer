@@ -146,4 +146,21 @@ public class UITimeline : MonoBehaviour
         yearUnitLength = unitLength;
     }
 
+    public float GetTimebarLength()
+    {
+        foreach (var subTL in subTimelines)
+        {
+            return subTL.GetTimebarLength();
+        }
+        return 0;
+    }
+    public (int, int) GetPixelTime()
+    {
+        foreach (var subTL in subTimelines)
+        {
+            return subTL.GetPixelTime();
+        }
+        return (0, 0);
+
+    }
 }
