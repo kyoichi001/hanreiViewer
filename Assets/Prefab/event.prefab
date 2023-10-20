@@ -339,6 +339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0c91f0a11f3f754b90ca4fe5eb98839, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHeight: 80
   actNode: {fileID: 3398905254045749044}
   boneLine: {fileID: 7354099357651779395}
 --- !u!223 &41882035059490641
