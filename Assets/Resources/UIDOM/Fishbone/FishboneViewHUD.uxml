@@ -1,4 +1,4 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:Template name="FishboneViewSidebar" src="project://database/Assets/Resources/UIDOM/Fishbone/FishboneViewSidebar.uxml?fileID=9197481963319205126&amp;guid=cf41a45b2066312489cebb69a6441d10&amp;type=3#FishboneViewSidebar" />
-    <ui:Instance template="FishboneViewSidebar" name="FishboneViewSidebar" style="flex-basis: auto; width: 250px;" />
+    <ui:Instance template="FishboneViewSidebar" name="FishboneViewSidebar" style="flex-basis: auto; width: 25%; height: 100%; background-color: rgb(255, 255, 255); max-width: 300px;" />
 </ui:UXML>

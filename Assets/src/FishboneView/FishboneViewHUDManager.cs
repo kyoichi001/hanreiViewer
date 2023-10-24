@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class FishboneViewHUDManager : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] TMPro.TextMeshProUGUI dataName;
     [SerializeField] Button backButton;
     [SerializeField] GameObject hanreiSelectorButtonPrefab;
     [SerializeField] RectTransform hanreiSelector;
@@ -29,7 +28,6 @@ public class FishboneViewHUDManager : MonoBehaviour
         });
         FishboneViewManager.Instance.OnShowData.AddListener((path, data) =>
         {
-            dataName.text = path;
         });
         EventDataLoader.Instance.OnDataLoaded.AddListener((path, data_) =>
         {
