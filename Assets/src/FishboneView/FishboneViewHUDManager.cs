@@ -19,10 +19,18 @@ public class FishboneViewHUDManager : MonoBehaviour
             foreach (var (hanreiTitle, path) in filenames)
             {
                 var obj = Instantiate(hanreiSelectorButtonPrefab, hanreiSelector);
-                obj.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = hanreiTitle;
-                obj.GetComponent<Button>().onClick.AddListener(() =>
+                var buttons = obj.GetComponentsInChildren<Button>();
+                buttons[0].GetComponentInChildren<TMPro.TextMeshProUGUI>().text = hanreiTitle;
+
+                //fishboneの表示
+                buttons[0].onClick.AddListener(() =>
                 {
                     FishboneViewManager.Instance.ShowFishboneUI(path);
+                });
+                //textviewの表示
+                buttons[1].onClick.AddListener(() =>
+                {
+
                 });
             }
         });
