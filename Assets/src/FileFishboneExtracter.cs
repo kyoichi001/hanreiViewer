@@ -53,7 +53,7 @@ public class FileFishboneExtracter : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.D))
         {
             UnityEngine.Debug.Log("sample pdf extracting");
-            await ExtractTextFromPDF("C:\\Users\\Tanaka\\Downloads\\2023ET_田中_ver3.pdf");
+            await ExtractTextFromPDF(@"C:\Users\tanso\Downloads\2023ETver8_田中.pdf");
             UnityEngine.Debug.Log("sample pdf extracted");
         }
     }

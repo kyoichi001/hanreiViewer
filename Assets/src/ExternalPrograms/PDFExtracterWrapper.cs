@@ -9,7 +9,7 @@ using UnityEngine.Events;
 public class PDFExtracterWrapper : MonoBehaviour
 {
     private static readonly string FolderPath = Application.streamingAssetsPath;
-    private static readonly string FilePath = FolderPath + "/pdf_extracter/pdf_extracter.exe";
+    private static readonly string FilePath = FolderPath + "/pdf2txt/pdf2txt.exe";
 
     private Process _process;
 
