@@ -2,15 +2,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using B83.Win32;
-
+using UnityEngine.Events;
+//https://github.com/Bunny83/UnityWindowsFileDrag-Drop
 
 public class FileDragAndDrop : MonoBehaviour
 {
-    List<string> log = new List<string>();
-    void OnEnable ()
+    public class OnFileDroppedEvent : UnityEvent<string> { }
+    public OnFileDroppedEvent OnFileDropped { get; } = new OnFileDroppedEvent();
+
+    void OnEnable()
     {
         // must be installed on the main thread to get the right thread id.
         UnityDragAndDropHook.InstallHook();
+
         UnityDragAndDropHook.OnDroppedFiles += OnFiles;
     }
     void OnDisable()
@@ -20,19 +24,7 @@ public class FileDragAndDrop : MonoBehaviour
 
     void OnFiles(List<string> aFiles, POINT aPos)
     {
-        // do something with the dropped file names. aPos will contain the 
-        // mouse position within the window where the files has been dropped.
-        string str = "Dropped " + aFiles.Count + " files at: " + aPos + "\n\t" +
-            aFiles.Aggregate((a, b) => a + "\n\t" + b);
-        Debug.Log(str);
-        log.Add(str);
-    }
-
-    private void OnGUI()
-    {
-        if (GUILayout.Button("clear log"))
-            log.Clear();
-        foreach (var s in log)
-            GUILayout.Label(s);
+        foreach (var f in aFiles)
+            OnFileDropped.Invoke(f);
     }
 }

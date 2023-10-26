@@ -23,8 +23,8 @@ public class HanreiDataIO : SingletonMonoBehaviour<HanreiDataIO>
         {
             var a = i.Split("__");
             var b = a[0].Split("\\");
-            var c = b[b.Length - 1].Split("/");
-            fileNames.Add(c[c.Length - 1]);
+            var c = b[^1].Split("/");
+            fileNames.Add(c[^1]);
         }
         foreach (var i in fileNames)
         {
@@ -52,7 +52,7 @@ public class HanreiDataIO : SingletonMonoBehaviour<HanreiDataIO>
             {
                 return t;
                 var v = t.Split(" ");
-                return v[v.Length - 1];
+                return v[^1];
             }
         }
         return "";
