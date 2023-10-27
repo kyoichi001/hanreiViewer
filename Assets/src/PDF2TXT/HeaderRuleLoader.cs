@@ -44,7 +44,8 @@ public class HeaderRule
     //header_type, headerがデータ内に存在するものかどうか
     public bool isValid(string text)
     {
-        if (data.data == null) return Regex.IsMatch(text, "^" + data.regex + "$");//もし順番を定義するdataが存在しない場合、順番は考慮せず、正規表現にマッチするかのみ考慮
+        Debug.Log("check valid");
+        if (data.data == null || data.data.Count == 0) return Regex.IsMatch(text, "^" + data.regex + "$");//もし順番を定義するdataが存在しない場合、順番は考慮せず、正規表現にマッチするかのみ考慮
         return data.data.Contains(text);
     }
     public bool match(string text)
@@ -150,7 +151,11 @@ public class HeaderList
         {
             return headerChecker.isHead(header);
         }
-        if (!headerChecker.isValid(headerType, header)) return false;
+        if (!headerChecker.isValid(headerType, header))
+        {
+            Debug.Log($"header is not valid {headerType} {header}");
+            return false;
+        }
         var targetIndex = headerChecker.getIndex(headerType, header);
         if (headerTypes[^1] == headerType)
         {
@@ -161,6 +166,7 @@ public class HeaderList
             }
             return targetIndex == headerIndexes[^1] + 1;
         }
+        Debug.Log($"debug point A");
         if (HasBefore(headerType))
         {
             if (IgnoresOrder(headerType)) return true;

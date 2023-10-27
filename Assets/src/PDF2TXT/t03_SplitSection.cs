@@ -44,7 +44,6 @@ public class t03_SplitSection
         public MainText mainText = new MainText();
         public FactReason factReason = new FactReason();
     }
-
     List<OutputData.Section> DetectHeader(HeaderChecker headerChecker, List<t02_DetectHeader.OutputData.Section> sections)
     {
         var headerList = new HeaderList(headerChecker);
@@ -60,14 +59,12 @@ public class t03_SplitSection
             if (headerChecker.matchHeader(header))
             {
                 var (headerType, headerText, txt) = headerChecker.GetHeaderType(header);
-                Debug.Log($"match header {header} {headerType} {headerText}");
                 var flag1 = headerList.IsNextHeader(headerType, headerText);
                 var flag2 = headerChecker.isCollect(headerType, string.Join("", texts));
                 if (flag1 && flag2)
                 {
                     if (currentHeaderType != "")
                     {
-                        Debug.Log($"add section {currentHeaderType} {currentHeader}");
                         var sectionObj = new OutputData.Section
                         {
                             type = currentHeaderType,

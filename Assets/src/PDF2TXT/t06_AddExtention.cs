@@ -103,6 +103,8 @@ public class t06_AddExtention
     }
     string hasClaimExpression(string text, int indent)
     {
+        //var genkokuRegex="(\\(|【|〔)原告.*の主張(\\)|】|〕)";
+        //var hikokuRegex="(\\(|【|〔)被告.*の主張(\\)|】|〕)";
         var i = text.IndexOf("主張");
         if (i != -1)
         {
@@ -111,6 +113,11 @@ public class t06_AddExtention
             if (t.Contains("被告")) return "hikoku";
         }
         if (text.Contains("判断") && indent == 1) return "saibanjo";
+        return null;
+    }
+    string hasJudgeExpression(string text, int indent)
+    {
+        if (text.Contains("裁判所の判断") && indent == 1) return "saibanjo";
         return null;
     }
 
@@ -174,28 +181,29 @@ public class t06_AddExtention
         string befClaimState = null;
         foreach (var t in data.factReason.sections)
         {
+            if (t.texts.Count == 0) continue;
             res.factReason.sections.Add(ConvertSection(t));
-
             var indent = t.indent;
             var header = t.header;
-
-            var text = "";
-            foreach (var a in t.texts)
-                text += a.raw_text;
-            var issueNum = hasIssueExpression(text);
+            var issueNum = hasIssueExpression(t.texts[0].raw_text);
             string claimState = null;
             var claimState1 = hasClaimExpression(t.header, indent);
-            var claimState2 = hasClaimExpression(text, indent);
+            var judgeState = hasJudgeExpression(t.texts[0].raw_text, indent);
             if (issueNum != null)
             {
                 issueIndent = indent;
                 befIssueNum = issueNum;
             }
-            if (claimState1 != null || claimState2 != null)
+            if (claimState1 != null)
             {
                 claimIndent = indent;
-                if (claimState1 != null) claimState = claimState1;
-                if (claimState2 != null) claimState = claimState2;
+                claimState = claimState1;
+                befClaimState = claimState;
+            }
+            if (judgeState != null)
+            {
+                claimIndent = indent;
+                claimState = judgeState;
                 befClaimState = claimState;
             }
             if (issueNum == null && issueIndent != null)
