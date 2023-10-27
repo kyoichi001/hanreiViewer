@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class t03_SplitSection
 {
+    [System.Serializable]
     public class OutputData
     {
         [System.Serializable]
@@ -59,12 +60,14 @@ public class t03_SplitSection
             if (headerChecker.matchHeader(header))
             {
                 var (headerType, headerText, txt) = headerChecker.GetHeaderType(header);
+                Debug.Log($"match header {header} {headerType} {headerText}");
                 var flag1 = headerList.IsNextHeader(headerType, headerText);
                 var flag2 = headerChecker.isCollect(headerType, string.Join("", texts));
                 if (flag1 && flag2)
                 {
                     if (currentHeaderType != "")
                     {
+                        Debug.Log($"add section {currentHeaderType} {currentHeader}");
                         var sectionObj = new OutputData.Section
                         {
                             type = currentHeaderType,
@@ -105,18 +108,20 @@ public class t03_SplitSection
                 }
             }
         }
-        var sectionObj1 = new OutputData.Section();
-        sectionObj1.type = currentHeaderType;
-        sectionObj1.header = currentHeader;
-        sectionObj1.texts = texts;
-        sectionObj1.indent = headerList.CurrentIndent();
+        var sectionObj1 = new OutputData.Section
+        {
+            type = currentHeaderType,
+            header = currentHeader,
+            texts = texts,
+            indent = headerList.CurrentIndent()
+        };
         res.Add(sectionObj1);
         return res;
     }
 
-    public OutputData Convert(t02_DetectHeader.OutputData data)
+    public OutputData Convert(t02_DetectHeader.OutputData data, string headerRulePath)
     {
-        var rules = HeaderRuleLoader.Load("filepath");
+        var rules = HeaderRuleLoader.Load(headerRulePath);
         var headerChecker = new HeaderChecker(rules);
         var res = new OutputData();
         res.signature.header_text = data.signature.header_text;

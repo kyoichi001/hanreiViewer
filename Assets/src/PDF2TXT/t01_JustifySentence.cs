@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class t01_JustifySentence
@@ -40,7 +41,12 @@ public class t01_JustifySentence
         OutputData res = new OutputData();
         foreach (var page in data.pages)
         {
-            page.contents.Sort((a, b) => a.y.CompareTo(b.y));
+            page.contents.Sort((a, b) =>
+            {
+                if (a.y != b.y)
+                    return -a.y.CompareTo(b.y);
+                return a.x.CompareTo(b.x);
+            });
             var i = 1;
             while (i < page.contents.Count)
             {
@@ -55,7 +61,8 @@ public class t01_JustifySentence
             foreach (var c in page.contents)
             {
                 c.text = c.text.Trim().Replace("\n", "").Replace("\t", "").Replace("（", "(").Replace("）", ")");
-                res.contents.Add(c.text);
+                if (c.text != "" && !Regex.IsMatch(c.text, @"^[-ー \d]+$"))
+                    res.contents.Add(c.text);
             }
         }
         return res;

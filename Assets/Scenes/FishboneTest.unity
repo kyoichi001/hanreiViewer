@@ -751,6 +751,7 @@ GameObject:
   - component: {fileID: 329864015}
   - component: {fileID: 329864014}
   - component: {fileID: 329864013}
+  - component: {fileID: 329864017}
   - component: {fileID: 329864012}
   m_Layer: 0
   m_Name: FileFishboneExtracter
@@ -822,6 +823,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &329864017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 329864011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc43015cb07a3bb48a9af7b4fee35034, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  samplePDFPath: Datas/Sample/091743_hanrei.pdf
+  pdfOutputPath: Datas/Sample
+  josnOutputPath: Datas/Sample
+  headerRulePath: pdf2txt/rules/headers.json
 --- !u!1 &350021673
 GameObject:
   m_ObjectHideFlags: 0
@@ -1422,7 +1439,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 968953202}
   m_HandleRect: {fileID: 968953201}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class t04_IgnoreHeaderText
 {
+    [System.Serializable]
     public class OutputData
     {
         [System.Serializable]

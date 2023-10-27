@@ -26,6 +26,14 @@ public class t02_DetectHeader
         [System.Serializable]
         public class Section
         {
+            public Section()
+            {
+            }
+            public Section(Section s)
+            {
+                header = s.header;
+                texts = new List<string>(s.texts);
+            }
             public string header;
             public List<string> texts = new List<string>();
         }
@@ -47,12 +55,12 @@ public class t02_DetectHeader
         public FactReason factReason = new FactReason();
     }
 
-    public OutputData Convert(t01_JustifySentence.OutputData data)
+    public OutputData Convert(t01_JustifySentence.OutputData data, string headerRulePath)
     {
         var res = new OutputData();
 
         var main_section_headers = new List<string> { "判決", "主文", "事実及び理由" };
-        var rules = HeaderRuleLoader.Load("filepath");
+        var rules = HeaderRuleLoader.Load(headerRulePath);
         var current_phase = 0;
         var header_others = rules.FindAll((obj) => !obj.order);
         var raw_texts = new List<string>();
@@ -66,25 +74,33 @@ public class t02_DetectHeader
                 switch (current_phase)
                 {
                     case 0:
-                        res.signature.contents = raw_texts;
+                        res.signature.header_text = "";
+                        res.signature.contents = new List<string>(raw_texts);
                         break;
                     case 1:
-                        res.judgement.contents = raw_texts;
+                        res.judgement.header_text = t_;
+                        res.judgement.contents = new List<string>(raw_texts);
                         break;
                     case 2:
-                        res.mainText.sections = sections;
-                        current_section = new OutputData.Section();
+                        sections.Add(current_section);
+                        res.mainText.header_text = t_;
+                        foreach (var section in sections)
+                        {
+                            if (section.header != "" && section.header != null)
+                                res.mainText.sections.Add(new OutputData.Section(section));
+                        }
                         break;
                 }
+                current_section = new OutputData.Section();
                 raw_texts.Clear();
                 sections.Clear();
                 current_phase++;
+                continue;
             }
             var header_flg = false;
             foreach (var h in header_others)
             {
-                var re = new Regex(h.regex);
-                if (Regex.IsMatch(t_, h.regex))
+                if (Regex.IsMatch(t_, "^" + h.regex + "$"))
                 {
                     if (current_section.header != "")
                     {
@@ -103,10 +119,14 @@ public class t02_DetectHeader
             {
                 continue;
             }
-            var a = text.Split(" ");
+            var a = text.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             if (a.Length >= 2)
             {
-                sections.Add(current_section);
+                //Debug.Log(string.Join(",", a));
+                if (current_section.header != "")
+                {
+                    sections.Add(current_section);
+                }
                 current_section = new OutputData.Section
                 {
                     header = a[0],
@@ -120,7 +140,12 @@ public class t02_DetectHeader
             raw_texts.Add(text);
         }
         sections.Add(current_section);
-        res.factReason.sections = sections;
+        res.factReason.header_text = "事実及び理由";
+        foreach (var section in sections)
+        {
+            if (section.header != "" && section.header != null)
+                res.factReason.sections.Add(new OutputData.Section(section));
+        }
 
         return res;
     }

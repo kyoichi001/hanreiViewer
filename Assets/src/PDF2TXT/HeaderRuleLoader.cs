@@ -38,18 +38,18 @@ public class HeaderRule
     public Rule data;
     public bool isHead(string str)
     {
-        if (data.data == null) return false;
+        if (data.data == null || data.data.Count == 0) return false;
         return str == data.data[0];
     }
     //header_type, headerがデータ内に存在するものかどうか
     public bool isValid(string text)
     {
-        if (data.data == null) return Regex.IsMatch(text, data.regex);//もし順番を定義するdataが存在しない場合、順番は考慮せず、正規表現にマッチするかのみ考慮
+        if (data.data == null) return Regex.IsMatch(text, "^" + data.regex + "$");//もし順番を定義するdataが存在しない場合、順番は考慮せず、正規表現にマッチするかのみ考慮
         return data.data.Contains(text);
     }
     public bool match(string text)
     {
-        return Regex.IsMatch(text, data.regex);
+        return Regex.IsMatch(text, "^" + data.regex + "$");
     }
     public int? GetIndex(string text)
     {
@@ -67,9 +67,10 @@ public class HeaderChecker
     {
         foreach (var rule in rules_)
         {
-            var r = new HeaderRule();
-            r.data = rule;
-            rules.Add(r);
+            rules.Add(new HeaderRule
+            {
+                data = rule
+            });
         }
     }
     public bool matchHeader(string text)
@@ -87,14 +88,14 @@ public class HeaderChecker
     public bool isCollect(string header_type, string old_text)
     {
         var rule = GetRule(header_type);
-        if (rule.data.ignore_letters == "" || old_text == "") return true;
+        if (rule.data.ignore_letters == null || rule.data.ignore_letters == "" || old_text == "") return true;
         return !rule.data.ignore_letters.Contains(old_text[^1]);
     }
     public (string, string, string) GetHeaderType(string text)
     {
         foreach (var rule in rules)
         {
-            var m = Regex.Match(text, rule.data.regex);
+            var m = Regex.Match(text, "^" + rule.data.regex);
             if (m.Success)
             {
                 return (rule.data.name, m.Value, text[(m.Index + m.Length)..]);
@@ -153,7 +154,11 @@ public class HeaderList
         var targetIndex = headerChecker.getIndex(headerType, header);
         if (headerTypes[^1] == headerType)
         {
-            if (IgnoresOrder(headerType)) return true;
+            if (IgnoresOrder(headerType))
+            {
+                Debug.Log($"ignore order {headerType}");
+                return true;
+            }
             return targetIndex == headerIndexes[^1] + 1;
         }
         if (HasBefore(headerType))
@@ -164,6 +169,7 @@ public class HeaderList
         }
         if (IgnoresOrder(headerType))
         {
+            Debug.Log($"ignore order {headerType}");
             return true;
         }
         return headerChecker.isHead(header);

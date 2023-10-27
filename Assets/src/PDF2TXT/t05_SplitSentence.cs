@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class t05_SplitSentence
 {
+    [System.Serializable]
     public class OutputData
     {
         [System.Serializable]
@@ -22,6 +24,7 @@ public class t05_SplitSentence
         [System.Serializable]
         public class Section
         {
+            [System.Serializable]
             public class Text
             {
                 public int text_id;
@@ -48,6 +51,7 @@ public class t05_SplitSentence
             public string header_text;
             public List<Section> sections = new List<Section>();
         }
+        [System.Serializable]
         public class SelifData
         {
             public int targetSelif;
@@ -55,6 +59,7 @@ public class t05_SplitSentence
             public int targetTextID;
             public int textID;
         }
+        [System.Serializable]
         public class BlacketsData
         {
             public int position;
@@ -73,7 +78,7 @@ public class t05_SplitSentence
     {
         foreach (var i in table)
         {
-            if ((ignoreKey != '\0' || i.Key != ignoreKey) && table[i.Key] != 0)
+            if ((ignoreKey == '\0' || i.Key != ignoreKey) && table[i.Key] != 0)
                 return false;
         }
         return true;
@@ -83,19 +88,22 @@ public class t05_SplitSentence
         var res = new List<string>();
         var resWOKakko = "";
         var resKakko = "";
-        var pairKakko = new Dictionary<char, char>();
-        pairKakko['('] = ')';
-        pairKakko[')'] = '(';
-        pairKakko['「'] = '」';
-        pairKakko['」'] = '「';
-        var kakkoCount = new Dictionary<char, int>();
-        kakkoCount['('] = 0;
-        kakkoCount['「'] = 0;
+        var pairKakko = new ReadOnlyDictionary<char, char>(new Dictionary<char, char>
+        {
+            {'(',')'},
+            {')','('},
+            {'「','」'},
+            {'」','「'},
+        });
+        var kakkoCount = new Dictionary<char, int>
+        {
+            ['('] = 0,
+            ['「'] = 0
+        };
         var targetKakko = '\0';
         if (text == "")
         {
-            res.Add("");
-            return res;
+            return new List<string> { "" };
         }
         if (text[0] == '(' || text[0] == '「')
         {
@@ -110,7 +118,7 @@ public class t05_SplitSentence
         {
             resWOKakko += text[0];
         }
-        foreach (var t in text)
+        foreach (var t in text[1..])
         {
             if (t == ')' || t == '」')
             {
@@ -119,7 +127,6 @@ public class t05_SplitSentence
                 {
                     res.Add(resKakko + t);
                     resKakko = "";
-                    kakkoCount = new Dictionary<char, int>();
                     kakkoCount['('] = 0;
                     kakkoCount['「'] = 0;
                     targetKakko = '\0';
@@ -157,8 +164,8 @@ public class t05_SplitSentence
     }
     List<string> SplitText(string text)
     {
-        var a = Regex.Replace(text, "。([^」\\)〕])", "。$\\1");
-        var d = a.Split("$");
+        var a = Regex.Replace(text, "。([^」\\)〕])", "。^$1");
+        var d = a.Split("^");
         if (d.Length == 0) return new List<string> { text };
         return new List<string>(d);
     }
@@ -182,6 +189,7 @@ public class t05_SplitSentence
         }
         return texts2;
     }
+    [System.Serializable]
     public class TextData
     {
         public string text;
@@ -199,6 +207,7 @@ public class t05_SplitSentence
         var current_selif_count = 0;
         foreach (var t in texts)
         {
+            //Debug.Log("char debug : " + t[0]);
             if (t[0] == '「')
             {
                 selifs.Add(new OutputData.SelifData
