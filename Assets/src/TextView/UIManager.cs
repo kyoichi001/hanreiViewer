@@ -31,15 +31,25 @@ public class UIManager : MonoBehaviour
         uAnnotationsController = GetComponent<UIAnnotationsController>();
 
         var submenuElement = uIDocument.rootVisualElement.Q("subMenu");
-        DataLoader.Instance.OnDataLoaded.AddListener((dat) =>
+        FileTextExtracter.Instance.OnDataLoaded.AddListener((dat) =>
         {
             uIFilesController.GenerateButton(submenuElement, dat);
         });
-        AnnotationLoader.Instance.OnDataChanged.AddListener((d) =>
+        /*AnnotationLoader.Instance.OnDataChanged.AddListener((d) =>
         {
             RenewHanrei();
+        });*/
+        uIFilesController.OnButtonClicked.AddListener((dat) =>
+        {
+            try
+            {
+                ShowHanrei(dat);
+            }
+            catch (Exception e)
+            {
+                DialogPopupManager.Instance.Print(e.Message);
+            }
         });
-        uIFilesController.OnButtonClicked.AddListener((dat) => ShowHanrei(dat));
 
         uAnnotationsController.OnRelationDeleted.AddListener((dat) =>
         {
@@ -95,21 +105,18 @@ public class UIManager : MonoBehaviour
         container.Clear();
         var t = hanreiUXML.CloneTree();
         t.Q<Label>("title").text = data.filename;
-        // ‘î•ñ¶¬
         t.Q<Foldout>("signatureLabel").text = data.contents.signature.header_text;
         var signatureLst = t.Q<VisualElement>("signatureContents");
         foreach (var i in data.contents.signature.texts)
         {
             signatureLst.Add(new Label(i));
         }
-        // ”»Œˆ¶¬
         t.Q<Foldout>("judgementLabel").text = data.contents.judgement.header_text;
         var judgementLst = t.Q<VisualElement>("judgementContents");
         foreach (var i in data.contents.judgement.texts)
         {
             judgementLst.Add(new Label(i));
         }
-        //å•¶¶¬
         t.Q<Foldout>("mainTextLabel").text = data.contents.main_text.header_text;
         uContentsController.generateSectionsDOM(
             t.Q<VisualElement>("mainTextContents"),
@@ -124,7 +131,6 @@ public class UIManager : MonoBehaviour
             //popoverManager.RemovePopover();
         });
 
-        //–À‹y‚Ñ——R¶¬
         t.Q<Foldout>("factReasonLabel").text = data.contents.fact_reason.header_text;
         uContentsController.generateSectionsDOM(
             t.Q<VisualElement>("factReasonContents"),

@@ -5,9 +5,9 @@ using UnityEngine;
 public class DialogPopupManager : SingletonMonoBehaviour<DialogPopupManager>
 {
     public GameObject DialogPrefab;
-    public void Print(string text)
+    public void Print(string text, Color color)
     {
         var s = Instantiate(DialogPrefab, transform).GetComponent<DialogPopup>();
-        s.Init(text);
+        s.Init(text, color);
     }
 }

@@ -13,6 +13,7 @@ public class CaboChaRes
     [System.Serializable]
     public class CaboChaToken
     {
+        public int id;
         public string text;
         public string tag;
     }
@@ -37,34 +38,8 @@ public class CabochaWrapper : SingletonMonoBehaviour<CabochaWrapper>
     List<string> buffer = new List<string>();
     public class OnTextTokenizedEvent : UnityEvent<CaboChaRes> { }
     OnTextTokenizedEvent OnTextTokenized = new OnTextTokenizedEvent();
-    private void Awake()
-    {
-        _process = new Process();
 
-        // プロセスを起動するときに使用する値のセットを指定
-        _process.StartInfo = new ProcessStartInfo
-        {
-            FileName = FilePath,                        // 起動するファイルのパスを指定する
-            UseShellExecute = false,                    // プロセスの起動にオペレーティング システムのシェルを使用するかどうか(既定値:true)
-            WorkingDirectory = FolderPath,              // 開始するプロセスの作業ディレクトリを取得または設定する(既定値:"")
-            RedirectStandardInput = true,               // StandardInput から入力を読み取る(既定値：false)
-            RedirectStandardOutput = true,              // 出力を StandardOutput に書き込むかどうか(既定値：false)
-            CreateNoWindow = true,                      // プロセス用の新しいウィンドウを作成せずにプロセスを起動するかどうか(既定値：false)
-            Arguments = "-f1"
-        };
-        // 外部プロセスのStandardOutput ストリームに行を書き込む度に発火されるイベント
-        _process.OutputDataReceived += OnStandardOut;
-
-        //外部プロセスの終了を検知する
-        _process.EnableRaisingEvents = true;
-        _process.Exited += DisposeProcess;
-
-        // プロセスを起動する
-        _process.Start();
-        _process.BeginOutputReadLine();
-    }
-
-    private async void Update()
+    /*private async void Update()
     {
         if (Input.GetKeyDown(KeyCode.Z))
         {
@@ -73,14 +48,14 @@ public class CabochaWrapper : SingletonMonoBehaviour<CabochaWrapper>
             await UniTask.DelayFrame(1);//これ入れないと非同期処理からmainthreadに帰ってくる前に下の文を実行するためエラーになる
             foreach (var i in res.bunsetsus)
             {
-                UnityEngine.Debug.Log($"{i.text} id:{i.id} to:{i.to}");
+                Akak.Debug.Print($"{i.text} id:{i.id} to:{i.to}");
                 foreach (var j in i.tokens)
                 {
-                    DialogPopupManager.Instance.Print($"{j.text} tag:{j.tag}");
+                    Akak.Debug.Print($"{j.text} tag:{j.tag}");
                 }
             }
         }
-    }
+    }*/
 
     private void OnDestroy()
         => DisposeProcess();
@@ -116,7 +91,38 @@ public class CabochaWrapper : SingletonMonoBehaviour<CabochaWrapper>
         _process.Dispose();
         _process = null;
     }
+    public void StartProcess()
+    {
+        _process = new Process();
 
+        // プロセスを起動するときに使用する値のセットを指定
+        _process.StartInfo = new ProcessStartInfo
+        {
+            FileName = FilePath,                        // 起動するファイルのパスを指定する
+            UseShellExecute = false,                    // プロセスの起動にオペレーティング システムのシェルを使用するかどうか(既定値:true)
+            WorkingDirectory = FolderPath,              // 開始するプロセスの作業ディレクトリを取得または設定する(既定値:"")
+            RedirectStandardInput = true,               // StandardInput から入力を読み取る(既定値：false)
+            RedirectStandardOutput = true,              // 出力を StandardOutput に書き込むかどうか(既定値：false)
+            CreateNoWindow = false,                      // プロセス用の新しいウィンドウを作成せずにプロセスを起動するかどうか(既定値：false)
+            Arguments = "-f1"
+        };
+        // 外部プロセスのStandardOutput ストリームに行を書き込む度に発火されるイベント
+        _process.OutputDataReceived += OnStandardOut;
+
+        //外部プロセスの終了を検知する
+        _process.EnableRaisingEvents = true;
+        _process.Exited += DisposeProcess;
+
+        // プロセスを起動する
+        _process.Start();
+        _process.BeginOutputReadLine();
+    }
+    public void EndProcess()
+    {
+        if (_process == null) return;
+        _process.Close();
+        _process = null;
+    }
     public async UniTask<CaboChaRes> CaboCha(string text)
     {
         _process?.StandardInput.WriteLine(text);
@@ -133,6 +139,8 @@ public class CabochaWrapper : SingletonMonoBehaviour<CabochaWrapper>
     CaboChaRes ConvertRes(List<string> buffer_)
     {
         var res = new CaboChaRes();
+        var id = 0;
+        //UnityEngine.Debug.Log($"converting {string.Join(',', buffer_)}");
         foreach (var i in buffer_)
         {
             if (i[0] == '*')
@@ -146,10 +154,12 @@ public class CabochaWrapper : SingletonMonoBehaviour<CabochaWrapper>
             {
                 var a = i.Split("\t");
                 res.bunsetsus[^1].tokens.Add(new CaboChaRes.CaboChaToken());
+                res.bunsetsus[^1].tokens[^1].id = id;
                 res.bunsetsus[^1].tokens[^1].text = a[0];
                 res.bunsetsus[^1].text += a[0];
                 var b = a[1].Split(",")[0..4];
                 res.bunsetsus[^1].tokens[^1].tag = string.Join("-", b.Where((v) => v != "*"));
+                id++;
             }
         }
         return res;

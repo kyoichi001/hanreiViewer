@@ -19,8 +19,8 @@ public class UIContentsController : MonoBehaviour
     [SerializeField] VisualTreeAsset arrowUXML;
 
     string cullentFilename;
-    Dictionary<(int, int), VisualElement> tokenMap = new Dictionary<(int, int), VisualElement>();
-    Dictionary<VisualElement, (int, int)> domMap = new Dictionary<VisualElement, (int, int)>();
+    // Dictionary<(int, int), VisualElement> tokenMap = new Dictionary<(int, int), VisualElement>();
+    // Dictionary<VisualElement, (int, int)> domMap = new Dictionary<VisualElement, (int, int)>();
 
     public class OnTokenMouseOverEvent : UnityEvent<Token, VisualElement> { }
     public OnTokenMouseOverEvent OnTokenMouseOver { get; } = new OnTokenMouseOverEvent();
@@ -35,7 +35,7 @@ public class UIContentsController : MonoBehaviour
 
     private void Start()
     {
-        OnTokenDragged.AddListener((token, tokenDOM, target, targetDOM) =>
+        /*OnTokenDragged.AddListener((token, tokenDOM, target, targetDOM) =>
         {
             if (!domMap.ContainsKey(tokenDOM) || !domMap.ContainsKey(targetDOM))
             {
@@ -57,7 +57,7 @@ public class UIContentsController : MonoBehaviour
             var borderWidth = 3f;
             SetBorderColor(tokenDOM, col);
             SetBorderWidth(tokenDOM, borderWidth);
-        });
+        });*/
     }
 
     bool dragging = false;
@@ -78,7 +78,7 @@ public class UIContentsController : MonoBehaviour
                     var dom = type.target as VisualElement;
                     //Debug.Log(dom.Q<Label>().text);
                     OnTokenMouseOver.Invoke(token, dom);
-                    foreach (var i in annotationLoader.GetAnnotations(cullentFilename))
+                    /*foreach (var i in annotationLoader.GetAnnotations(cullentFilename))
                     {
                         var token1 = (i.textID, i.tokenID);
                         var token2 = (i.textID, i.targetID);
@@ -88,13 +88,13 @@ public class UIContentsController : MonoBehaviour
                             HighlightRelation(tokenMap[token1], tokenMap[token2]);
                             break;
                         }
-                    }
+                    }*/
                 });
                 tokenDOM.RegisterCallback<MouseOutEvent>((type) =>
                 {
                     var dom = type.target as VisualElement;
                     OnTokenMouseOut.Invoke(token, dom);
-                    foreach (var i in annotationLoader.GetAnnotations(cullentFilename))
+                    /*foreach (var i in annotationLoader.GetAnnotations(cullentFilename))
                     {
                         var token1 = (i.textID, i.tokenID);
                         var token2 = (i.textID, i.targetID);
@@ -104,7 +104,7 @@ public class UIContentsController : MonoBehaviour
                             ResetHighlight(tokenMap[token1], tokenMap[token2]);
                             break;
                         }
-                    }
+                    }*/
                 });
                 tokenDOM.RegisterCallback<PointerDownEvent>((type) =>
                 {
@@ -125,8 +125,8 @@ public class UIContentsController : MonoBehaviour
                         contextDOM.Q<Label>("tokenID").text = token.id.ToString();
                         contextDOM.Q<Label>("tokenText").text = token.text;
                         contextDOM.Q<DropdownField>().value = "None";
-                        contextDOM.Q<DropdownField>().choices =new List<string>() { 
-                            "None","ŠÔ", "l•¨", "s“®" ,"ŠÔ-N", "l•¨-N", "s“®-N" ,
+                        contextDOM.Q<DropdownField>().choices = new List<string>() {
+                            "None","ï¿½ï¿½ï¿½ï¿½", "ï¿½lï¿½ï¿½", "ï¿½sï¿½ï¿½" ,"ï¿½ï¿½ï¿½ï¿½-N", "ï¿½lï¿½ï¿½-N", "ï¿½sï¿½ï¿½-N" ,
                         };
                         contextDOM.Q<DropdownField>().RegisterValueChangedCallback((e) =>
                         {
@@ -134,9 +134,9 @@ public class UIContentsController : MonoBehaviour
                             var type = e.newValue switch
                             {
                                 "None" => TokenTagType.None,
-                                _=>TokenTagType.None
+                                _ => TokenTagType.None
                             };
-                            AnnotationLoader.Instance.AddTag(cullentFilename,text.text_id,token.id,type);
+                            AnnotationLoader.Instance.AddTag(cullentFilename, text.text_id, token.id, type);
                         });
                         PopoverManager.Instance.AddPopover(contextDOM, $"{token.text}");
                     }
@@ -153,7 +153,7 @@ public class UIContentsController : MonoBehaviour
                 {
                     if (dragging)
                     {
-                        //var dom = type.target as VisualElement; //‚±‚ê‚¾‚Æ‚¤‚Ü‚­Dictionary‚Ìkey‚Æˆê’v‚µ‚È‚¢BQÆæ‚Í“¯‚¶‚¾‚ª•Ê•¨ˆµ‚¢HƒLƒƒƒXƒg‚µ‚Ä‚¢‚é‚©‚çH
+                        //var dom = type.target as VisualElement; //ï¿½ï¿½ï¿½ê‚¾ï¿½Æ‚ï¿½ï¿½Ü‚ï¿½Dictionaryï¿½ï¿½keyï¿½Æˆï¿½vï¿½ï¿½ï¿½È‚ï¿½ï¿½Bï¿½Qï¿½Æï¿½Í“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Hï¿½Lï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½H
                         OnTokenDragged.Invoke(currentToken, currentTokenDOM, token, tokenDOM);
                         dragging = false;
                         currentToken = null;
@@ -166,8 +166,8 @@ public class UIContentsController : MonoBehaviour
                     tokenDOM.style.backgroundColor = new Color(1, 0, 0, 0.4f);
                 }
                 bunsetsuDOM.Q<VisualElement>("tokenContainer").Add(tokenDOM);
-                tokenMap.Add((text.text_id, token.id), tokenDOM);
-                domMap.Add(tokenDOM, (text.text_id, token.id));
+                //tokenMap.Add((text.text_id, token.id), tokenDOM);
+                //domMap.Add(tokenDOM, (text.text_id, token.id));
             }
             root.Add(bunsetsuDOM);
         }
@@ -175,7 +175,7 @@ public class UIContentsController : MonoBehaviour
 
     void GenerateAnnotationArrow(VisualElement root, VisualElement textDOM, int tokenID, int targetID, TokenRelationType type)
     {
-        var leftPos = new Vector2();
+        /*var leftPos = new Vector2();
         var rightPos = new Vector2();
         foreach (var dom in textDOM.Children())
         {
@@ -188,12 +188,12 @@ public class UIContentsController : MonoBehaviour
                 rightPos = new Vector2(dom.resolvedStyle.left, dom.resolvedStyle.top);
             }
         }
-        GenerateArrow(root, leftPos, rightPos, 3);
+        GenerateArrow(root, leftPos, rightPos, 3);*/
     }
 
     void GenerateMarker(VisualElement root, VisualElement textDOM, int tokenID, int targetID, TokenRelationType type)
     {
-        var marker = new VisualElement();
+        /*var marker = new VisualElement();
         marker.style.backgroundColor = new Color(1, 0, 0);
         foreach (var dom in textDOM.Children())
         {
@@ -202,7 +202,7 @@ public class UIContentsController : MonoBehaviour
                 marker.transform.position = dom.transform.position;
             }
         }
-        root.Add(marker);
+        root.Add(marker);*/
     }
 
     void GenerateArrow(VisualElement root, Vector2 leftPos, Vector2 rightPos, int height)
@@ -250,7 +250,6 @@ public class UIContentsController : MonoBehaviour
                 sectionData.header_text?.Length > 0 && sectionData.texts.Count > 0
                 ))
             {
-                //ƒZƒNƒVƒ‡ƒ“‚ªq—v‘f‚ğŠÜ‚Ş‚©Aheader_text,text—¼•û‚ğŠÜ‚Ş‚È‚çfoldout‚É‚·‚é
                 var section = foldableSectionUXML.CloneTree();
                 section.Q<Foldout>("header").text = sectionData.header + "  " + sectionData?.header_text;
                 foreach (var text in sectionData.texts)
@@ -300,17 +299,17 @@ public class UIContentsController : MonoBehaviour
     }
     public void ClearAnnotation()
     {
-        foreach (var i in tokenMap.Values)
-        {
-            var col = new Color(0f, 0, 0f,0);
-            var borderWidth = 0f;
-            SetBorderColor(i, col);
-            SetBorderWidth(i, borderWidth);
-        }
+        /* foreach (var i in tokenMap.Values)
+         {
+             var col = new Color(0f, 0, 0f,0);
+             var borderWidth = 0f;
+             SetBorderColor(i, col);
+             SetBorderWidth(i, borderWidth);
+         }*/
     }
-    public void GenerateAnnotation(List<TokenRelation> annotations=null)
+    public void GenerateAnnotation(List<TokenRelation> annotations = null)
     {
-        Debug.Log($"generate annotation {annotationLoader.GetAnnotations(cullentFilename).Count}");
+        /*Debug.Log($"generate annotation {annotationLoader.GetAnnotations(cullentFilename).Count}");
         foreach (var i in annotationLoader.GetAnnotations(cullentFilename))
         {
             var token1 = (i.textID, i.tokenID);
@@ -327,6 +326,6 @@ public class UIContentsController : MonoBehaviour
             SetBorderWidth(tokenMap[token1], borderWidth);
             SetBorderColor(tokenMap[token2], col);
             SetBorderWidth(tokenMap[token2], borderWidth);
-        }
+        }*/
     }
 }

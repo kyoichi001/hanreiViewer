@@ -104,14 +104,14 @@ public class FactReason
 [System.Serializable]
 public class HanreiContent
 {
-    public Signature signature;
-    public Judgement judgement;
-    public MainText main_text;
-    public FactReason fact_reason;
+    public Signature signature = new Signature();
+    public Judgement judgement = new Judgement();
+    public MainText main_text = new MainText();
+    public FactReason fact_reason = new FactReason();
 }
 [System.Serializable]
 public class HanreiData
 {
     public string filename;
-    public HanreiContent contents;
+    public HanreiContent contents = new HanreiContent();
 }

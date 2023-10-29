@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -19,6 +20,18 @@ public class PDFExtracterWrapper : MonoBehaviour
 
     public async UniTask Extract(string filePath, string outPutPath)
     {
+        if (!File.Exists(FilePath))
+        {
+            await UniTask.DelayFrame(1);
+            Akak.Debug.PrintError("pdf2txt not found");
+            return;
+        }
+        if (!File.Exists(filePath))
+        {
+            await UniTask.DelayFrame(1);
+            Akak.Debug.PrintError($"target file:{filePath} not found");
+            return;
+        }
         var tcs = new UniTaskCompletionSource();
         _process = new Process();
         // プロセスを起動するときに使用する値のセットを指定
@@ -30,7 +43,7 @@ public class PDFExtracterWrapper : MonoBehaviour
             RedirectStandardInput = false,               // StandardInput から入力を読み取る(既定値：false)
             RedirectStandardOutput = true,              // 出力を StandardOutput に書き込むかどうか(既定値：false)
             RedirectStandardError = true,
-            CreateNoWindow = false,                      // プロセス用の新しいウィンドウを作成せずにプロセスを起動するかどうか(既定値：false)
+            CreateNoWindow = true,                      // プロセス用の新しいウィンドウを作成せずにプロセスを起動するかどうか(既定値：false)
             Arguments = $"\"{filePath}\" \"{outPutPath}\""
         };
         // 外部プロセスのStandardOutput ストリームに行を書き込む度に発火されるイベント
@@ -50,7 +63,7 @@ public class PDFExtracterWrapper : MonoBehaviour
             if (_process == null || _process.HasExited)
             {
                 //var msg = _process.StandardOutput.ReadToEnd();
-                UnityEngine.Debug.Log($"pdf extracter 異常終了 {_process == null} {_process.HasExited} {_process.ExitCode}");
+                //DialogPopupManager.Instance.Print($"pdf extracter 異常終了 {_process == null} {_process.HasExited} {_process.ExitCode}");
                 tcs.TrySetResult();
                 return;
             }
@@ -58,7 +71,6 @@ public class PDFExtracterWrapper : MonoBehaviour
             _process.CloseMainWindow();
             _process.Dispose();
             _process = null;
-            UnityEngine.Debug.Log("pdf extracter ended");
             tcs.TrySetResult();
         };
         // プロセスを起動する

@@ -20,7 +20,6 @@ public class FileFishboneExtracter : MonoBehaviour
         pdfExtracterWrapper.OnStandardOut.AddListener((output) =>
         {
             UnityEngine.Debug.Log(output);
-            DialogPopupManager.Instance.Print(output);
         });
     }
 

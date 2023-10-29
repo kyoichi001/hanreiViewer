@@ -8,11 +8,11 @@ using UnityEngine.Events;
 
 public class DataLoader : SingletonMonoBehaviour<DataLoader>
 {
-    public class OnDataLoadedEvent:UnityEvent<HanreiData>{}
+    public class OnDataLoadedEvent : UnityEvent<HanreiData> { }
 
     public string DataPath;
-    public List<HanreiData> hanreiDatas=new List<HanreiData>();
-    public OnDataLoadedEvent OnDataLoaded { get; } =new OnDataLoadedEvent();
+    public List<HanreiData> hanreiDatas = new List<HanreiData>();
+    public OnDataLoadedEvent OnDataLoaded { get; } = new OnDataLoadedEvent();
 
     HanreiData LoadData(string filePath)
     {
@@ -29,7 +29,7 @@ public class DataLoader : SingletonMonoBehaviour<DataLoader>
     {
         Debug.Log("load hanrei data");
         string[] files = Directory.GetFiles(DataPath);
-        foreach (var file in files)
+        /*foreach (var file in files)
         {
             if(!file.EndsWith(".json")) continue;
             Debug.Log($"loading {file}");
@@ -37,20 +37,20 @@ public class DataLoader : SingletonMonoBehaviour<DataLoader>
             dat.filename = Path.GetFileName(file).Split(".")[0];
             hanreiDatas.Add(dat);
             OnDataLoaded.Invoke(dat);
-        }
+        }*/
     }
-    public Token GetToken(string filename,int textID,int tokenID)
+    public Token GetToken(string filename, int textID, int tokenID)
     {
-        foreach(var i in hanreiDatas)
+        foreach (var i in hanreiDatas)
         {
             if (i.filename != filename) continue;
-            foreach(var j in i.contents.fact_reason.sections)
+            foreach (var j in i.contents.fact_reason.sections)
             {
-                foreach(var k in j.texts)
+                foreach (var k in j.texts)
                 {
-                    foreach(var l in k.bunsetu)
+                    foreach (var l in k.bunsetu)
                     {
-                        foreach(var m in l.tokens)
+                        foreach (var m in l.tokens)
                         {
                             if (textID == k.text_id && tokenID == m.id) return m;
                         }
