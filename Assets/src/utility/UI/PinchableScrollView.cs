@@ -106,7 +106,7 @@ public class PinchableScrollView : MonoBehaviour
     }
     public void SetViewCenter(RectTransform target)
     {
-        var localPoint = transform.parent.InverseTransformPoint(target.position);
+        var localPoint = transform.parent.InverseTransformPoint(target.position + new Vector3(-800 / 2, 400 / 2));
         transform.localPosition -= localPoint;
     }
 }
