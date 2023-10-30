@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[ExecuteInEditMode]
 public class UIScroll : MonoBehaviour
 {
     //https://note.com/what_is_picky/n/nf9b5dca6e5b6
@@ -24,7 +25,10 @@ public class UIScroll : MonoBehaviour
     }
     void Update()
     {
-        var scale = origin.lossyScale * scaleFactor;
+        var center = transform.root.position;
+        var localCenter = transform.parent.InverseTransformPoint(center);
+        var scale = Vector3.one;
+        scale /= Mathf.Abs(origin.position.z) * scaleFactor;
         m_material.SetTextureScale(k_propName, new Vector2(1 / scale.x, 1 / scale.y));
         m_material.SetTextureOffset(k_propName, origin.localPosition * scrollSensitivity);
     }
