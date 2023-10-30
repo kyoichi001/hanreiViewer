@@ -14,12 +14,12 @@ public class FileFishboneExtracter : MonoBehaviour
         pdfExtracterWrapper = GetComponent<PDFExtracterWrapper>();
         dragAndDrop.OnFileDropped.AddListener(async (path) =>
         {
-            DialogPopupManager.Instance.Print($"file dropped {path}");
+            Akak.Debug.Print($"file dropped {path}");
             await ExtractTextFromPDF(path);
         });
         pdfExtracterWrapper.OnStandardOut.AddListener((output) =>
         {
-            UnityEngine.Debug.Log(output);
+            Akak.Debug.Log(output);
         });
     }
 
@@ -27,10 +27,10 @@ public class FileFishboneExtracter : MonoBehaviour
     {
         if (Path.GetExtension(filePath) != ".pdf")
         {
-            DialogPopupManager.Instance.Print("not pdf");
+            Akak.Debug.PrintWarn("not pdf");
             return;
         }
-        DialogPopupManager.Instance.Print("pdf extracting...");
+        Akak.Debug.Log("pdf extracting...");
         var outputPath = Application.dataPath + "\\out.json";
         try
         {
@@ -39,10 +39,10 @@ public class FileFishboneExtracter : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            DialogPopupManager.Instance.Print(e.Message);
+            Akak.Debug.PrintError(e.Message);
             throw;
         }
-        DialogPopupManager.Instance.Print("pdf extracted");
+        Akak.Debug.Log("pdf extracted");
 
     }
 

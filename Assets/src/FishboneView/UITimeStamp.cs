@@ -193,23 +193,6 @@ public class UITimeStamp : MonoBehaviour
 
     public bool matchFilter(bool genkoku, bool hikoku, bool jijitsu)
     {
-
-        /*if (claim == "")
-        {
-            if (data.claim_state == "" || data.claim_state == "saibanjo") return true;
-        }
-        else if (claim == "genkoku")
-        {
-            if (data.claim_state == claim) return true;
-        }
-        else if (claim == "hikoku")
-        {
-            if (data.claim_state == claim) return true;
-        }
-        else if (claim == "saibanjo")
-        {
-            if (data.claim_state == claim) return true;
-        }*/
         if (genkoku && data.claim_state == "genkoku")
         {
             return true;

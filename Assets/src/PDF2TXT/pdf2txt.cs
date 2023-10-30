@@ -49,22 +49,22 @@ public class pdf2txt : MonoBehaviour
         reader.Close();
         var inputDat = JsonUtility.FromJson<t01_JustifySentence.InputData>(datastr);
         await UniTask.DelayFrame(1);
-        DialogPopupManager.Instance.Print("pdf2txt : phase 1");
+        Akak.Debug.Log("pdf2txt : phase 1");
         var res1 = t01.Convert(inputDat);
         Export(JsonUtility.ToJson(res1, true), Application.dataPath + "/" + josnOutputPath + "/" + inputFileName + "__phase1.json");
-        DialogPopupManager.Instance.Print("pdf2txt : phase 2");
+        Akak.Debug.Log("pdf2txt : phase 2");
         var res2 = t02.Convert(res1, Application.streamingAssetsPath + "/" + headerRulePath);
         Export(JsonUtility.ToJson(res2, true), Application.dataPath + "/" + josnOutputPath + "/" + inputFileName + "__phase2.json");
-        DialogPopupManager.Instance.Print("pdf2txt : phase 3");
+        Akak.Debug.Log("pdf2txt : phase 3");
         var res3 = t03.Convert(res2, Application.streamingAssetsPath + "/" + headerRulePath);
         Export(JsonUtility.ToJson(res3, true), Application.dataPath + "/" + josnOutputPath + "/" + inputFileName + "__phase3.json");
-        DialogPopupManager.Instance.Print("pdf2txt : phase 4");
+        Akak.Debug.Log("pdf2txt : phase 4");
         var res4 = t04.Convert(res3);
         Export(JsonUtility.ToJson(res4, true), Application.dataPath + "/" + josnOutputPath + "/" + inputFileName + "__phase4.json");
-        DialogPopupManager.Instance.Print("pdf2txt : phase 5");
+        Akak.Debug.Log("pdf2txt : phase 5");
         var res5 = t05.Convert(res4);
         Export(JsonUtility.ToJson(res5, true), Application.dataPath + "/" + josnOutputPath + "/" + inputFileName + "__phase5.json");
-        DialogPopupManager.Instance.Print("pdf2txt : phase 6");
+        Akak.Debug.Log("pdf2txt : phase 6");
         var res6 = t06.Convert(res5);
 
         string json = JsonUtility.ToJson(res6, true);                 // jsonとして変換
@@ -72,20 +72,21 @@ public class pdf2txt : MonoBehaviour
         StreamWriter wr = new StreamWriter(o, false);    // ファイル書き込み指定
         wr.WriteLine(json);                                     // json変換した情報を書き込み
         wr.Close();
-        DialogPopupManager.Instance.Print("pdf2txt : task finished");
+        Akak.Debug.Log("pdf2txt : task finished");
     }
-    void Update()
+    async void Update()
     {
         if (Input.GetKeyDown(KeyCode.Y))
         {
             try
             {
-                DialogPopupManager.Instance.Print("converting pdf...");
-                ConvertPDF2Txt(Application.dataPath + "/" + samplePDFPath);
+                Akak.Debug.Log("converting pdf...");
+                await ConvertPDF2Txt(Application.dataPath + "/" + samplePDFPath);
             }
             catch (Exception e)
             {
-                DialogPopupManager.Instance.Print(e.Message);
+                await UniTask.DelayFrame(1);
+                Akak.Debug.Log(e.Message);
             }
         }
     }

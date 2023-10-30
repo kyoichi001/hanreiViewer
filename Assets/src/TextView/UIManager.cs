@@ -47,7 +47,7 @@ public class UIManager : MonoBehaviour
             }
             catch (Exception e)
             {
-                DialogPopupManager.Instance.Print(e.Message);
+                Akak.Debug.PrintError(e.Message);
             }
         });
 
