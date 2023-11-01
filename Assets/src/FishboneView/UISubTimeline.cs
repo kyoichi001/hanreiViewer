@@ -15,14 +15,18 @@ public class UISubTimeline : MonoBehaviour
     [Header("Debug")]
     [SerializeField, ReadOnly] List<UITimeData> topTimes = new List<UITimeData>();
     [SerializeField, ReadOnly] List<UITimeData> bottomTimes = new List<UITimeData>();
-
+    [SerializeField, ReadOnly] float cameraScale;
+    [SerializeField, ReadOnly] int currentScaleLevel = 0;
 
     public System.DateTime begin_time { get; private set; }
     public System.DateTime end_time { get; private set; }
 
     RectTransform rectTransform;
 
-    int currentScaleLevel = 0;
+    void Awake()
+    {
+        mainCamera = FindObjectOfType<Camera>();
+    }
     public void Init(System.DateTime begin, System.DateTime end)
     {
         rectTransform = transform as RectTransform;
@@ -89,7 +93,7 @@ public class UISubTimeline : MonoBehaviour
     }
     void GenerateTimeBar(System.DateTime minTime, System.DateTime maxTime)
     {
-        var (timeTickYear, timeTickMonth) = GetPixelTime();
+        var (timeTickYear, timeTickMonth, _) = GetPixelTime();
 
         var t = minTime.AddYears(timeTickYear).AddMonths(timeTickMonth);
         int max_count = 0;
@@ -108,7 +112,7 @@ public class UISubTimeline : MonoBehaviour
     }
     public float GetTimebarLength()
     {
-        var (timeTickYear, timeTickMonth) = GetPixelTime();
+        var (timeTickYear, timeTickMonth, _) = GetPixelTime();
         var (min_value, max_value) = (begin_time, end_time);
         var t2 = min_value.AddYears(timeTickYear).AddMonths(timeTickMonth);
         var timeRatio2 = (float)(t2 - min_value).TotalDays / (float)(max_value - min_value).TotalDays;
@@ -127,7 +131,7 @@ public class UISubTimeline : MonoBehaviour
         var beginRatio = (float)(b - minTime).TotalDays / (float)(maxTime - minTime).TotalDays;
         var endRatio = (float)(e - minTime).TotalDays / (float)(maxTime - minTime).TotalDays;
         var rc = data.gameObject.transform as RectTransform;
-        Debug.Log($"time {minTime},{maxTime}, time {data.data.begin_time},{data.data.end_time}, ratio {beginRatio},{endRatio}");
+        //Debug.Log($"time {minTime},{maxTime}, time {data.data.begin_time},{data.data.end_time}, ratio {beginRatio},{endRatio}");
         switch (data.data.timeType)
         {
             case TimeType.point:
@@ -146,7 +150,7 @@ public class UISubTimeline : MonoBehaviour
                     data.data.layer * time_layer_offset + padding
                     );
                 var widthRatio = endRatio - beginRatio;
-                Debug.Log($"{rectTransform.rect.width}:{widthRatio},{widthRatio * rectTransform.rect.width}", gameObject);
+                //Debug.Log($"{rectTransform.rect.width}:{widthRatio},{widthRatio * rectTransform.rect.width}", gameObject);
                 rc.sizeDelta = new Vector2(widthRatio * rectTransform.rect.width, time_height);
                 break;
         }
@@ -176,42 +180,39 @@ public class UISubTimeline : MonoBehaviour
     }
     void Update()
     {
-        var lv = currentScaleLevel;
-        var (timeTickYear, timeTickMonth) = GetPixelTime();
-        if (lv != currentScaleLevel)
+        var (timeTickYear, timeTickMonth, level) = GetPixelTime();
+        if (level != currentScaleLevel)
         {
+            currentScaleLevel = level;
+            Debug.Log("generate time bar");
             ClearTimeBar();
             GenerateTimeBar(begin_time, end_time);
         }
     }
-
-    public (int, int) GetPixelTime()
+    Camera mainCamera;
+    public (int, int, int) GetPixelTime()
     {
-        var scale = transform.lossyScale.x;
-        if (scale <= 0.2f + 0.1f)
+        cameraScale = Mathf.Abs(mainCamera.transform.position.z - transform.position.z);
+        var scale = cameraScale;
+        if (scale >= 1500)
         {
-            currentScaleLevel = 0;
-            return (5, 0);
+            return (5, 0, 0);
         }
-        else if (scale <= 0.5f + .25f)
+        else if (scale >= 800)
         {
-            currentScaleLevel = 1;
-            return (1, 0);
+            return (1, 0, 1);
         }
-        else if (scale <= 1f + .25f)
+        else if (scale >= 700)
         {
-            currentScaleLevel = 2;
-            return (0, 6);
+            return (0, 6, 2);
         }
-        else if (scale <= 2.0f + .25f)
+        else if (scale >= 600)
         {
-            currentScaleLevel = 3;
-            return (0, 3);
+            return (0, 3, 3);
         }
         else
         {
-            currentScaleLevel = 3;
-            return (0, 3);
+            return (0, 3, 3);
         }
     }
 

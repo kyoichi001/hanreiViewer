@@ -25,16 +25,16 @@ public class DrawLine : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, 0, angle * Mathf.Rad2Deg);
     }
 
-    public Vector2 GetFromPos()
+    public Vector3 GetFromPos()
     {
-        if (ui1 == null || ui2 == null) return new Vector2(float.NaN, float.NaN);
+        if (ui1 == null || ui2 == null) return new Vector3(float.NaN, float.NaN, float.NaN);
         var offset = ui2.position - ui1.position;
         var angle = Mathf.Atan2(offset.y, offset.x);
         return ui1.position + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * ui1Margin;
     }
-    public Vector2 GetToPos()
+    public Vector3 GetToPos()
     {
-        if (ui1 == null || ui2 == null) return new Vector2(float.NaN, float.NaN);
+        if (ui1 == null || ui2 == null) return new Vector3(float.NaN, float.NaN, float.NaN);
         var offset = ui2.position - ui1.position;
         var angle = Mathf.Atan2(offset.y, offset.x);
         return ui2.position - new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * ui2Margin;

@@ -10,7 +10,9 @@ public class FishboneViewHUDManager : MonoBehaviour
     [SerializeField] Button backButton;
     [SerializeField] GameObject hanreiSelectorButtonPrefab;
     [SerializeField] RectTransform hanreiSelector;
+    [SerializeField] GameObject fishboneHUD;
 
+    UIHanreiSelectorButton currentActiveButton = null;
     // Start is called before the first frame update
     void Awake()
     {
@@ -18,24 +20,25 @@ public class FishboneViewHUDManager : MonoBehaviour
         {
             foreach (var (hanreiTitle, path) in filenames)
             {
-                var obj = Instantiate(hanreiSelectorButtonPrefab, hanreiSelector);
-                var buttons = obj.GetComponentsInChildren<Button>();
-                buttons[0].GetComponentInChildren<TMPro.TextMeshProUGUI>().text = hanreiTitle;
-
-                //fishboneの表示
-                buttons[0].onClick.AddListener(() =>
+                var obj = Instantiate(hanreiSelectorButtonPrefab, hanreiSelector).GetComponent<UIHanreiSelectorButton>();
+                obj.Init(hanreiTitle);
+                obj.OnShowFishbone.AddListener(() =>
                 {
+                    currentActiveButton?.Deactivate();
                     FishboneViewManager.Instance.ShowFishboneUI(path);
+                    obj.Activate();
+                    currentActiveButton = obj;
                 });
-                //textviewの表示
-                buttons[1].onClick.AddListener(() =>
+                obj.OnShowTextview.AddListener(() =>
                 {
 
                 });
             }
         });
+        fishboneHUD.SetActive(false);
         FishboneViewManager.Instance.OnShowData.AddListener((path, data) =>
         {
+            fishboneHUD.SetActive(true);
         });
         EventDataLoader.Instance.OnDataLoaded.AddListener((path, data_) =>
         {

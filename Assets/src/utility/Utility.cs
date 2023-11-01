@@ -40,7 +40,7 @@ public class Utility
         var day = date % 100;
         if (month < 1) month = 1;
         if (day < 1) day = 1;
-        Debug.Log($"{date}:{year}/{month}/{day}");
+        //Debug.Log($"{date}:{year}/{month}/{day}");
         return new System.DateTime(year, month, day);
     }
 }

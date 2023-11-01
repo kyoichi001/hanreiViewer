@@ -158,7 +158,8 @@ public class UITimeline : MonoBehaviour
     {
         foreach (var subTL in subTimelines)
         {
-            return subTL.GetPixelTime();
+            var (a, b, _) = subTL.GetPixelTime();
+            return (a, b);
         }
         return (0, 0);
 

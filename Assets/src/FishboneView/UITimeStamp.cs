@@ -67,7 +67,7 @@ public class UITimeStamp : MonoBehaviour
     /// </summary>
     public void SetPosition()
     {
-        Debug.Log($"set position {data.time_node.position}");
+        //Debug.Log($"set position {data.time_node.position}");
         transform.position = data.time_node.position;
         if (data.is_top)
         {
@@ -126,7 +126,7 @@ public class UITimeStamp : MonoBehaviour
     {
         var offset = personNode.transform.localPosition;
         float angle = Mathf.Atan2(offset.y, offset.x);
-        Debug.Log($"timestamp : {data.is_top}, {angle}");
+        //Debug.Log($"timestamp : {data.is_top}, {angle}");
         var vec = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle));
         var pos = Vector3.zero;
         if (data.is_top)

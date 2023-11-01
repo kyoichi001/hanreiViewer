@@ -25,7 +25,7 @@ public class TimelineManager : SingletonMonoBehaviour<TimelineManager>
         }
         var b = begin_time == null ? "null" : begin_time.ToString();
         var e = end_time == null ? "null" : begin_time.ToString();
-        Debug.Log($"Timeline manager : AddTime {b} {e}");
+        //Debug.Log($"Timeline manager : AddTime {b} {e}");
         int layer = 0;
         while (!isCapable(begin_time, end_time, layer, isTop))
         {

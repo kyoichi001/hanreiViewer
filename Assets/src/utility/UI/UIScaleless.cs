@@ -11,6 +11,6 @@ public class UIScaleless : MonoBehaviour
     void Update()
     {
         var scale = transform.parent.lossyScale;
-        transform.localScale = new Vector3(scaleX ? 1 / scale.x : 1, scaleY ? 1 / scale.y : 1);
+        transform.localScale = new Vector3(scaleX ? 1 / scale.x : 1, scaleY ? 1 / scale.y : 1, 1);
     }
 }

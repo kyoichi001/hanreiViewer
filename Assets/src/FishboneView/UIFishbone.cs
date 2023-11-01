@@ -9,13 +9,14 @@ using DataType = HanreiTokenizedData.HanreiTextTokenData.HanreiEventsData;
 public class UIFishbone : MonoBehaviour
 {
 
+    [Header("Prefabs")]
+    [SerializeField] GameObject timeStampPrefab;
+    [SerializeField] GameObject eventButtonPrefab;
+
     [Header("References")]
     [SerializeField] GameObject timeLine;
     [SerializeField] RectTransform timeStampsContainer;
-    [SerializeField] GameObject timeStampPrefab;
     [SerializeField] RectTransform eventsList;
-    [SerializeField] GameObject eventButtonPrefab;
-    [SerializeField] PinchableScrollView scrollView;
     [SerializeField] Toggle genkokuToggle;
     [SerializeField] Toggle hikokuToggle;
     [SerializeField] Toggle jijitsuToggle;
@@ -127,10 +128,10 @@ public class UIFishbone : MonoBehaviour
             eventMap[map_key] = dat;
             var eventButtonScr = Instantiate(eventButtonPrefab, eventsList).GetComponent<UIEventButton>();
             eventButtonScr.Init(time_id.ToString(), data_.person, time_text);
-            eventButtonScr.GetComponent<Button>().onClick.AddListener(() =>
+            /*eventButtonScr.GetComponent<Button>().onClick.AddListener(() =>
             {
                 scrollView.SetViewCenter(dat.time_node);
-            });
+            });*/
         }
     }
 
@@ -140,11 +141,11 @@ public class UIFishbone : MonoBehaviour
         {
             var time_id = timeMap[i.Key];
             var obj = uiTimeLine.GetTimeTransform(time_id).gameObject;
-            Debug.Log($"GenerateUI : {i.Key} {time_id} {obj.name}:{obj.transform.position}");
+            // Debug.Log($"GenerateUI : {i.Key} {time_id} {obj.name}:{obj.transform.position}");
             i.Value.time_node = obj.transform as RectTransform;
-            Debug.Log("debug A");
+            //Debug.Log("debug A");
             var timeStampObj = Instantiate(timeStampPrefab, timeStampsContainer).GetComponent<UITimeStamp>();
-            Debug.Log($"timestamp data {i.Value.time_node.position}");
+            // Debug.Log($"timestamp data {i.Value.time_node.position}");
             timeStampObj.SetData(i.Value);
             timeStampObj.SetPosition();
         }
