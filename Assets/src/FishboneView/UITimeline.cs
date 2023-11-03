@@ -30,7 +30,7 @@ public class UITimeline : MonoBehaviour
         var (min, max) = TimelineManager.Instance.CalcMinMax();
         if (splitTime <= min || max <= splitTime) return false;
         //すでにある区間を横切って切ろうとするとエラー
-        foreach (var i in TimelineManager.Instance.data)
+        foreach (var i in TimelineManager.Instance.GetData())
         {
             switch (i.timeType)
             {
@@ -119,7 +119,7 @@ public class UITimeline : MonoBehaviour
                 subTimelines.Add(b);
             }
         }
-        foreach (var i in TimelineManager.Instance.data)
+        foreach (var i in TimelineManager.Instance.GetData())
         {
             foreach (var subTL in subTimelines)
             {

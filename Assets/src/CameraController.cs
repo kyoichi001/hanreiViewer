@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraController : MonoBehaviour
 {
@@ -12,19 +13,28 @@ public class CameraController : MonoBehaviour
     Vector3 origin;
     Vector3 transformOrigin;
     // Update is called once per frame
+    bool isEnable = false;
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (!EventSystem.current.IsPointerOverGameObject())
         {
-            origin = Input.mousePosition;
-            transformOrigin = transform.position;
-        }
-        else if (Input.GetMouseButton(0))
-        {
-            transform.position = transformOrigin + (Input.mousePosition - origin) * scrollSensitivity;
+            if (Input.GetMouseButtonDown(0))
+            {
+                origin = Input.mousePosition;
+                transformOrigin = transform.position;
+                isEnable = true;
+            }
+            else if (isEnable && Input.GetMouseButton(0))
+            {
+                transform.position = transformOrigin + (Input.mousePosition - origin) * scrollSensitivity;
+            }
+            else if (isEnable && Input.GetMouseButtonUp(0))
+            {
+                isEnable = false;
+            }
+            transform.position += new Vector3(0, 0, Input.mouseScrollDelta.y * zoomSensitivity);
+            transform.position = new Vector3(transform.position.x, transform.position.y, Mathf.Clamp(transform.position.z, zoomMin, zoomMax));
         }
 
-        transform.position += new Vector3(0, 0, Input.mouseScrollDelta.y * zoomSensitivity);
-        transform.position = new Vector3(transform.position.x, transform.position.y, Mathf.Clamp(transform.position.z, zoomMin, zoomMax));
     }
 }

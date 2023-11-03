@@ -43,4 +43,12 @@ public class Utility
         //Debug.Log($"{date}:{year}/{month}/{day}");
         return new System.DateTime(year, month, day);
     }
+    public static bool Contains(System.DateTime t, System.DateTime begin, System.DateTime end)
+    {
+        return begin <= t && t < end;
+    }
+    public static bool Contains(System.DateTime beginValue, System.DateTime endValue, System.DateTime begin, System.DateTime end)
+    {
+        return begin <= beginValue && endValue <= end;
+    }
 }

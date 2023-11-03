@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5945625740279537754}
   - component: {fileID: 2440096583309645380}
   - component: {fileID: 6682037080998738412}
+  - component: {fileID: 2629148378193251034}
   m_Layer: 5
   m_Name: act
   m_TagString: Untagged
@@ -152,6 +153,19 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
   m_EffectDistance: {x: 3, y: 3}
   m_UseGraphicAlpha: 1
+--- !u!114 &2629148378193251034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3398905254045749044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 009918e7195fca244b47e2b85d4018b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverCursor: {fileID: 2800000, guid: 9b787dbab1731e649a2792391545988b, type: 3}
 --- !u!1 &5485710306448509285
 GameObject:
   m_ObjectHideFlags: 0

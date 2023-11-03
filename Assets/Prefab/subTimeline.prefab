@@ -122,6 +122,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4862021193947359573}
   - component: {fileID: -242187744591011584}
+  - component: {fileID: 1453198010783096625}
   m_Layer: 5
   m_Name: subTimeline
   m_TagString: Untagged
@@ -172,6 +173,20 @@ MonoBehaviour:
   timeBarPrefab: {fileID: 425860659988358930, guid: 2d626a7f62e75bd4abeb5d54a4336d38, type: 3}
   topTimes: []
   bottomTimes: []
+  cameraScale: 0
+  currentScaleLevel: 0
+--- !u!114 &1453198010783096625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3849677134331512603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8f2f6958dc59a846a4fdbd9f69bbde0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7679290034693980338
 GameObject:
   m_ObjectHideFlags: 0
