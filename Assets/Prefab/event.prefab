@@ -356,6 +356,7 @@ MonoBehaviour:
   maxHeight: 80
   actNode: {fileID: 3398905254045749044}
   boneLine: {fileID: 7354099357651779395}
+  modalPrefab: {fileID: 990375133097399809, guid: bed406ae9c956f54fbbed25913de6d45, type: 3}
 --- !u!223 &41882035059490641
 Canvas:
   m_ObjectHideFlags: 0

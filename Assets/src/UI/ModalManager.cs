@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 //TODO: 整備
-public class ModalManager : MonoBehaviour
+public class ModalManager : SingletonMonoBehaviour<ModalManager>
 {
+    [SerializeField] RectTransform modalContainer;
     [SerializeField] Button bgButton;
     List<Modal> modals = new List<Modal>();//表示するmodalのキュー
     void Awake()
@@ -15,14 +16,20 @@ public class ModalManager : MonoBehaviour
             CloseModal();
         });
     }
-    public void AddModal(Modal m)
+    public void AddModal(GameObject m)
     {
-        modals.Add(m);
-        m.gameObject.SetActive(false);
+        var obj = Instantiate(m, modalContainer);
+        modals.Add(obj.GetComponent<Modal>());
+        modals[^1].OnClose.AddListener(() =>
+        {
+            CloseModal();
+        });
+        obj.gameObject.SetActive(false);
+        OpenModal();
     }
     public void CloseModal()
     {
-        Destroy(modals[0]);
+        Destroy(modals[0].gameObject);
         modals.RemoveAt(0);
         bgButton.gameObject.SetActive(false);
     }

@@ -28,6 +28,13 @@ public class FishboneViewManager : SingletonMonoBehaviour<FishboneViewManager>
             var c = b[^1].Split("/");
             data[c[^1]] = data_;
         });
+        /*var a = new System.DateTime(2000, 1, 1);
+        var b = new System.DateTime(2003, 4, 1);
+        var c = new System.DateTime(2005, 12, 10);
+        var d = new System.DateTime(2010, 12, 31);
+        Debug.Log((b - a).TotalDays);
+        Debug.Log((c - a).TotalDays);
+        Debug.Log((d - a).TotalDays);*/
     }
     void Start()
     {

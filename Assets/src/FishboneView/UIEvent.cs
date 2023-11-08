@@ -9,6 +9,7 @@ public class UIEvent : MonoBehaviour
     [SerializeField] GameObject actNode;
     TMPro.TextMeshProUGUI actText;
     [SerializeField] GameObject boneLine;
+    [SerializeField] GameObject modalPrefab;
     Canvas canvas;
 
     private void Awake()
@@ -43,6 +44,10 @@ public class UIEvent : MonoBehaviour
             rt.sizeDelta = new Vector2(rt.sizeDelta.x, height);
         });
         trigger.triggers.Add(exit_entry);
+        button.onClick.AddListener(() =>
+        {
+            ModalManager.Instance.AddModal(modalPrefab);
+        });
     }
 
     public Rect CalcRect()
