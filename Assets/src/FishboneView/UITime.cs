@@ -2,13 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum TimeType
-{
-    point,
-    begin_end,
-    begin,
-    end
-}
 [System.Serializable]
 public class UITimeData
 {
