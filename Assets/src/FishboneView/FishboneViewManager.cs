@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -37,6 +38,7 @@ public class FishboneViewManager : SingletonMonoBehaviour<FishboneViewManager>
     }
     async void Start()
     {
+        //var token = this.GetCancellationTokenOnDestroy();
         var filenames = HanreiDataIO.Instance.GetFileNames();
         var a = new List<(string, string)>();
         foreach (var f in filenames)
