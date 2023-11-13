@@ -8,10 +8,8 @@ public class UISubTimeline : MonoBehaviour
     public class TimelineNodeData
     {
         public int ID;
-        public System.DateTime? begin_time;
-        public System.DateTime? end_time;
+        public DurationTime time;
         public string text;
-        public TimeType timeType;
         public bool is_top;
         public int layer;
     }
@@ -35,12 +33,10 @@ public class UISubTimeline : MonoBehaviour
 
     RectTransform rectTransform;
     Akak.LOD LOD;
-    Camera mainCamera;
 
     void Awake()
     {
         rectTransform = transform as RectTransform;
-        mainCamera = FindObjectOfType<Camera>();
         LOD = GetComponent<Akak.LOD>();
     }
     public void Init(System.DateTime begin, System.DateTime end)
@@ -48,35 +44,24 @@ public class UISubTimeline : MonoBehaviour
         begin_time = begin;
         end_time = end;
     }
-    public bool Contains(System.DateTime? begin, System.DateTime? end, TimeType timeType, int offsetYear = 10)
+    public bool Contains(DurationTime t, int offsetYear = 10)
     {
-        switch (timeType)
-        {
-            case TimeType.point:
-                return Utility.Contains(begin ?? System.DateTime.MinValue, begin_time, end_time);
-            case TimeType.begin_end:
-                return Utility.Contains(begin ?? System.DateTime.MinValue, end ?? System.DateTime.MaxValue, begin_time, end_time);
-            case TimeType.begin:
-                return Utility.Contains(begin ?? System.DateTime.MinValue, begin?.AddYears(offsetYear) ?? System.DateTime.MaxValue, begin_time, end_time);
-            case TimeType.end:
-                return Utility.Contains(end?.AddYears(-offsetYear) ?? System.DateTime.MinValue, end ?? System.DateTime.MaxValue, begin_time, end_time);
-        }
-        return false;
+        return Utility.Contains(begin_time, end_time, t, offsetYear);
     }
     public void AddTime(UITimeData data)
     {
         var arr = data.is_top ? topTimes : bottomTimes;
         int layer = 0;
-        if (data.timeType == TimeType.point)
+        if (data.time.timeType == TimeType.point)
         {
-            while (!isCapable(data.begin_time ?? System.DateTime.MinValue, layer, data.is_top))
+            while (!isCapable(data.time.begin ?? System.DateTime.MinValue, layer, data.is_top))
             {
                 layer++;
             }
         }
         else
         {
-            while (!isCapable(data.begin_time, data.end_time, layer, data.is_top))
+            while (!isCapable(data.time.begin, data.time.end, layer, data.is_top))
             {
                 layer++;
             }
@@ -84,10 +69,8 @@ public class UISubTimeline : MonoBehaviour
         arr.Add(new TimelineNodeData
         {
             ID = data.ID,
-            begin_time = data.begin_time,
-            end_time = data.end_time,
+            time = data.time,
             text = data.text,
-            timeType = data.timeType,
             is_top = data.is_top,
             layer = layer
         });
@@ -155,13 +138,13 @@ public class UISubTimeline : MonoBehaviour
         var time_height = 25;
         var time_layer_offset = isTop ? time_height : -time_height;
         var padding = isTop ? 30 : -30;
-        System.DateTime b = data.data.begin_time ?? data.data.end_time?.AddYears(-10) ?? System.DateTime.MinValue;
-        System.DateTime e = data.data.end_time ?? data.data.begin_time?.AddYears(10) ?? System.DateTime.MaxValue;
+        System.DateTime b = data.data.time.begin ?? data.data.time.end?.AddYears(-10) ?? System.DateTime.MinValue;
+        System.DateTime e = data.data.time.end ?? data.data.time.begin?.AddYears(10) ?? System.DateTime.MaxValue;
         var beginRatio = (float)(b - minTime).TotalDays / (float)(maxTime - minTime).TotalDays;
         var endRatio = (float)(e - minTime).TotalDays / (float)(maxTime - minTime).TotalDays;
         var rc = data.gameObject.transform as RectTransform;
         //Debug.Log($"time {minTime},{maxTime}, time {data.data.begin_time},{data.data.end_time}, ratio {beginRatio},{endRatio}");
-        switch (data.data.timeType)
+        switch (data.data.time.timeType)
         {
             case TimeType.point:
                 rc.localPosition = new Vector3(
@@ -252,11 +235,10 @@ public class UISubTimeline : MonoBehaviour
         var data = is_top ? topTimes : bottomTimes;
         foreach (var i in data)
         {
-            var b2 = i.begin_time ?? i.end_time?.AddYears(-offsetYear) ?? System.DateTime.MinValue;
-            var e2 = i.end_time ?? i.begin_time?.AddYears(offsetYear) ?? System.DateTime.MaxValue;
+            var (b2, e2) = i.time.GetMinMax(offsetYear);
             if (i.is_top != is_top) continue;
             if (i.layer != layer) continue;
-            switch (i.timeType)
+            switch (i.time.timeType)
             {
                 case TimeType.point:
                     if (b <= b2 && b2 <= e) return false;
@@ -275,29 +257,12 @@ public class UISubTimeline : MonoBehaviour
     }
     bool isCapable(System.DateTime time, int layer, bool isTop, int offsetYear = 10, int paddingYear = 1)
     {
-        var b = time.AddYears(-paddingYear);
-        var e = time.AddYears(paddingYear);
         var data = isTop ? topTimes : bottomTimes;
         foreach (var i in data)
         {
-            var b2 = i.begin_time ?? i.end_time?.AddYears(-offsetYear) ?? System.DateTime.MinValue;
-            var e2 = i.end_time ?? i.begin_time?.AddYears(offsetYear) ?? System.DateTime.MaxValue;
             if (i.is_top != isTop) continue;
             if (i.layer != layer) continue;
-            switch (i.timeType)
-            {
-                case TimeType.point:
-                    if (b <= b2 && b2 <= e) return false;
-                    break;
-                case TimeType.begin:
-                case TimeType.begin_end:
-                case TimeType.end:
-                    if (b <= b2 && b2 <= e) return false;
-                    if (b <= e2 && e2 <= e) return false;
-                    if (b2 <= b && b <= e2) return false;
-                    if (b2 <= e && e <= e2) return false;
-                    break;
-            }
+            if (i.time.Contains(time)) return false;
         }
         return true;
     }

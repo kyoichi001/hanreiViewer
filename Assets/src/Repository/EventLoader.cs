@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -10,16 +11,17 @@ public class EventLoader : MonoBehaviour
     public class OnDataLoadedEvent : UnityEvent<EventFileData> { }
     public OnDataLoadedEvent OnDataLoaded { get; } = new OnDataLoadedEvent();
 
-    EventData LoadData(string path)
+    async UniTask<EventData> LoadData(string path)
     {
-        StreamReader reader = new StreamReader(path);
-        string datastr = reader.ReadToEnd();
-        reader.Close();
-        Debug.Log(datastr);
-        return JsonUtility.FromJson<EventData>(datastr);
+        using (var reader = new StreamReader(path))
+        {
+            string datastr = await reader.ReadToEndAsync();
+            Debug.Log(datastr);
+            return JsonUtility.FromJson<EventData>(datastr);
+        }
     }
     // Start is called before the first frame update
-    void Start()
+    async void Start()
     {
         Debug.Log("load annotation data");
         string[] files = Directory.GetFiles(dirPath);
@@ -27,7 +29,7 @@ public class EventLoader : MonoBehaviour
         {
             if (!file.EndsWith(".csv")) continue;
             Debug.Log($"loading {file}");
-            var events = LoadData(file);
+            var events = await LoadData(file);
             var d = new EventFileData
             {
                 filename = Path.GetFileName(file).Split(".")[0],

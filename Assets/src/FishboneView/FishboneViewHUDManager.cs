@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -43,8 +44,7 @@ public class FishboneViewHUDManager : MonoBehaviour
         EventDataLoader.Instance.OnDataLoaded.AddListener((path, data_) =>
         {
             Debug.Log($"path : {path}");
-            var arr = path.Split(new char[] { '/', '\\' });
-            var filename = arr[^1];
+            var filename = Path.GetFileName(path);
         });
 
         backButton.onClick.AddListener(() =>

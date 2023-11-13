@@ -32,18 +32,18 @@ public class UITimeline : MonoBehaviour
         //すでにある区間を横切って切ろうとするとエラー
         foreach (var i in TimelineManager.Instance.GetData())
         {
-            switch (i.timeType)
+            switch (i.time.timeType)
             {
                 case TimeType.point:
                     continue;
                 case TimeType.begin:
-                    if ((i.begin_time ?? splitTime) <= splitTime && splitTime < i.begin_time?.AddYears(offsetYear)) return false;
+                    if ((i.time.begin ?? splitTime) <= splitTime && splitTime < i.time.begin?.AddYears(offsetYear)) return false;
                     break;
                 case TimeType.end:
-                    if (i.end_time?.AddYears(-offsetYear) <= splitTime && splitTime < (i.end_time ?? splitTime)) return false;
+                    if (i.time.end?.AddYears(-offsetYear) <= splitTime && splitTime < (i.time.end ?? splitTime)) return false;
                     break;
                 case TimeType.begin_end:
-                    if ((i.begin_time ?? splitTime) <= splitTime && splitTime < (i.end_time ?? splitTime)) return false;
+                    if ((i.time.begin ?? splitTime) <= splitTime && splitTime < (i.time.end ?? splitTime)) return false;
                     break;
             }
         }
@@ -123,15 +123,13 @@ public class UITimeline : MonoBehaviour
         {
             foreach (var subTL in subTimelines)
             {
-                if (subTL.Contains(i.begin_time, i.end_time, i.timeType, offsetYear))
+                if (subTL.Contains(i.time, offsetYear))
                 {
                     subTL.AddTime(i);
                 }
                 else
                 {
-                    var b = i.begin_time == null ? "null" : i.begin_time.ToString();
-                    var e = i.end_time == null ? "null" : i.begin_time.ToString();
-                    Debug.Log($"not contain {i.ID} {b} {e} in {subTL.begin_time} {subTL.end_time}");
+                    Debug.LogWarning($"not contain {i.ID} {i.time} in {subTL.begin_time} {subTL.end_time}");
                 }
             }
         }

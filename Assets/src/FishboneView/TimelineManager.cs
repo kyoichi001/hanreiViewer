@@ -30,10 +30,8 @@ public class TimelineManager : SingletonMonoBehaviour<TimelineManager>
         data.Add(new UITimeData
         {
             ID = time_id,
-            begin_time = beginTime,
-            end_time = endTime,
+            time = new DurationTime(beginTime, endTime, timeType),
             text = text,
-            timeType = timeType,
             is_top = isTop,
         });
         time_id++;
@@ -44,9 +42,8 @@ public class TimelineManager : SingletonMonoBehaviour<TimelineManager>
         data.Add(new UITimeData
         {
             ID = time_id,
-            begin_time = time,
+            time = new DurationTime(time),
             text = text,
-            timeType = TimeType.point,
             is_top = isTop,
         });
         time_id++;
@@ -64,27 +61,8 @@ public class TimelineManager : SingletonMonoBehaviour<TimelineManager>
         var max_value = System.DateTime.MinValue;
         foreach (var i in data)
         {
-            var b = i.begin_time ?? System.DateTime.MinValue;
-            var e = i.end_time ?? System.DateTime.MaxValue;
-            switch (i.timeType)
-            {
-                case TimeType.point:
-                    min_value = Utility.Min(min_value, b);
-                    max_value = Utility.Max(max_value, b);
-                    break;
-                case TimeType.begin_end:
-                    min_value = Utility.Min(min_value, b);
-                    max_value = Utility.Max(max_value, e);
-                    break;
-                case TimeType.begin:
-                    min_value = Utility.Min(min_value, b);
-                    max_value = Utility.Max(max_value, b.AddYears(offsetYear));
-                    break;
-                case TimeType.end:
-                    min_value = Utility.Min(min_value, e.AddYears(-offsetYear));
-                    max_value = Utility.Max(max_value, e);
-                    break;
-            }
+            min_value = Utility.Min(min_value, i.time, offsetYear);
+            max_value = Utility.Max(max_value, i.time, offsetYear);
         }
         return (min_value, max_value);
     }

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using static System.Net.Mime.MediaTypeNames;
 using UnityEngine.Events;
 
 public class DataLoader : SingletonMonoBehaviour<DataLoader>

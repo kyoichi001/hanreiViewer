@@ -6,10 +6,8 @@ using UnityEngine;
 public class UITimeData
 {
     public int ID;
-    public System.DateTime? begin_time;
-    public System.DateTime? end_time;
+    public DurationTime time;
     public string text;
-    public TimeType timeType;
     public bool is_top;
 }
 
@@ -30,8 +28,8 @@ public class UITime : MonoBehaviour
     {
         data = data_;
         textUI.text = data.text;
-        begin_time = data.begin_time.ToString();
-        end_time = data.end_time.ToString();
+        begin_time = data.time.begin.ToString();
+        end_time = data.time.end.ToString();
     }
     public void Activate()
     {

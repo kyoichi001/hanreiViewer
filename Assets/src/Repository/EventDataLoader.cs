@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using System.IO;
+using Cysharp.Threading.Tasks;
 
 public class EventDataLoader : SingletonMonoBehaviour<EventDataLoader>
 {
@@ -11,33 +12,34 @@ public class EventDataLoader : SingletonMonoBehaviour<EventDataLoader>
     [SerializeField] List<HanreiTokenizedData> datas = new List<HanreiTokenizedData>();
     public class OnDataLoadedEvent : UnityEvent<string, HanreiTokenizedData> { }
     public OnDataLoadedEvent OnDataLoaded { get; } = new OnDataLoadedEvent();
-    HanreiTokenizedData LoadData(string path)
+    async UniTask<HanreiTokenizedData> LoadData(string path)
     {
-        StreamReader reader = new StreamReader(path, System.Text.Encoding.UTF8);
-        string datastr = reader.ReadToEnd();
-        reader.Close();
-        //Debug.Log(datastr);
-        var jsonData = JsonUtility.FromJson<HanreiTokenizedData>(datastr);
-        foreach (var data in jsonData.datas)
+        using (var reader = new StreamReader(path, System.Text.Encoding.UTF8))
         {
-            foreach (var e in data.events)
+            string datastr = await reader.ReadToEndAsync();
+            var jsonData = JsonUtility.FromJson<HanreiTokenizedData>(datastr);
+            //Debug.Log(datastr);
+            foreach (var data in jsonData.datas)
             {
-                e.issue_num = data.issue_num;
-                e.claim_state = data.claim_state ?? "";
+                foreach (var e in data.events)
+                {
+                    e.issue_num = data.issue_num;
+                    e.claim_state = data.claim_state ?? "";
+                }
             }
+            return jsonData;
         }
-        return jsonData;
     }
 
     // Start is called before the first frame update
-    void Start()
+    async void Start()
     {
         string[] files = Directory.GetFiles(Application.dataPath + "/" + filepath);
         foreach (var file in files)
         {
             if (!file.EndsWith(".json")) continue;
             //Debug.Log($"loading {file}");
-            var dat = LoadData(file);
+            var dat = await LoadData(file);
             datas.Add(dat);
             OnDataLoaded.Invoke(file, dat);
         }

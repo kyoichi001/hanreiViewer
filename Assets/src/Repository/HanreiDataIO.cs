@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class HanreiDataIO : SingletonMonoBehaviour<HanreiDataIO>
@@ -8,7 +9,7 @@ public class HanreiDataIO : SingletonMonoBehaviour<HanreiDataIO>
 
     [SerializeField] string dataFilePath;
 
-    HashSet<string> fileNames = new HashSet<string>();
+    readonly HashSet<string> fileNames = new HashSet<string>();
 
     public List<string> GetFileNames()
     {
@@ -21,10 +22,8 @@ public class HanreiDataIO : SingletonMonoBehaviour<HanreiDataIO>
         string[] names = Directory.GetFiles(Application.dataPath + "/" + dataFilePath, "*.json");
         foreach (var i in names)
         {
-            var a = i.Split("__");
-            var b = a[0].Split("\\");
-            var c = b[^1].Split("/");
-            fileNames.Add(c[^1]);
+            var c = Path.GetFileNameWithoutExtension(i).Split("__")[0];
+            fileNames.Add(c);
         }
         foreach (var i in fileNames)
         {
@@ -33,37 +32,37 @@ public class HanreiDataIO : SingletonMonoBehaviour<HanreiDataIO>
         return res;
     }
 
-    public HanreiData GetTextData(string filename)
+    public async UniTask<HanreiData> GetTextData(string filename)
     {
         if (!fileNames.Contains(filename)) return null;
         var path = Application.dataPath + "/" + dataFilePath + "/" + filename + "__text.json";
-        StreamReader reader = new StreamReader(path);
-        string datastr = reader.ReadToEnd();
-        reader.Close();
-        return JsonUtility.FromJson<HanreiData>(datastr);
+        using (var reader = new System.IO.StreamReader(path, System.Text.Encoding.UTF8))
+        {
+            string datastr = await reader.ReadToEndAsync();
+            return JsonUtility.FromJson<HanreiData>(datastr);
+        }
     }
-    public string GetHanreiTitle(string filename)
+    public async UniTask<string> GetHanreiTitle(string filename)
     {
         if (!fileNames.Contains(filename)) return "";
-        var dat = GetTextData(filename);
+        var dat = await GetTextData(filename);
         foreach (var t in dat.contents.signature.texts)
         {
             if (t.EndsWith("事件"))
             {
                 return t;
-                var v = t.Split(" ");
-                return v[^1];
             }
         }
         return "";
     }
-    public HanreiTokenizedData GetTokenizedData(string filename)
+    public async UniTask<HanreiTokenizedData> GetTokenizedData(string filename)
     {
         if (!fileNames.Contains(filename)) return null;
         var path = Application.dataPath + "/" + dataFilePath + "/" + filename + "__tokenized.json";
-        StreamReader reader = new StreamReader(path, System.Text.Encoding.UTF8);
-        string datastr = reader.ReadToEnd();
-        reader.Close();
-        return JsonUtility.FromJson<HanreiTokenizedData>(datastr);
+        using (var reader = new System.IO.StreamReader(path, System.Text.Encoding.UTF8))
+        {
+            string allLines = await reader.ReadToEndAsync();
+            return JsonUtility.FromJson<HanreiTokenizedData>(allLines);
+        }
     }
 }
