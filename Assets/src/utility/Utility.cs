@@ -25,52 +25,21 @@ public class Utility
         }
         return rect;
     }
-    public static System.DateTime Min(System.DateTime a, System.DateTime b)
-    {
-        return a > b ? b : a;
-    }
-    public static System.DateTime Max(System.DateTime a, System.DateTime b)
-    {
-        return a < b ? b : a;
-    }
+    public static System.DateTime Min(System.DateTime a, System.DateTime b) => a > b ? b : a;
+    public static System.DateTime Max(System.DateTime a, System.DateTime b) => a < b ? b : a;
+
     public static System.DateTime Min(System.DateTime a, DurationTime b, int offsetYear = 10)
     {
-        switch (b.timeType)
-        {
-            case TimeType.point:
-                return Utility.Min(a, b.begin ?? System.DateTime.MaxValue);
-            case TimeType.begin_end:
-                return Utility.Min(a, b.begin ?? System.DateTime.MaxValue);
-            case TimeType.begin:
-                return Utility.Min(a, b.begin ?? System.DateTime.MaxValue);
-            case TimeType.end:
-                return Utility.Min(a, (b.end ?? System.DateTime.MaxValue).AddYears(-offsetYear));
-        }
-        return a;
+        var (min, max) = b.GetMinMax(offsetYear);
+        return Utility.Min(a, min);
     }
     public static System.DateTime Max(System.DateTime a, DurationTime b, int offsetYear = 10)
     {
-        switch (b.timeType)
-        {
-            case TimeType.point:
-                return Utility.Max(a, b.begin ?? System.DateTime.MinValue);
-            case TimeType.begin_end:
-                return Utility.Max(a, b.end ?? System.DateTime.MinValue);
-            case TimeType.begin:
-                return Utility.Max(a, (b.begin ?? System.DateTime.MinValue).AddYears(offsetYear));
-            case TimeType.end:
-                return Utility.Max(a, b.end ?? System.DateTime.MinValue);
-        }
-        return a;
+        var (min, max) = b.GetMinMax(offsetYear);
+        return Utility.Max(a, max);
     }
-    public static System.DateTime Min(DurationTime b, System.DateTime a, int offsetYear = 10)
-    {
-        return Utility.Min(a, b, offsetYear);
-    }
-    public static System.DateTime Max(DurationTime b, System.DateTime a, int offsetYear = 10)
-    {
-        return Utility.Max(a, b, offsetYear);
-    }
+    public static System.DateTime Min(DurationTime b, System.DateTime a, int offsetYear = 10) => Utility.Min(a, b, offsetYear);
+    public static System.DateTime Max(DurationTime b, System.DateTime a, int offsetYear = 10) => Utility.Max(a, b, offsetYear);
 
     public static System.DateTime Convert(int date)
     {
@@ -90,19 +59,8 @@ public class Utility
     {
         return begin <= beginValue && endValue <= end;
     }
-    public static bool Contains(System.DateTime beginValue, System.DateTime endValue, DurationTime t, int offsetYear)
+    public static bool Overlaps(System.DateTime beginValue, System.DateTime endValue, System.DateTime begin, System.DateTime end)
     {
-        switch (t.timeType)
-        {
-            case TimeType.point:
-                return Utility.Contains(t.begin ?? System.DateTime.MinValue, beginValue, endValue);
-            case TimeType.begin_end:
-                return Utility.Contains(t.begin ?? System.DateTime.MinValue, t.end ?? System.DateTime.MaxValue, beginValue, endValue);
-            case TimeType.begin:
-                return Utility.Contains(t.begin ?? System.DateTime.MinValue, t.begin?.AddYears(offsetYear) ?? System.DateTime.MaxValue, beginValue, endValue);
-            case TimeType.end:
-                return Utility.Contains(t.end?.AddYears(-offsetYear) ?? System.DateTime.MinValue, t.end ?? System.DateTime.MaxValue, beginValue, endValue);
-        }
-        return false;
+        return begin <= endValue && beginValue <= end;
     }
 }

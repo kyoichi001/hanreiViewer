@@ -46,25 +46,16 @@ public class UISubTimeline : MonoBehaviour
     }
     public bool Contains(DurationTime t, int offsetYear = 10)
     {
-        return Utility.Contains(begin_time, end_time, t, offsetYear);
+        var a = new DurationTime(begin_time, end_time, TimeType.begin_end);
+        return a.Contains(t, offsetYear);
     }
     public void AddTime(UITimeData data)
     {
         var arr = data.is_top ? topTimes : bottomTimes;
         int layer = 0;
-        if (data.time.timeType == TimeType.point)
+        while (!isCapable(data.time, layer, data.is_top))
         {
-            while (!isCapable(data.time.begin ?? System.DateTime.MinValue, layer, data.is_top))
-            {
-                layer++;
-            }
-        }
-        else
-        {
-            while (!isCapable(data.time.begin, data.time.end, layer, data.is_top))
-            {
-                layer++;
-            }
+            layer++;
         }
         arr.Add(new TimelineNodeData
         {
@@ -228,41 +219,14 @@ public class UISubTimeline : MonoBehaviour
         return null;
     }
 
-    bool isCapable(System.DateTime? beginTime, System.DateTime? endTime, int layer, bool is_top, int offsetYear = 10)
+    bool isCapable(DurationTime time, int layer, bool is_top, int offsetYear = 10, int paddingYear = 1)
     {
-        var b = beginTime ?? endTime?.AddYears(-offsetYear) ?? System.DateTime.MinValue;
-        var e = endTime ?? beginTime?.AddYears(offsetYear) ?? System.DateTime.MaxValue;
         var data = is_top ? topTimes : bottomTimes;
         foreach (var i in data)
         {
-            var (b2, e2) = i.time.GetMinMax(offsetYear);
             if (i.is_top != is_top) continue;
             if (i.layer != layer) continue;
-            switch (i.time.timeType)
-            {
-                case TimeType.point:
-                    if (b <= b2 && b2 <= e) return false;
-                    break;
-                case TimeType.begin:
-                case TimeType.begin_end:
-                case TimeType.end:
-                    if (b <= b2 && b2 <= e) return false;
-                    if (b <= e2 && e2 <= e) return false;
-                    if (b2 <= b && b <= e2) return false;
-                    if (b2 <= e && e <= e2) return false;
-                    break;
-            }
-        }
-        return true;
-    }
-    bool isCapable(System.DateTime time, int layer, bool isTop, int offsetYear = 10, int paddingYear = 1)
-    {
-        var data = isTop ? topTimes : bottomTimes;
-        foreach (var i in data)
-        {
-            if (i.is_top != isTop) continue;
-            if (i.layer != layer) continue;
-            if (i.time.Contains(time)) return false;
+            if (i.time.Overlaps(time.Extend(paddingYear), offsetYear)) return false;
         }
         return true;
     }
