@@ -38,7 +38,7 @@ public class DataLoader : SingletonMonoBehaviour<DataLoader>
             OnDataLoaded.Invoke(dat);
         }*/
     }
-    public Token GetToken(string filename, int textID, int tokenID)
+    public Bunsetsu.Token GetToken(string filename, int textID, int tokenID)
     {
         foreach (var i in hanreiDatas)
         {

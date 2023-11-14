@@ -143,7 +143,7 @@ public class FileTextExtracter : SingletonMonoBehaviour<FileTextExtracter>
                     };
                     foreach (var l in k.tokens)
                     {
-                        bunset.tokens.Add(new Token
+                        bunset.tokens.Add(new Bunsetsu.Token
                         {
                             text = l.text,
                             tag = l.tag

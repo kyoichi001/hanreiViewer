@@ -19,18 +19,18 @@ public class Entity
     public string end;
 }
 
-[System.Serializable]
-public class Token
-{
-    public int id;
-    public string text;
-    public string tag;
-    public int ent;
-}
 
 [System.Serializable]
 public class Bunsetsu
 {
+    [System.Serializable]
+    public class Token
+    {
+        public int id;
+        public string text;
+        public string tag;
+        public int ent;
+    }
     public int id;
     public string text;
     public List<Token> tokens = new List<Token>();
@@ -75,27 +75,6 @@ public class Section
 }
 
 [System.Serializable]
-public class Signature
-{
-    public string header_text;
-    public List<string> texts = new List<string>();
-}
-
-[System.Serializable]
-public class Judgement
-{
-    public string header_text;
-    public List<string> texts = new List<string>();
-}
-
-[System.Serializable]
-public class MainText
-{
-    public string header_text;
-    public List<Section> sections = new List<Section>();
-}
-
-[System.Serializable]
 public class FactReason
 {
     public string header_text;
@@ -104,6 +83,27 @@ public class FactReason
 [System.Serializable]
 public class HanreiContent
 {
+    [System.Serializable]
+    public class Signature
+    {
+        public string header_text;
+        public List<string> texts = new List<string>();
+    }
+
+    [System.Serializable]
+    public class Judgement
+    {
+        public string header_text;
+        public List<string> texts = new List<string>();
+    }
+
+    [System.Serializable]
+    public class MainText
+    {
+        public string header_text;
+        public List<Section> sections = new List<Section>();
+    }
+
     public Signature signature = new Signature();
     public Judgement judgement = new Judgement();
     public MainText main_text = new MainText();

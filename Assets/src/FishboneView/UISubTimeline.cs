@@ -81,7 +81,6 @@ public class UISubTimeline : MonoBehaviour
     }
     void GenerateTimeUI(TimelineNodeData data, bool isTop)
     {
-        //https://nekosuko.jp/1792/
         var parent = isTop ? times_top : times_bottom;
         var a = Instantiate(timePrefab, parent).GetComponent<UITime>();
         a.gameObject.name = data.ID.ToString();
@@ -124,13 +123,12 @@ public class UISubTimeline : MonoBehaviour
 
     void SetPosition(System.DateTime minTime, System.DateTime maxTime, UITime data, bool isTop)
     {
-        //単位を年にするために1000で割る
+        //単位を年にするために1000で割る（365日が年の日数だがプログラムが動いてるのでヨシ！）
         rectTransform.sizeDelta = new Vector2((float)(maxTime - minTime).TotalDays / 1000 * yearUnitLength, 50);
         var time_height = 25;
         var time_layer_offset = isTop ? time_height : -time_height;
         var padding = isTop ? 30 : -30;
-        System.DateTime b = data.data.time.begin ?? data.data.time.end?.AddYears(-10) ?? System.DateTime.MinValue;
-        System.DateTime e = data.data.time.end ?? data.data.time.begin?.AddYears(10) ?? System.DateTime.MaxValue;
+        var (b, e) = data.data.time.GetMinMax(10);
         var beginRatio = (float)(b - minTime).TotalDays / (float)(maxTime - minTime).TotalDays;
         var endRatio = (float)(e - minTime).TotalDays / (float)(maxTime - minTime).TotalDays;
         var rc = data.gameObject.transform as RectTransform;

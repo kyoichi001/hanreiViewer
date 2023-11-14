@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -32,20 +33,21 @@ public class HanreiDataIO : SingletonMonoBehaviour<HanreiDataIO>
         return res;
     }
 
-    public async UniTask<HanreiData> GetTextData(string filename)
+    public async UniTask<HanreiData> GetTextData(string filename, CancellationToken token)
     {
         if (!fileNames.Contains(filename)) return null;
         var path = Application.dataPath + "/" + dataFilePath + "/" + filename + "__text.json";
         using (var reader = new System.IO.StreamReader(path, System.Text.Encoding.UTF8))
         {
             string datastr = await reader.ReadToEndAsync();
+            token.ThrowIfCancellationRequested();
             return JsonUtility.FromJson<HanreiData>(datastr);
         }
     }
-    public async UniTask<string> GetHanreiTitle(string filename)
+    public async UniTask<string> GetHanreiTitle(string filename, CancellationToken token)
     {
         if (!fileNames.Contains(filename)) return "";
-        var dat = await GetTextData(filename);
+        var dat = await GetTextData(filename, token);
         foreach (var t in dat.contents.signature.texts)
         {
             if (t.EndsWith("事件"))
@@ -55,13 +57,14 @@ public class HanreiDataIO : SingletonMonoBehaviour<HanreiDataIO>
         }
         return "";
     }
-    public async UniTask<HanreiTokenizedData> GetTokenizedData(string filename)
+    public async UniTask<HanreiTokenizedData> GetTokenizedData(string filename, CancellationToken token)
     {
         if (!fileNames.Contains(filename)) return null;
         var path = Application.dataPath + "/" + dataFilePath + "/" + filename + "__tokenized.json";
         using (var reader = new System.IO.StreamReader(path, System.Text.Encoding.UTF8))
         {
             string allLines = await reader.ReadToEndAsync();
+            token.ThrowIfCancellationRequested();
             return JsonUtility.FromJson<HanreiTokenizedData>(allLines);
         }
     }

@@ -9,7 +9,7 @@ public class TokenView : VisualElement
     private Label _textDOM;
     private string text => _textDOM.text;
 
-    Token tokenData;
+    Bunsetsu.Token tokenData;
     int textID;
     string filename;
 

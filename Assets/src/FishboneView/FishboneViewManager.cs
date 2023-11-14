@@ -38,12 +38,13 @@ public class FishboneViewManager : SingletonMonoBehaviour<FishboneViewManager>
     }
     async void Start()
     {
+        var token = this.GetCancellationTokenOnDestroy();
         //var token = this.GetCancellationTokenOnDestroy();
         var filenames = HanreiDataIO.Instance.GetFileNames();
         var a = new List<(string, string)>();
         foreach (var f in filenames)
         {
-            var title = await HanreiDataIO.Instance.GetHanreiTitle(f);
+            var title = await HanreiDataIO.Instance.GetHanreiTitle(f, token);
             a.Add((title, f));
         }
         OnFilenamesLoaded.Invoke(a);

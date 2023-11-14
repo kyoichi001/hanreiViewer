@@ -22,15 +22,15 @@ public class UIContentsController : MonoBehaviour
     // Dictionary<(int, int), VisualElement> tokenMap = new Dictionary<(int, int), VisualElement>();
     // Dictionary<VisualElement, (int, int)> domMap = new Dictionary<VisualElement, (int, int)>();
 
-    public class OnTokenMouseOverEvent : UnityEvent<Token, VisualElement> { }
+    public class OnTokenMouseOverEvent : UnityEvent<Bunsetsu.Token, VisualElement> { }
     public OnTokenMouseOverEvent OnTokenMouseOver { get; } = new OnTokenMouseOverEvent();
-    public class OnTokenMouseOutEvent : UnityEvent<Token, VisualElement> { }
+    public class OnTokenMouseOutEvent : UnityEvent<Bunsetsu.Token, VisualElement> { }
     public OnTokenMouseOutEvent OnTokenMouseOut { get; } = new OnTokenMouseOutEvent();
-    public class OnTokenClickedEvent : UnityEvent<Token, VisualElement> { }
+    public class OnTokenClickedEvent : UnityEvent<Bunsetsu.Token, VisualElement> { }
     public OnTokenClickedEvent OnTokenClicked { get; } = new OnTokenClickedEvent();
-    public class OnTokenDraggingEvent : UnityEvent<Token, VisualElement> { }
+    public class OnTokenDraggingEvent : UnityEvent<Bunsetsu.Token, VisualElement> { }
     public OnTokenDraggingEvent OnTokenDragging { get; } = new OnTokenDraggingEvent();
-    public class OnTokenDraggedEvent : UnityEvent<Token, VisualElement, Token, VisualElement> { }
+    public class OnTokenDraggedEvent : UnityEvent<Bunsetsu.Token, VisualElement, Bunsetsu.Token, VisualElement> { }
     public OnTokenDraggedEvent OnTokenDragged { get; } = new OnTokenDraggedEvent();
 
     private void Start()
@@ -61,7 +61,7 @@ public class UIContentsController : MonoBehaviour
     }
 
     bool dragging = false;
-    Token currentToken;
+    Bunsetsu.Token currentToken;
     VisualElement currentTokenDOM;
 
     void GenerateText(VisualElement root, SectionText text)
