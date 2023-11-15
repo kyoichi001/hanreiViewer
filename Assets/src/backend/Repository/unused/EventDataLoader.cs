@@ -33,7 +33,6 @@ public class EventDataLoader : SingletonMonoBehaviour<EventDataLoader>
         }
     }
 
-    // Start is called before the first frame update
     async void Start()
     {
         var token = this.GetCancellationTokenOnDestroy();
