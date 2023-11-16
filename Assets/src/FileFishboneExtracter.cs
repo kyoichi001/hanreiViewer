@@ -7,17 +7,15 @@ using UnityEngine;
 public class FileFishboneExtracter : MonoBehaviour
 {
     FileDragAndDrop dragAndDrop;
-    PDFExtracterWrapper pdfExtracterWrapper;
     void Awake()
     {
         dragAndDrop = GetComponent<FileDragAndDrop>();
-        pdfExtracterWrapper = GetComponent<PDFExtracterWrapper>();
         dragAndDrop.OnFileDropped.AddListener(async (path) =>
         {
             Akak.Debug.Print($"file dropped {path}");
             await ExtractTextFromPDF(path);
         });
-        pdfExtracterWrapper.OnStandardOut.AddListener((output) =>
+        PDFExtracterWrapper.Instance.OnStandardOut.AddListener((output) =>
         {
             Akak.Debug.Log(output);
         });
@@ -34,7 +32,7 @@ public class FileFishboneExtracter : MonoBehaviour
         var outputPath = Application.dataPath + "\\out.json";
         try
         {
-            await pdfExtracterWrapper.Extract(filePath, outputPath);
+            await PDFExtracterWrapper.Instance.Extract(filePath, outputPath);
             await Cysharp.Threading.Tasks.UniTask.DelayFrame(1);//これ入れないと非同期処理からmainthreadに帰ってくる前に下の文を実行するためエラーになる
         }
         catch (System.Exception e)

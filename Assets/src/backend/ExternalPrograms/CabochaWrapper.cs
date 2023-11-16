@@ -20,45 +20,28 @@ public class CaboChaRes
     [System.Serializable]
     public class CaboChaBunsetsu
     {
-        public List<CaboChaToken> tokens = new List<CaboChaToken>();
+        public List<CaboChaToken> tokens = new();
         public string text;
         public int id;
         public int to;
     }
-    public List<CaboChaBunsetsu> bunsetsus = new List<CaboChaBunsetsu>();
+    public List<CaboChaBunsetsu> bunsetsus = new();
 }
 
-public class CabochaWrapper : SingletonMonoBehaviour<CabochaWrapper>
+public class CabochaWrapper : Singleton<CabochaWrapper>
 {
     private static readonly string FolderPath = Application.streamingAssetsPath;
     private static readonly string FilePath = FolderPath + "/CaboCha/bin/cabocha.exe";
 
     private Process _process;
 
-    List<string> buffer = new List<string>();
+    List<string> buffer = new();
     public class OnTextTokenizedEvent : UnityEvent<CaboChaRes> { }
-    OnTextTokenizedEvent OnTextTokenized = new OnTextTokenizedEvent();
-
-    /*private async void Update()
+    OnTextTokenizedEvent OnTextTokenized = new();
+    ~CabochaWrapper()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            UnityEngine.Debug.Log("sample text analyzing");
-            var res = await CaboCha("今日は良い天気だ");
-            await UniTask.DelayFrame(1);//これ入れないと非同期処理からmainthreadに帰ってくる前に下の文を実行するためエラーになる
-            foreach (var i in res.bunsetsus)
-            {
-                Akak.Debug.Print($"{i.text} id:{i.id} to:{i.to}");
-                foreach (var j in i.tokens)
-                {
-                    Akak.Debug.Print($"{j.text} tag:{j.tag}");
-                }
-            }
-        }
-    }*/
-
-    private void OnDestroy()
-        => DisposeProcess();
+        DisposeProcess();
+    }
 
     private void OnStandardOut(object sender, DataReceivedEventArgs e)
     {
@@ -74,8 +57,7 @@ public class CabochaWrapper : SingletonMonoBehaviour<CabochaWrapper>
         }
     }
 
-    private void DisposeProcess(object sender, EventArgs e)
-        => DisposeProcess();
+    private void DisposeProcess(object sender, EventArgs e) => DisposeProcess();
 
     private void DisposeProcess()
     {

@@ -1,13 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
-public class PDFExtracterWrapper : MonoBehaviour
+
+public class PDFExtracterWrapper : Singleton<PDFExtracterWrapper>
 {
     private static readonly string FolderPath = Application.streamingAssetsPath;
     private static readonly string FilePath = FolderPath + "/pdf2txt/pdf2txt.exe";
@@ -16,7 +13,6 @@ public class PDFExtracterWrapper : MonoBehaviour
 
     public class OnStandardOutEvent : UnityEvent<string> { }
     public OnStandardOutEvent OnStandardOut { get; } = new OnStandardOutEvent();
-
 
     public async UniTask Extract(string filePath, string outPutPath)
     {

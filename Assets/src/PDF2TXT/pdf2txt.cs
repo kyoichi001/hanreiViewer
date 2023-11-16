@@ -12,24 +12,12 @@ public class pdf2txt : MonoBehaviour
     [SerializeField] string josnOutputPath;
     [Header("Streaming assets")]
     [SerializeField] string headerRulePath;
-    t01_JustifySentence t01;
-    t02_DetectHeader t02;
-    t03_SplitSection t03;
-    t04_IgnoreHeaderText t04;
-    t05_SplitSentence t05;
-    t06_AddExtention t06;
-    PDFExtracterWrapper pdfExtracterWrapper;
-    void Awake()
-    {
-        t01 = new t01_JustifySentence();
-        t02 = new t02_DetectHeader();
-        t03 = new t03_SplitSection();
-        t04 = new t04_IgnoreHeaderText();
-        t05 = new t05_SplitSentence();
-        t06 = new t06_AddExtention();
-        pdfExtracterWrapper = GetComponent<PDFExtracterWrapper>();
-    }
-
+    readonly t01_JustifySentence t01 = new();
+    readonly t02_DetectHeader t02 = new();
+    readonly t03_SplitSection t03 = new();
+    readonly t04_IgnoreHeaderText t04 = new();
+    readonly t05_SplitSentence t05 = new();
+    readonly t06_AddExtention t06 = new();
     void Export(string jsonRes, string filename)
     {
         StreamWriter wr = new StreamWriter(filename + "__phase1.json", false);
@@ -41,7 +29,7 @@ public class pdf2txt : MonoBehaviour
     {
         var inputFileName = Path.GetFileNameWithoutExtension(filePath);
 
-        await pdfExtracterWrapper.Extract(filePath, Application.dataPath + "/" + pdfOutputPath + "/" + inputFileName + "__pdf.json");
+        await PDFExtracterWrapper.Instance.Extract(filePath, Application.dataPath + "/" + pdfOutputPath + "/" + inputFileName + "__pdf.json");
         Debug.Log("extract finished");
 
         StreamReader reader = new StreamReader(Application.dataPath + "/" + pdfOutputPath + "/" + inputFileName + "__pdf.json");
@@ -73,21 +61,5 @@ public class pdf2txt : MonoBehaviour
         wr.WriteLine(json);                                     // json変換した情報を書き込み
         wr.Close();
         Akak.Debug.Log("pdf2txt : task finished");
-    }
-    async void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            try
-            {
-                Akak.Debug.Log("converting pdf...");
-                await ConvertPDF2Txt(Application.dataPath + "/" + samplePDFPath);
-            }
-            catch (Exception e)
-            {
-                await UniTask.DelayFrame(1);
-                Akak.Debug.Log(e.Message);
-            }
-        }
     }
 }
