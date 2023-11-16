@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class HanreiTokenizer : MonoBehaviour
 {
-    [SerializeField] string sampleTextData;
     [System.Serializable]
     public class OutputData
     {
