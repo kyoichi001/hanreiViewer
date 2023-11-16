@@ -25,36 +25,25 @@ public class HanreiTokenizer : MonoBehaviour
     {
         var res = new OutputData();
         CabochaWrapper.Instance.StartProcess();
-        StreamReader reader = new StreamReader(filepath);
-        string datastr = reader.ReadToEnd();
-        reader.Close();
-        var dat = JsonUtility.FromJson<t06_AddExtention.OutputData>(datastr);
-        foreach (var d in dat.factReason.sections)
+        using (var reader = new StreamReader(filepath))
         {
-            foreach (var t in d.texts)
+            string datastr = await reader.ReadToEndAsync();
+            var dat = JsonUtility.FromJson<t06_AddExtention.OutputData>(datastr);
+            foreach (var d in dat.factReason.sections)
             {
-                var r = await CabochaWrapper.Instance.CaboCha(t.text);
-                res.datas.Add(new OutputData.TextData
+                foreach (var t in d.texts)
                 {
-                    text_id = t.text_id,
-                    text = t.text,
-                });
-                res.datas[^1].bunsetsu = new List<CaboChaRes.CaboChaBunsetsu>(r.bunsetsus);
+                    var r = await CabochaWrapper.Instance.CaboCha(t.text);
+                    res.datas.Add(new OutputData.TextData
+                    {
+                        text_id = t.text_id,
+                        text = t.text,
+                    });
+                    res.datas[^1].bunsetsu = new List<CaboChaRes.CaboChaBunsetsu>(r.bunsetsus);
+                }
             }
         }
         CabochaWrapper.Instance.EndProcess();
         return res;
-    }
-    async void Update()
-    {
-        /* if (Input.GetKeyDown(KeyCode.U))
-         {
-             var res = await Tokenize(Application.dataPath + "/" + sampleTextData);
-
-             string json = JsonUtility.ToJson(res, true);                 // jsonとして変換
-             StreamWriter wr = new StreamWriter(Application.dataPath + "/" + "sample_tokenized.json", false);    // ファイル書き込み指定
-             wr.WriteLine(json);                                     // json変換した情報を書き込み
-             wr.Close();
-         }*/
     }
 }

@@ -82,21 +82,7 @@ public class TokenView : VisualElement
         contextDOM.Q<Label>("textID").text = textID.ToString();
         contextDOM.Q<Label>("tokenID").text = tokenData.id.ToString();
         contextDOM.Q<Label>("tokenText").text = tokenData.text;
-        contextDOM.Q<DropdownField>().value = "None";
-        contextDOM.Q<DropdownField>().choices =
-           new List<string>() {
-           "None","����", "�l��", "�s��" ,"����-N", "�l��-N", "�s��-N" ,
-        };
-        contextDOM.Q<DropdownField>().RegisterValueChangedCallback((e) =>
-        {
-            Debug.Log($"value changed {e.newValue}");
-            var type = e.newValue switch
-            {
-                "None" => TokenTagType.None,
-                _ => TokenTagType.None
-            };
-            AnnotationLoader.Instance.AddTag(filename, textID, tokenData.id, type);
-        });
+
         PopoverManager.Instance.AddPopover(contextDOM, $"{tokenData.text}");
     }
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -23,10 +24,11 @@ public class FishboneViewHUDManager : MonoBehaviour
             {
                 var obj = Instantiate(hanreiSelectorButtonPrefab, hanreiSelector).GetComponent<UIHanreiSelectorButton>();
                 obj.Init(hanreiTitle);
-                obj.OnShowFishbone.AddListener(() =>
+                obj.OnShowFishbone.AddListener(async () =>
                 {
+                    var token = this.GetCancellationTokenOnDestroy();
                     currentActiveButton?.Deactivate();
-                    FishboneViewManager.Instance.ShowFishboneUI(path);
+                    await FishboneViewManager.Instance.ShowFishboneUI(path, token);
                     obj.Activate();
                     currentActiveButton = obj;
                 });
@@ -40,11 +42,6 @@ public class FishboneViewHUDManager : MonoBehaviour
         FishboneViewManager.Instance.OnShowData.AddListener((path, data) =>
         {
             fishboneHUD.SetActive(true);
-        });
-        EventDataLoader.Instance.OnDataLoaded.AddListener((path, data_) =>
-        {
-            Debug.Log($"path : {path}");
-            var filename = Path.GetFileName(path);
         });
 
         backButton.onClick.AddListener(() =>

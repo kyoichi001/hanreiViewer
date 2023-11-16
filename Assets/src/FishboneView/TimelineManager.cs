@@ -9,13 +9,6 @@ public class TimelineManager : SingletonMonoBehaviour<TimelineManager>
     [Header("Debug")]
     [SerializeField] List<UITimeData> data = new List<UITimeData>();
     public List<UITimeData> GetData() => data;
-    void Awake()
-    {
-        EventDataLoader.Instance.OnDataLoaded.AddListener((path, data_) =>
-        {
-
-        });
-    }
     public int AddTime(System.DateTime? beginTime, System.DateTime? endTime, string text, bool isTop)
     {
         if (beginTime == null && endTime == null)

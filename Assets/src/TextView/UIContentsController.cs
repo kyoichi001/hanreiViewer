@@ -14,9 +14,6 @@ public class UIContentsController : MonoBehaviour
     [SerializeField] VisualTreeAsset bunsetsuUXML;
     [SerializeField] VisualTreeAsset tokenUXML;
     [SerializeField] VisualTreeAsset tokenContextUXML;
-    [Header("annotation")]
-    [SerializeField] AnnotationLoader annotationLoader;
-    [SerializeField] VisualTreeAsset arrowUXML;
 
     string cullentFilename;
     // Dictionary<(int, int), VisualElement> tokenMap = new Dictionary<(int, int), VisualElement>();
@@ -78,33 +75,11 @@ public class UIContentsController : MonoBehaviour
                     var dom = type.target as VisualElement;
                     //Debug.Log(dom.Q<Label>().text);
                     OnTokenMouseOver.Invoke(token, dom);
-                    /*foreach (var i in annotationLoader.GetAnnotations(cullentFilename))
-                    {
-                        var token1 = (i.textID, i.tokenID);
-                        var token2 = (i.textID, i.targetID);
-                        if (i.textID != text.text_id) continue;
-                        if (i.tokenID == token.id || i.targetID == token.id)
-                        {
-                            HighlightRelation(tokenMap[token1], tokenMap[token2]);
-                            break;
-                        }
-                    }*/
                 });
                 tokenDOM.RegisterCallback<MouseOutEvent>((type) =>
                 {
                     var dom = type.target as VisualElement;
                     OnTokenMouseOut.Invoke(token, dom);
-                    /*foreach (var i in annotationLoader.GetAnnotations(cullentFilename))
-                    {
-                        var token1 = (i.textID, i.tokenID);
-                        var token2 = (i.textID, i.targetID);
-                        if (i.textID != text.text_id) continue;
-                        if (i.tokenID == token.id || i.targetID == token.id)
-                        {
-                            ResetHighlight(tokenMap[token1], tokenMap[token2]);
-                            break;
-                        }
-                    }*/
                 });
                 tokenDOM.RegisterCallback<PointerDownEvent>((type) =>
                 {
@@ -120,25 +95,6 @@ public class UIContentsController : MonoBehaviour
                     }
                     else if (type.button == 1) // right click
                     {
-                        var contextDOM = tokenContextUXML.CloneTree();
-                        contextDOM.Q<Label>("textID").text = text.text_id.ToString();
-                        contextDOM.Q<Label>("tokenID").text = token.id.ToString();
-                        contextDOM.Q<Label>("tokenText").text = token.text;
-                        contextDOM.Q<DropdownField>().value = "None";
-                        contextDOM.Q<DropdownField>().choices = new List<string>() {
-                            "None","����", "�l��", "�s��" ,"����-N", "�l��-N", "�s��-N" ,
-                        };
-                        contextDOM.Q<DropdownField>().RegisterValueChangedCallback((e) =>
-                        {
-                            Debug.Log($"value changed {e.newValue}");
-                            var type = e.newValue switch
-                            {
-                                "None" => TokenTagType.None,
-                                _ => TokenTagType.None
-                            };
-                            AnnotationLoader.Instance.AddTag(cullentFilename, text.text_id, token.id, type);
-                        });
-                        PopoverManager.Instance.AddPopover(contextDOM, $"{token.text}");
                     }
                 });
                 tokenDOM.RegisterCallback<PointerMoveEvent>((type) =>
@@ -172,48 +128,6 @@ public class UIContentsController : MonoBehaviour
             root.Add(bunsetsuDOM);
         }
     }
-
-    void GenerateAnnotationArrow(VisualElement root, VisualElement textDOM, int tokenID, int targetID, TokenRelationType type)
-    {
-        /*var leftPos = new Vector2();
-        var rightPos = new Vector2();
-        foreach (var dom in textDOM.Children())
-        {
-            if (domMap[dom].Item2 == tokenID)
-            {
-                leftPos = new Vector2(dom.resolvedStyle.left, dom.resolvedStyle.top);
-            }
-            else if (domMap[dom].Item2 == targetID)
-            {
-                rightPos = new Vector2(dom.resolvedStyle.left, dom.resolvedStyle.top);
-            }
-        }
-        GenerateArrow(root, leftPos, rightPos, 3);*/
-    }
-
-    void GenerateMarker(VisualElement root, VisualElement textDOM, int tokenID, int targetID, TokenRelationType type)
-    {
-        /*var marker = new VisualElement();
-        marker.style.backgroundColor = new Color(1, 0, 0);
-        foreach (var dom in textDOM.Children())
-        {
-            if (domMap[dom].Item2 == tokenID)
-            {
-                marker.transform.position = dom.transform.position;
-            }
-        }
-        root.Add(marker);*/
-    }
-
-    void GenerateArrow(VisualElement root, Vector2 leftPos, Vector2 rightPos, int height)
-    {
-        //TODO:
-        var dom = arrowUXML.CloneTree();
-        dom.Q<VisualElement>("arrowContainer").style.width = rightPos.x - leftPos.x;
-        dom.Q<VisualElement>("arrowContainer").style.height = height;
-        dom.Q<VisualElement>("arrowContainer").style.height = height;
-        root.Add(dom);
-    }
     void HighlightRelation(VisualElement tokenDOM, VisualElement tokenDOM2)
     {
         tokenDOM.style.backgroundColor = new Color(0, 0.6f, 0);
@@ -229,15 +143,6 @@ public class UIContentsController : MonoBehaviour
     {
         return next.indent == target.indent + 1;
     }
-    bool HasAnnotation(SectionText text, List<TokenRelation> annotations)
-    {
-        foreach (var annotation in annotations)
-        {
-            if (annotation.textID == text.text_id) return true;
-        }
-        return false;
-    }
-
     public void generateSectionsDOM(VisualElement root, string filename, List<Section> sections)
     {
         cullentFilename = filename;
@@ -296,36 +201,5 @@ public class UIContentsController : MonoBehaviour
         dom.style.borderTopWidth = width;
         dom.style.borderBottomWidth = width;
         dom.style.borderRightWidth = width;
-    }
-    public void ClearAnnotation()
-    {
-        /* foreach (var i in tokenMap.Values)
-         {
-             var col = new Color(0f, 0, 0f,0);
-             var borderWidth = 0f;
-             SetBorderColor(i, col);
-             SetBorderWidth(i, borderWidth);
-         }*/
-    }
-    public void GenerateAnnotation(List<TokenRelation> annotations = null)
-    {
-        /*Debug.Log($"generate annotation {annotationLoader.GetAnnotations(cullentFilename).Count}");
-        foreach (var i in annotationLoader.GetAnnotations(cullentFilename))
-        {
-            var token1 = (i.textID, i.tokenID);
-            var token2 = (i.textID, i.targetID);
-            if (!tokenMap.ContainsKey(token1) || !tokenMap.ContainsKey(token2))
-            {
-                Debug.LogError($"key does not found token1:{token1} token2:{token2}");
-                continue;
-            }
-
-            var col = new Color(0.5f, 1, 0.5f);
-            var borderWidth = 3f;
-            SetBorderColor(tokenMap[token1], col);
-            SetBorderWidth(tokenMap[token1], borderWidth);
-            SetBorderColor(tokenMap[token2], col);
-            SetBorderWidth(tokenMap[token2], borderWidth);
-        }*/
     }
 }

@@ -59,4 +59,24 @@ public class HanreiRepository : Singleton<HanreiRepository>
         }
         return "";
     }
+    public async UniTask<HanreiTokenizedData.HanreiTextTokenData>
+    GetText(string filename, int textID, CancellationToken token)
+    {
+        var dat = await GetTokenizedData(filename, token);
+        foreach (var j in dat.datas)
+            if (textID == j.text_id) return j;
+        return null;
+    }
+    public async UniTask<HanreiTokenizedData.HanreiTextTokenData.HanreiTokenizedBunsetsuData.HanreiTokenData>
+    GetToken(string filename, int textID, int tokenID, CancellationToken token)
+    {
+        var dat = await GetText(filename, textID, token);
+        foreach (var k in dat.bunsetsu)
+        {
+            foreach (var l in k.tokens)
+                if (tokenID == l.id) return l;
+        }
+        return null;
+    }
+
 }
