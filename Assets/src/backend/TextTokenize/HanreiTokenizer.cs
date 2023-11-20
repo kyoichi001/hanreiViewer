@@ -4,7 +4,7 @@ using System.IO;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class HanreiTokenizer : MonoBehaviour
+public class HanreiTokenizer : Singleton<HanreiTokenizer>
 {
     [System.Serializable]
     public class OutputData

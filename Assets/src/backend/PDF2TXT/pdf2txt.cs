@@ -5,13 +5,8 @@ using System.IO;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class pdf2txt : MonoBehaviour
+public class pdf2txt : Singleton<pdf2txt>
 {
-    [SerializeField] string samplePDFPath;
-    [SerializeField] string pdfOutputPath;
-    [SerializeField] string josnOutputPath;
-    [Header("Streaming assets")]
-    [SerializeField] string headerRulePath;
     readonly t01_JustifySentence t01 = new();
     readonly t02_DetectHeader t02 = new();
     readonly t03_SplitSection t03 = new();
@@ -27,6 +22,16 @@ public class pdf2txt : MonoBehaviour
 
     public async UniTask ConvertPDF2Txt(string filePath, string outputPath = null)
     {
+        var dat = Resources.FindObjectsOfTypeAll<ProgramConfig>();
+        if (dat == null || dat.Length == 0)
+        {
+            Akak.Debug.LogError("Program Config Data not found");
+            return;
+        }
+        string pdfOutputPath = dat[0].pdfOutputPath;
+        string josnOutputPath = dat[0].jsonOutputPath;
+        string headerRulePath = dat[0].headerRulePath;
+
         var inputFileName = Path.GetFileNameWithoutExtension(filePath);
 
         await PDFExtracterWrapper.Instance.Extract(filePath, Application.dataPath + "/" + pdfOutputPath + "/" + inputFileName + "__pdf.json");

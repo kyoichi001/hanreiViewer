@@ -35,6 +35,9 @@ public class CameraController : MonoBehaviour
             transform.position += new Vector3(0, 0, Input.mouseScrollDelta.y * zoomSensitivity);
             transform.position = new Vector3(transform.position.x, transform.position.y, Mathf.Clamp(transform.position.z, zoomMin, zoomMax));
         }
+    }
+    public void SetCenter(Vector3 target)
+    {
 
     }
 }

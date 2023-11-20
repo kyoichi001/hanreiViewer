@@ -13,14 +13,10 @@ public class FileTextExtracter : SingletonMonoBehaviour<FileTextExtracter>
     public OnDataLoadedEvent OnDataLoaded { get; } = new OnDataLoadedEvent();
 
     FileDragAndDrop dragAndDrop;
-    pdf2txt pdfExtracterWrapper;
-    HanreiTokenizer tokenizer;
     // Start is called before the first frame update
     void Start()
     {
-        tokenizer = GetComponent<HanreiTokenizer>();
         dragAndDrop = GetComponent<FileDragAndDrop>();
-        pdfExtracterWrapper = GetComponent<pdf2txt>();
         dragAndDrop.OnFileDropped.AddListener(async (path) =>
         {
             Akak.Debug.Log($"file dropped {path}");
@@ -51,7 +47,7 @@ public class FileTextExtracter : SingletonMonoBehaviour<FileTextExtracter>
         try
         {
             var inputFileName = Path.GetFileNameWithoutExtension(filePath);
-            await pdfExtracterWrapper.ConvertPDF2Txt(filePath, Application.dataPath + "/" + "out2.json");
+            await pdf2txt.Instance.ConvertPDF2Txt(filePath, Application.dataPath + "/" + "out2.json");
         }
         catch (System.Exception e)
         {
@@ -66,7 +62,7 @@ public class FileTextExtracter : SingletonMonoBehaviour<FileTextExtracter>
     {
         var filePath = Application.dataPath + "\\out2.json";
         Akak.Debug.Log("tokenizing");
-        var tokenizedData = await tokenizer.Tokenize(filePath);
+        var tokenizedData = await HanreiTokenizer.Instance.Tokenize(filePath);
         await Cysharp.Threading.Tasks.UniTask.DelayFrame(1);//これ入れないと非同期処理からmainthreadに帰ってくる前に下の文を実行するためエラーになる
         Akak.Debug.Log("tokenized");
         string json = JsonUtility.ToJson(tokenizedData, true);                 // jsonとして変換
