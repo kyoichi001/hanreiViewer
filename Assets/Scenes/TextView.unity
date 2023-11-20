@@ -231,52 +231,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c994cb68701810b489a1e01196f2235d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &48626617
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 48626619}
-  - component: {fileID: 48626618}
-  m_Layer: 0
-  m_Name: MainScript
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &48626618
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 48626617}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 349cf13f8d8f13a4299bce8e9e777911, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DataPath: Assets/Datas/hanreiData
-  hanreiDatas: []
---- !u!4 &48626619
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 48626617}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -562,7 +516,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1321283781
 GameObject:
@@ -639,35 +593,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 223347432439784760, guid: fe294fb08bdb5194692e3f9a1a701711, type: 3}
       propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 223347432439784760, guid: fe294fb08bdb5194692e3f9a1a701711, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 79.23234
-      objectReference: {fileID: 0}
-    - target: {fileID: 223347432439784760, guid: fe294fb08bdb5194692e3f9a1a701711, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 476.65817
-      objectReference: {fileID: 0}
-    - target: {fileID: 223347432439784760, guid: fe294fb08bdb5194692e3f9a1a701711, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.9852285
-      objectReference: {fileID: 0}
-    - target: {fileID: 223347432439784760, guid: fe294fb08bdb5194692e3f9a1a701711, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 223347432439784760, guid: fe294fb08bdb5194692e3f9a1a701711, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 223347432439784760, guid: fe294fb08bdb5194692e3f9a1a701711, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 223347432439784760, guid: fe294fb08bdb5194692e3f9a1a701711, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 223347432439784760, guid: fe294fb08bdb5194692e3f9a1a701711, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -681,7 +607,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4480877094354842578, guid: fe294fb08bdb5194692e3f9a1a701711, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -719,7 +646,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8106410292679177263, guid: f63782eed1c13274c9cfbd6a1c03ae32, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8106410292679177263, guid: f63782eed1c13274c9cfbd6a1c03ae32, type: 3}
       propertyPath: m_AnchorMax.x

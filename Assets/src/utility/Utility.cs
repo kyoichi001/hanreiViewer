@@ -25,9 +25,10 @@ public class Utility
         }
         return rect;
     }
+
+    #region DurationTime関係
     public static System.DateTime Min(System.DateTime a, System.DateTime b) => a > b ? b : a;
     public static System.DateTime Max(System.DateTime a, System.DateTime b) => a < b ? b : a;
-
     public static System.DateTime Min(System.DateTime a, DurationTime b, int offsetYear = 10)
     {
         var (min, max) = b.GetMinMax(offsetYear);
@@ -63,4 +64,5 @@ public class Utility
     {
         return begin <= endValue && beginValue <= end;
     }
+    #endregion
 }

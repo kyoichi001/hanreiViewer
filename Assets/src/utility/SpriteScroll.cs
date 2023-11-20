@@ -17,12 +17,6 @@ public class SpriteScroll : MonoBehaviour
         m_material = new Material(sh);
         sprite.material = m_material;
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
     // Update is called once per frame
     void Update()
     {
