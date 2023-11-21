@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class CameraController : MonoBehaviour
+public class CameraController : SingletonMonoBehaviour<CameraController>
 {
     [SerializeField] float scrollSensitivity = 1f;
     [SerializeField] float zoomSensitivity = 1f;
@@ -38,6 +38,6 @@ public class CameraController : MonoBehaviour
     }
     public void SetCenter(Vector3 target)
     {
-
+        transform.position = new Vector3(target.x, target.y, transform.position.z);
     }
 }

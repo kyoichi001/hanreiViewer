@@ -29,7 +29,7 @@ public class UIFishbone : MonoBehaviour
     UITimeline uiTimeLine;
     readonly Dictionary<(string, System.DateTime, System.DateTime), TimeStampData> eventMap = new();
     readonly Dictionary<(string, System.DateTime, System.DateTime), int> timeMap = new();
-
+    List<UITimeStamp> timeStamps = new();
     private void Awake()
     {
         var token = this.GetCancellationTokenOnDestroy();
@@ -51,7 +51,7 @@ public class UIFishbone : MonoBehaviour
             }
             uiTimeLine.GenerateUI();
             await GenerateUI(token);
-            // SetEventsPosition();
+            SetPosition();
         });
         genkokuToggle.onValueChanged.AddListener(async (e) =>
         {
@@ -69,6 +69,7 @@ public class UIFishbone : MonoBehaviour
         timelineSlider.onValueChanged.AddListener((e) =>
         {
             uiTimeLine.PinchTimeline(e);
+            SetPosition();
         });
     }
 
@@ -145,7 +146,7 @@ public class UIFishbone : MonoBehaviour
             i.Value.time_node = obj.transform as RectTransform;
             var timeStampObj = Instantiate(timeStampPrefab, timeStampsContainer).GetComponent<UITimeStamp>();
             timeStampObj.SetData(i.Value);
-            timeStampObj.SetPosition();
+            timeStamps.Add(timeStampObj);
             var dat = await HanreiRepository.Instance.GetText(FishboneViewManager.Instance.GetCurrentPath(), i.Value.text_id, token);
             var eve = await HanreiRepository.Instance.GetEvent(FishboneViewManager.Instance.GetCurrentPath(), i.Value.event_id, token);
             timeStampObj.OnEventClicked.AddListener((id) =>
@@ -157,8 +158,15 @@ public class UIFishbone : MonoBehaviour
             eventButtonScr.Init(time_id.ToString(), eve.person, Time2Text(eve.time));
             eventButtonScr.GetComponent<Button>().onClick.AddListener(() =>
             {
-                //scrollView.SetViewCenter(timeStampObj);
+                CameraController.Instance.SetCenter(timeStampObj.transform.position);
             });
+        }
+    }
+    void SetPosition()
+    {
+        foreach (var i in timeStamps)
+        {
+            i.SetPosition();
         }
     }
     void ClearData()
