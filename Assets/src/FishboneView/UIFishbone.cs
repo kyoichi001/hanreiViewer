@@ -156,9 +156,10 @@ public class UIFishbone : MonoBehaviour
             });
             var eventButtonScr = Instantiate(eventButtonPrefab, eventsList).GetComponent<UIEventButton>();
             eventButtonScr.Init(time_id.ToString(), eve.person, Time2Text(eve.time));
-            eventButtonScr.GetComponent<Button>().onClick.AddListener(() =>
+            eventButtonScr.GetComponent<Button>().onClick.AddListener(async () =>
             {
-                CameraController.Instance.SetCenter(timeStampObj.transform.position);
+                await CameraController.Instance.SetCenter(timeStampObj.transform.position);
+                await timeStampObj.GetComponent<UIColorSet>().SetColorEffect(Color.yellow);
             });
         }
     }

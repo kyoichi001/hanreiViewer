@@ -76,6 +76,22 @@ public class HanreiRepository : Singleton<HanreiRepository>
             if (textID == j.text_id) return j;
         return null;
     }
+    public async UniTask<HanreiTokenizedData.HanreiTextTokenData>
+    GetTextPrev(string filename, int textID, CancellationToken token)
+    {
+        var dat = await GetTokenizedData(filename, token);
+        var index = dat.datas.FindIndex((d) => d.text_id == textID);
+        if (index == 0 || index == -1) return null;
+        return dat.datas[index - 1];
+    }
+    public async UniTask<HanreiTokenizedData.HanreiTextTokenData>
+    GetTextNext(string filename, int textID, CancellationToken token)
+    {
+        var dat = await GetTokenizedData(filename, token);
+        var index = dat.datas.FindIndex((d) => d.text_id == textID);
+        if (index == dat.datas.Count - 1 || index == -1) return null;
+        return dat.datas[index + 1];
+    }
     public async UniTask<HanreiTokenizedData.HanreiTextTokenData.HanreiEventsData>
     GetEvent(string filename, int eventID, CancellationToken token)
     {

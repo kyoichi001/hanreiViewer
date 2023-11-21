@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -12,7 +13,6 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
 
     Vector3 origin;
     Vector3 transformOrigin;
-    // Update is called once per frame
     bool isEnable = false;
     void Update()
     {
@@ -36,8 +36,22 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
             transform.position = new Vector3(transform.position.x, transform.position.y, Mathf.Clamp(transform.position.z, zoomMin, zoomMax));
         }
     }
-    public void SetCenter(Vector3 target)
+    public async UniTask SetCenter(Vector3 target, float duration = 0.5f)
     {
-        transform.position = new Vector3(target.x, target.y, transform.position.z);
+        var targetPos = new Vector3(target.x, target.y, transform.position.z);
+        float t = 0;
+        var start = transform.position;
+        while (t < duration)
+        {
+            transform.position = Vector3.Lerp(start, targetPos, ease(t / duration));
+            t += Time.deltaTime;
+            await UniTask.DelayFrame(1);
+        }
+        transform.position = targetPos;
+    }
+
+    float ease(float t)
+    {
+        return Mathf.Pow(t - 1, 3) + 1;
     }
 }
