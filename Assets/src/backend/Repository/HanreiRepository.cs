@@ -9,6 +9,7 @@ using UnityEngine;
 public class HanreiRepository : Singleton<HanreiRepository>
 {
     readonly Dictionary<string, HanreiData> hanreiDataCache = new();
+    readonly Dictionary<string, List<HanreiTokenizedData.HanreiTextTokenData.HanreiEventsData>> eventDataCache = new();
     readonly Dictionary<string, HanreiTokenizedData> hanreiTokenizedDataCache = new();
     public List<string> GetNames(string directory)//pathから __**.jsonのみ抜いたものがfilenameとして得られる
     {
@@ -26,6 +27,10 @@ public class HanreiRepository : Singleton<HanreiRepository>
     }
     public async UniTask<HanreiData> GetTextData(string filename, CancellationToken token)
     {
+        if (hanreiDataCache.ContainsKey(filename))
+        {
+            return hanreiDataCache[filename];
+        }
         var path = filename + "__text.json";
         using (var reader = new System.IO.StreamReader(path, System.Text.Encoding.UTF8))
         {
@@ -37,6 +42,10 @@ public class HanreiRepository : Singleton<HanreiRepository>
     }
     public async UniTask<HanreiTokenizedData> GetTokenizedData(string filename, CancellationToken token)
     {
+        if (hanreiTokenizedDataCache.ContainsKey(filename))
+        {
+            return hanreiTokenizedDataCache[filename];
+        }
         var path = filename + "__tokenized.json";
         using (var reader = new System.IO.StreamReader(path, System.Text.Encoding.UTF8))
         {
@@ -66,6 +75,24 @@ public class HanreiRepository : Singleton<HanreiRepository>
         foreach (var j in dat.datas)
             if (textID == j.text_id) return j;
         return null;
+    }
+    public async UniTask<HanreiTokenizedData.HanreiTextTokenData.HanreiEventsData>
+    GetEvent(string filename, int eventID, CancellationToken token)
+    {
+        if (eventDataCache.ContainsKey(filename))
+        {
+            return eventDataCache[filename][eventID];
+        }
+        eventDataCache[filename] = new List<HanreiTokenizedData.HanreiTextTokenData.HanreiEventsData>();
+        var dat = await GetTokenizedData(filename, token);
+        foreach (var d in dat.datas)
+        {
+            foreach (var e in d.events)
+            {
+                eventDataCache[filename].Add(e);
+            }
+        }
+        return eventDataCache[filename][eventID];
     }
     public async UniTask<HanreiTokenizedData.HanreiTextTokenData.HanreiTokenizedBunsetsuData.HanreiTokenData>
     GetToken(string filename, int textID, int tokenID, CancellationToken token)

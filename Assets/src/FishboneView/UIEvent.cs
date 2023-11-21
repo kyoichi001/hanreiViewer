@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 public class UIEvent : MonoBehaviour
 {
+    public UnityEvent OnButtonClicked { get; } = new();
     [SerializeField] float maxHeight = 80;
     [SerializeField] GameObject actNode;
     TMPro.TextMeshProUGUI actText;
@@ -46,21 +48,15 @@ public class UIEvent : MonoBehaviour
         trigger.triggers.Add(exit_entry);
         button.onClick.AddListener(() =>
         {
-            ModalManager.Instance.AddModal(modalPrefab);
+            OnButtonClicked.Invoke();
         });
     }
 
     public Rect CalcRect()
     {
-        var res = new Rect();
         var rc1 = boneLine.transform as RectTransform;
         var rc2 = actNode.transform as RectTransform;
-
-        res.yMin = Mathf.Min(rc1.rect.yMin, rc2.rect.yMin);
-        res.yMax = Mathf.Max(rc1.rect.yMax, rc2.rect.yMax);
-        res.xMin = Mathf.Min(rc1.rect.xMin, rc2.rect.xMin);
-        res.xMax = Mathf.Max(rc1.rect.xMax, rc2.rect.xMax);
-        return res;
+        return Utility.GetContainsRect(rc1.rect, rc2.rect);
     }
     public void SetActWidth(float width)
     {

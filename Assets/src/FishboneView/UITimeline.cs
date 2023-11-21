@@ -11,19 +11,10 @@ public class UITimeline : MonoBehaviour
 
     [SerializeField] float yearUnitLength = 100;
     [Header("References")]
-    [SerializeField] Slider pinchSlider;
     [SerializeField] GameObject subTimelinePrefab;
 
     List<UISubTimeline> subTimelines = new List<UISubTimeline>();
     List<System.DateTime> splitTimes = new List<System.DateTime>();
-    private void Awake()
-    {
-        pinchSlider.value = yearUnitLength;
-        pinchSlider.onValueChanged.AddListener((value) =>
-        {
-            PinchTimeline(value);
-        });
-    }
 
     bool Splitable(System.DateTime splitTime, int offsetYear = 10)
     {

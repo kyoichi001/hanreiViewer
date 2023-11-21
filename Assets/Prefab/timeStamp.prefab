@@ -337,6 +337,7 @@ MonoBehaviour:
   eventsGap: 5
   eventsWidth: 100
   eventPrefab: {fileID: 6678113315623104585, guid: 97cd1cfdc7650fd489c98efecfff5131, type: 3}
+  modalPrefab: {fileID: 990375133097399809, guid: 3a4c9a876ccc24345906fc1f6295a905, type: 3}
   personNode: {fileID: 6745972082919335847}
   eventsContainer: {fileID: 910691317918833931}
   boneLine: {fileID: 7068307518752340074}

@@ -16,7 +16,7 @@ public class ModalManager : SingletonMonoBehaviour<ModalManager>
             CloseModal();
         });
     }
-    public void AddModal(GameObject m)
+    public GameObject AddModal(GameObject m)
     {
         var obj = Instantiate(m, modalContainer);
         modals.Add(obj.GetComponent<Modal>());
@@ -26,6 +26,7 @@ public class ModalManager : SingletonMonoBehaviour<ModalManager>
         });
         obj.gameObject.SetActive(false);
         OpenModal();
+        return obj;
     }
     public void CloseModal()
     {

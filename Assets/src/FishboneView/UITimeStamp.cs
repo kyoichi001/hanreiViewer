@@ -1,22 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 [System.Serializable]
 public class TimeStampData
 {
+    public int text_id;
+    public int event_id;
     public string person;
     public RectTransform time_node;
     public List<string> acts;
     public bool is_top;
-    public string claim_state;
-    public int issue_num;
 }
 
 public class UITimeStamp : MonoBehaviour
 {
+    public class OnEventClickedEvent : UnityEvent<int> { }
+    public OnEventClickedEvent OnEventClicked { get; } = new();
     float height = 300;
     [SerializeField] float eventsGap;
     [SerializeField] float eventsWidth;
@@ -104,6 +109,11 @@ public class UITimeStamp : MonoBehaviour
         {
             var eventSrc = Instantiate(eventPrefab, eventsContainer).GetComponent<UIEvent>();
             eventSrc.SetData(act);
+            var id = events.Count;
+            eventSrc.OnButtonClicked.AddListener(() =>
+            {
+                OnEventClicked.Invoke(id);
+            });
             events.Add(eventSrc);
         }
         ui_arrow.ui2 = data.time_node;
@@ -112,6 +122,11 @@ public class UITimeStamp : MonoBehaviour
     {
         var eventSrc = Instantiate(eventPrefab, eventsContainer).GetComponent<UIEvent>();
         eventSrc.SetData(act);
+        var id = events.Count;
+        eventSrc.OnButtonClicked.AddListener(() =>
+        {
+            OnEventClicked.Invoke(id);
+        });
         events.Add(eventSrc);
         SetActsPos(eventsGap);
     }
@@ -191,17 +206,18 @@ public class UITimeStamp : MonoBehaviour
         }
     }
 
-    public bool matchFilter(bool genkoku, bool hikoku, bool jijitsu)
+    public async UniTask<bool> matchFilter(bool genkoku, bool hikoku, bool jijitsu, CancellationToken token)
     {
-        if (genkoku && data.claim_state == "genkoku")
+        var dat = await HanreiRepository.Instance.GetText(FishboneViewManager.Instance.GetCurrentPath(), data.text_id, token);
+        if (genkoku && dat.claim_state == "genkoku")
         {
             return true;
         }
-        if (hikoku && data.claim_state == "hikoku")
+        if (hikoku && dat.claim_state == "hikoku")
         {
             return true;
         }
-        if (jijitsu && (data.claim_state == "" || data.claim_state == "saibanjo"))
+        if (jijitsu && (dat.claim_state == "" || dat.claim_state == "saibanjo"))
         {
             return true;
         }

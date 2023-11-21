@@ -27,7 +27,10 @@ public class FishboneViewManager : SingletonMonoBehaviour<FishboneViewManager>
     }
     public async UniTask ShowFishboneUI(string path, CancellationToken token)
     {
+        currentPath = path;
         var d = await HanreiRepository.Instance.GetTokenizedData(path, token);
         OnShowData.Invoke(path, d);
     }
+    string currentPath;
+    public string GetCurrentPath() => currentPath;
 }
