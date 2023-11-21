@@ -72,25 +72,23 @@ public class HanreiRepository : Singleton<HanreiRepository>
     GetText(string filename, int textID, CancellationToken token)
     {
         var dat = await GetTokenizedData(filename, token);
-        foreach (var j in dat.datas)
-            if (textID == j.text_id) return j;
-        return null;
+        return dat.datas.Find((d) => d.text_id == textID);
     }
-    public async UniTask<HanreiTokenizedData.HanreiTextTokenData>
-    GetTextPrev(string filename, int textID, CancellationToken token)
+    public async UniTask<List<HanreiTokenizedData.HanreiTextTokenData>>
+    GetTextPrev(string filename, int textID, int count, CancellationToken token)
     {
         var dat = await GetTokenizedData(filename, token);
         var index = dat.datas.FindIndex((d) => d.text_id == textID);
-        if (index == 0 || index == -1) return null;
-        return dat.datas[index - 1];
+        if (index <= count - 1 || index == -1) return null;
+        return dat.datas.GetRange(index - count, count);
     }
-    public async UniTask<HanreiTokenizedData.HanreiTextTokenData>
-    GetTextNext(string filename, int textID, CancellationToken token)
+    public async UniTask<List<HanreiTokenizedData.HanreiTextTokenData>>
+    GetTextNext(string filename, int textID, int count, CancellationToken token)
     {
         var dat = await GetTokenizedData(filename, token);
         var index = dat.datas.FindIndex((d) => d.text_id == textID);
-        if (index == dat.datas.Count - 1 || index == -1) return null;
-        return dat.datas[index + 1];
+        if (index >= dat.datas.Count - count || index == -1) return null;
+        return dat.datas.GetRange(index + 1, count);
     }
     public async UniTask<HanreiTokenizedData.HanreiTextTokenData.HanreiEventsData>
     GetEvent(string filename, int eventID, CancellationToken token)
