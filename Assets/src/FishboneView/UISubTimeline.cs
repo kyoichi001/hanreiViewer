@@ -132,7 +132,6 @@ public class UISubTimeline : MonoBehaviour
         var beginRatio = (float)(b - minTime).TotalDays / (float)(maxTime - minTime).TotalDays;
         var endRatio = (float)(e - minTime).TotalDays / (float)(maxTime - minTime).TotalDays;
         var rc = data.gameObject.transform as RectTransform;
-        //Debug.Log($"time {minTime},{maxTime}, time {data.data.begin_time},{data.data.end_time}, ratio {beginRatio},{endRatio}");
         switch (data.data.time.timeType)
         {
             case TimeType.point:
@@ -144,22 +143,18 @@ public class UISubTimeline : MonoBehaviour
             case TimeType.begin_end:
             case TimeType.begin:
             case TimeType.end:
-                beginRatio = Mathf.Clamp(beginRatio, 0f, 1f);
-                endRatio = Mathf.Clamp(endRatio, 0f, 1f);
                 rc.localPosition = new Vector3(
                     rectTransform.rect.xMin + rectTransform.rect.width * (endRatio + beginRatio) / 2,
                     data.data.layer * time_layer_offset + padding
                     );
                 var widthRatio = endRatio - beginRatio;
-                //Debug.Log($"{rectTransform.rect.width}:{widthRatio},{widthRatio * rectTransform.rect.width}", gameObject);
                 rc.sizeDelta = new Vector2(widthRatio * rectTransform.rect.width, time_height);
                 break;
         }
     }
-    public void GenerateUI(float yearUnitLength)
+    public void GenerateUI()
     {
         ClearTimeBar();
-        this.yearUnitLength = yearUnitLength;
         var (min_value, max_value) = (begin_time, end_time);
         foreach (var i in topTimes)
         {
@@ -177,6 +172,21 @@ public class UISubTimeline : MonoBehaviour
         {
             SetPosition(min_value, max_value, child.GetComponent<UITime>(), false);
         }
+        GenerateTimeBar(min_value, max_value);
+    }
+    public void SetUnitLength(float yearUnitLength)
+    {
+        this.yearUnitLength = yearUnitLength;
+        var (min_value, max_value) = (begin_time, end_time);
+        foreach (Transform child in times_top)
+        {
+            SetPosition(min_value, max_value, child.GetComponent<UITime>(), true);
+        }
+        foreach (Transform child in times_bottom)
+        {
+            SetPosition(min_value, max_value, child.GetComponent<UITime>(), false);
+        }
+        ClearTimeBar();
         GenerateTimeBar(min_value, max_value);
     }
     void Update()

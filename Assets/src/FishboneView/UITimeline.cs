@@ -81,7 +81,6 @@ public class UITimeline : MonoBehaviour
 
     }
 
-
     public void GenerateUI()
     {
         var offsetYear = 10;
@@ -126,13 +125,19 @@ public class UITimeline : MonoBehaviour
         }
         foreach (var subTL in subTimelines)
         {
-            subTL.GenerateUI(yearUnitLength);
+            subTL.GenerateUI();
+            subTL.SetUnitLength(yearUnitLength);
         }
     }
     public void PinchTimeline(float unitLength)
     {
         var (min_value, max_value) = TimelineManager.Instance.CalcMinMax();
         yearUnitLength = unitLength;
+        foreach (var subTL in subTimelines)
+        {
+            subTL.SetUnitLength(yearUnitLength);
+        }
+
     }
 
     public float GetTimebarLength()
