@@ -56,4 +56,17 @@ public class Utility
         return begin <= endValue && beginValue <= end;
     }
     #endregion
+
+    public static T DeepClone<T>(T src)
+    {
+        using (var memoryStream = new System.IO.MemoryStream())
+        {
+            var binaryFormatter
+              = new System.Runtime.Serialization
+                    .Formatters.Binary.BinaryFormatter();
+            binaryFormatter.Serialize(memoryStream, src); // シリアライズ
+            memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+            return (T)binaryFormatter.Deserialize(memoryStream); // デシリアライズ
+        }
+    }
 }
