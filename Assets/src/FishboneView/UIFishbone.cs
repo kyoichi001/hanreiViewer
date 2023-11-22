@@ -147,12 +147,14 @@ public class UIFishbone : MonoBehaviour
             var timeStampObj = Instantiate(timeStampPrefab, timeStampsContainer).GetComponent<UITimeStamp>();
             timeStampObj.SetData(i.Value);
             timeStamps.Add(timeStampObj);
-            var dat = await HanreiRepository.Instance.GetText(FishboneViewManager.Instance.GetCurrentPath(), i.Value.text_id, token);
             var eve = await HanreiRepository.Instance.GetEvent(FishboneViewManager.Instance.GetCurrentPath(), i.Value.event_id, token);
-            timeStampObj.OnEventClicked.AddListener((id) =>
+            timeStampObj.OnEventClicked.AddListener(async (id) =>
             {
                 var obj = ModalManager.Instance.AddModal(modalPrefab);
-                obj.GetComponent<HanreiTextModal>().Init(dat.text, i.Value.person, Time2Text(eve.time), i.Value.acts[id]);
+                var dat = await HanreiRepository.Instance.GetText(FishboneViewManager.Instance.GetCurrentPath(), i.Value.text_id, token);
+                var section = await HanreiRepository.Instance.GetTextSection(FishboneViewManager.Instance.GetCurrentPath(), i.Value.text_id, token);
+                if (section != null)
+                    obj.GetComponent<HanreiTextModal>().Init(section.header, dat.text, i.Value.person, Time2Text(eve.time), i.Value.acts[id]);
             });
             var eventButtonScr = Instantiate(eventButtonPrefab, eventsList).GetComponent<UIEventButton>();
             eventButtonScr.Init(time_id.ToString(), eve.person, Time2Text(eve.time));

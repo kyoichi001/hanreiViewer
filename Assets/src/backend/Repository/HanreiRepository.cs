@@ -90,6 +90,23 @@ public class HanreiRepository : Singleton<HanreiRepository>
         if (index >= dat.datas.Count - count || index == -1) return null;
         return dat.datas.GetRange(index + 1, count);
     }
+    public async UniTask<Section>
+    GetTextSection(string filename, int textID, CancellationToken token)
+    {
+        var dat = await GetTextData(filename, token);
+        Debug.Log("aaaaaaa:" + textID);
+        foreach (var section in dat.contents.fact_reason.sections)
+        {
+            foreach (var t in section.texts)
+            {
+                Debug.Log(t.text_id);
+            }
+            var index = section.texts.Find((t) => t.text_id == textID);
+            if (index == null) continue;
+            return section;
+        }
+        return null;
+    }
     public async UniTask<HanreiTokenizedData.HanreiTextTokenData.HanreiEventsData>
     GetEvent(string filename, int eventID, CancellationToken token)
     {

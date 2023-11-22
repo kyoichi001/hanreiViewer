@@ -6,6 +6,7 @@ using UnityEngine;
 public class ProgramConfig : ScriptableObject
 {
     [Header("pdf2txt")]
+    public string targetHanreiDataPath;
     public string pdfOutputPath;
     public string jsonOutputPath;
     public string headerRulePath;
