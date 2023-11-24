@@ -1,6 +1,7 @@
 using System.Collections.Generic;
-using InputData = t02_02_extract_people.OutputData;
-public class t02_03_mark_kakari
+using System.Linq;
+using InputData = t02_03_mark_kakari.OutputData;
+public class t02_04_extract_act
 {
 
     [System.Serializable]
@@ -53,7 +54,16 @@ public class t02_03_mark_kakari
                 }
                 public List<People> people = new();
             }
+            [System.Serializable]
+            public class Events
+            {
+                public string person;
+                public string time;
+                public int value;
+                public string acts;
+            }
             public Event event_ = null;
+            public List<Events> events = new();
         }
         public List<TextData> datas = new();
         public OutputData(InputData data)
@@ -88,42 +98,18 @@ public class t02_03_mark_kakari
             }
         }
     }
-    void CheckRentaishi_(int root, Graph g, List<bool> timeFlagList, List<bool> personFlagList, List<OutputData.TextData.Bunsetsu> bnsts)
+    bool IsShugo(OutputData.TextData.Bunsetsu bst)
     {
-        if (personFlagList[root] || bnsts[root].person != null)
-            foreach (var child in g.g[root])
-                personFlagList[child] = true;
-        if (timeFlagList[root] || bnsts[root].times != null && bnsts[root].times.Exists((t) => t.type == "point"))
-            foreach (var child in g.g[root])
-                timeFlagList[child] = true;
-        foreach (var child in g.g[root])
+        if (bst.is_rentaishi || bst.person == null) return false;
+        foreach (var tango in bst.tokens)
         {
-            CheckRentaishi_(root, g, timeFlagList, personFlagList, bnsts);
+            var tgs = tango.Tags();
+            if ("はがも".Contains(tango.text) && tgs.Contains("助詞")) return true;
         }
+        return false;
     }
-    (List<bool>, List<bool>) CheckRentaishi(List<OutputData.TextData.Bunsetsu> bnsts)
+    void ExtractEvents(OutputData.TextData dat)
     {
-        var timeFlagList = new List<bool>(bnsts.Count);
-        var personFlagList = new List<bool>(bnsts.Count);
-        var li = new List<List<int>>(bnsts.Count + 1);
-        foreach (var bnst in bnsts)
-            if (bnst.id != -1) li[bnst.to].Add(bnst.id);
-        var g = new Graph(li);
-        CheckRentaishi_(bnsts[^1].id, g, timeFlagList, personFlagList, bnsts);
-        return (timeFlagList, personFlagList);
-    }
-    public OutputData Convert(InputData data)
-    {
-        var res = new OutputData(data);
-        foreach (var content in res.datas)
-        {
-            var (tt, pp) = CheckRentaishi(content.bunsetsu);
-            foreach (var bunsetsu in content.bunsetsu)
-            {
-                if (tt[bunsetsu.id]) bunsetsu.time_kakari = tt[bunsetsu.id];
-                if (pp[bunsetsu.id]) bunsetsu.person_kakari = pp[bunsetsu.id];
-            }
-        }
-        return res;
+
     }
 }
