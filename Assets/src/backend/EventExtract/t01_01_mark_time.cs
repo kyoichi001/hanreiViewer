@@ -7,30 +7,30 @@ using UnityEngine;
 
 using InputData = HanreiTokenizer.OutputData;
 
-[System.Serializable]
-public class Time
-{
-    public int year;
-    public int month;
-    public int day;
-    public Time() { }
-    public Time(Time t)
-    {
-        this.year = t.year;
-        this.month = t.month;
-        this.day = t.day;
-    }
-    public Time(int year, int month, int day)
-    {
-        this.year = year;
-        this.month = month;
-        this.day = day;
-    }
-    public int Value() => year * 10000 + month * 100 + day;
-}
 
 public class t01_01_mark_time
 {
+    [System.Serializable]
+    public class Time
+    {
+        public int year;
+        public int month;
+        public int day;
+        public Time() { }
+        public Time(Time t)
+        {
+            this.year = t.year;
+            this.month = t.month;
+            this.day = t.day;
+        }
+        public Time(int year, int month, int day)
+        {
+            this.year = year;
+            this.month = month;
+            this.day = day;
+        }
+        public int Value() => year * 10000 + month * 100 + day;
+    }
     [System.Serializable]
     public class TimeValue
     {
