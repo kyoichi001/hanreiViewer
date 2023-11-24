@@ -108,8 +108,121 @@ public class t02_04_extract_act
         }
         return false;
     }
-    void ExtractEvents(OutputData.TextData dat)
+    List<OutputData.TextData.Events> ExtractEvents(OutputData.TextData dat)
     {
-
+        var res = new List<OutputData.TextData.Events>();
+        var extracts = false;
+        foreach (var bnst in dat.bunsetsu)
+        {
+            if (bnst.times == null) continue;
+            foreach (var time in bnst.times)
+            {
+                if (time.type == "point")
+                {
+                    extracts = true;
+                    break;
+                }
+            }
+        }
+        if (!extracts) return res;
+        string extract_time = null;
+        int? extract_time_value = null;
+        var acts = "";
+        var person = "";
+        foreach (var bnst in dat.bunsetsu)
+        {
+            if (bnst.time_kakari || bnst.person_kakari) continue;
+            if (bnst.is_rentaishi)
+            {
+                foreach (var tango in bnst.tokens) acts += tango.text;
+                continue;
+            }
+            if (bnst.times != null)
+            {
+                string t = null;
+                int? t_v = null;
+                foreach (var time in bnst.times)
+                {
+                    if (time.type == "point" || time.type == "begin" || time.type == "end")
+                    {
+                        foreach (var t_obj in bnst.times)
+                            t += t_obj.text;
+                        t_v = time.value;
+                        break;
+                    }
+                }
+                if (t != null)
+                {
+                    if (extract_time != null)
+                    {
+                        res.Add(new OutputData.TextData.Events
+                        {
+                            person = person,
+                            time = extract_time,
+                            value = extract_time_value ?? 0,
+                            acts = acts
+                        });
+                        acts = "";
+                        person = "";
+                    }
+                    extract_time = t;
+                    extract_time_value = t_v;
+                }
+                continue;
+            }
+            if (bnst.person != null)
+            {
+                if (!IsShugo(bnst))
+                {
+                    foreach (var tango in bnst.tokens)
+                        acts += tango.text;
+                    continue;
+                }
+                if (person != "")
+                {
+                    res.Add(new OutputData.TextData.Events
+                    {
+                        person = person,
+                        time = extract_time,
+                        value = extract_time_value ?? 0,
+                        acts = acts
+                    });
+                    extract_time = null;
+                    extract_time_value = null;
+                    acts = "";
+                }
+                person = bnst.person.content;
+                continue;
+            }
+            foreach (var tango in bnst.tokens)
+                acts += tango.text;
+        }
+        if (extract_time != null && person != "")
+        {
+            res.Add(new OutputData.TextData.Events
+            {
+                person = person,
+                time = extract_time,
+                value = extract_time_value ?? 0,
+                acts = acts
+            });
+        }
+        return res;
+    }
+    public OutputData Convert(InputData data)
+    {
+        var res = new OutputData(data);
+        foreach (var content in res.datas)
+        {
+            if (content.event_?.times == null) continue;
+            var ddd = ExtractEvents(content);
+            if (ddd.Count != 0) content.events = ddd;
+            foreach (var e in ddd)
+            {
+                if (e.person == "" || (e.time ?? "") == "" || e.acts == "")
+                    continue;
+            }
+        }
+        return res;
     }
 }
