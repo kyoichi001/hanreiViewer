@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using TreeEditor;
 using InputData = t02_02_extract_people.OutputData;
 public class t02_03_mark_kakari
 {
