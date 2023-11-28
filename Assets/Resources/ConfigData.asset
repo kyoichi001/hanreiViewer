@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e36623741138d147b1e00fe01248774, type: 3}
   m_Name: ConfigData
   m_EditorClassIdentifier: 
+  targetHanreiDataPath: Datas
   pdfOutputPath: Datas/Sample
   jsonOutputPath: Datas/Sample
   headerRulePath: pdf2txt/rules/headers.json
