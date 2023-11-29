@@ -92,11 +92,6 @@ public class UIFishbone : MonoBehaviour
             SetPosition();
         });
     }
-    void Update()
-    {
-        currentCameraRatio = uiTimeLine.GetXRatioFromCenter(CameraController.Instance.gameObject.transform.position.x + sliderCameraOffset);
-    }
-
     public bool is_top(DataType data_)
     {
         return data_.person.Contains("原告");
