@@ -19,15 +19,15 @@ public class ExtractEvent
 
     public async UniTask<t02_04_extract_act.OutputData> Extract(string filePath, CancellationToken token)
     {
-        var dat = Resources.FindObjectsOfTypeAll<ProgramConfig>();
-        if (dat == null || dat.Length == 0)
+        var dat = Resources.Load<ProgramConfig>("ConfigData");
+        if (dat == null)
         {
             Akak.Debug.LogError("Program Config Data not found");
             return null;
         }
-        string timeRulePath = dat[0].pdfOutputPath;
-        string personRulePath = dat[0].pdfOutputPath;
-
+        string timeRulePath = dat.pdfOutputPath;
+        string personRulePath = dat.pdfOutputPath;
+        Resources.UnloadAsset(dat);
         var inputFileName = Path.GetFileNameWithoutExtension(filePath);
 
         var res = await HanreiTokenizer.Instance.Tokenize(filePath);

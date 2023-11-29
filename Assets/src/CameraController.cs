@@ -36,6 +36,10 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
             transform.position = new Vector3(transform.position.x, transform.position.y, Mathf.Clamp(transform.position.z, zoomMin, zoomMax));
         }
     }
+    public void SetCenterImmidiately(Vector3 target)
+    {
+        transform.position = target;
+    }
     public async UniTask SetCenter(Vector3 target, float duration = 0.5f)
     {
         var targetPos = new Vector3(target.x, target.y, transform.position.z);

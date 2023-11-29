@@ -156,6 +156,22 @@ public class UITimeline : MonoBehaviour
             return (a, b);
         }
         return (0, 0);
-
     }
+    public float GetXRatioFromCenter(float globalX)
+    {
+        foreach (var subTL in subTimelines)
+        {
+            return subTL.GetXRatioFromCenter(globalX);
+        }
+        return 0;
+    }
+    public Vector3 GetWorldPosFromCenterRatio(float ratio)
+    {
+        foreach (var subTL in subTimelines)
+        {
+            return subTL.GetWorldPosFromCenterRatio(ratio);
+        }
+        return Vector3.zero;
+    }
+
 }

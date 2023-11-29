@@ -238,4 +238,15 @@ public class UISubTimeline : MonoBehaviour
         }
         return true;
     }
+    public float GetXRatioFromCenter(float globalX)
+    {
+        var localPoint = transform.InverseTransformPoint(new Vector3(globalX, 0, 0));
+        var ratio = (localPoint.x - rectTransform.rect.xMin) / rectTransform.rect.width;
+        return 2.0f * (ratio - 0.5f);//左端 -1 右端 1になるように
+    }
+    public Vector3 GetWorldPosFromCenterRatio(float ratio)
+    {
+        var pos = new Vector3(rectTransform.rect.width * ratio / 2f, 0);
+        return transform.TransformPoint(pos);
+    }
 }

@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 
 using DataType = HanreiTokenizedData.HanreiTextTokenData.HanreiEventsData;
 using System.Threading;
+using UnityEngine.EventSystems;
 
 public class UIFishbone : MonoBehaviour
 {
@@ -23,13 +24,16 @@ public class UIFishbone : MonoBehaviour
     [SerializeField] Toggle hikokuToggle;
     [SerializeField] Toggle jijitsuToggle;
     [SerializeField] Slider timelineSlider;
+    [SerializeField] float sliderCameraOffset;
     [Header("Debug")]
     [SerializeField, ReadOnly] List<DataType> data = new();
+    [SerializeField, ReadOnly] float currentCameraRatio;
 
     UITimeline uiTimeLine;
     readonly Dictionary<(string, System.DateTime, System.DateTime), TimeStampData> eventMap = new();
     readonly Dictionary<(string, System.DateTime, System.DateTime), int> timeMap = new();
     List<UITimeStamp> timeStamps = new();
+    float sliderDraggingRatio = 0;
     private void Awake()
     {
         var token = this.GetCancellationTokenOnDestroy();
@@ -66,11 +70,31 @@ public class UIFishbone : MonoBehaviour
             await FilterUI(genkokuToggle.isOn, hikokuToggle.isOn, jijitsuToggle.isOn, token);
         });
         timelineSlider.value = 300;//yearUnitLength;
+        var eventTrriger = timelineSlider.GetComponent<EventTrigger>();
+        var enter_entry = new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.PointerDown
+        };
+        enter_entry.callback.AddListener((data) =>
+        {
+            sliderDraggingRatio = uiTimeLine.GetXRatioFromCenter(CameraController.Instance.gameObject.transform.position.x + sliderCameraOffset);
+        });
+        eventTrriger.triggers.Add(enter_entry);
         timelineSlider.onValueChanged.AddListener((e) =>
         {
             uiTimeLine.PinchTimeline(e);
+            var pos = uiTimeLine.GetWorldPosFromCenterRatio(sliderDraggingRatio);
+            CameraController.Instance.SetCenterImmidiately(new Vector3(
+                pos.x,
+                CameraController.Instance.gameObject.transform.position.y,
+                CameraController.Instance.gameObject.transform.position.z
+            ));
             SetPosition();
         });
+    }
+    void Update()
+    {
+        currentCameraRatio = uiTimeLine.GetXRatioFromCenter(CameraController.Instance.gameObject.transform.position.x + sliderCameraOffset);
     }
 
     public bool is_top(DataType data_)
@@ -143,6 +167,7 @@ public class UIFishbone : MonoBehaviour
         {
             var time_id = timeMap[i.Key];
             var obj = uiTimeLine.GetTimeTransform(time_id).gameObject;
+            Debug.Log(obj);
             i.Value.time_node = obj.transform as RectTransform;
             var timeStampObj = Instantiate(timeStampPrefab, timeStampsContainer).GetComponent<UITimeStamp>();
             timeStampObj.SetData(i.Value);

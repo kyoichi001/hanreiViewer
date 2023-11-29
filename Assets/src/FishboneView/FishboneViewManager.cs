@@ -15,9 +15,10 @@ public class FishboneViewManager : SingletonMonoBehaviour<FishboneViewManager>
     public OnShowDataEvent OnShowData { get; } = new OnShowDataEvent();
     async void Start()
     {
-        var dat = Resources.FindObjectsOfTypeAll<ProgramConfig>();
+        var dat = Resources.Load<ProgramConfig>("ConfigData");
         var token = this.GetCancellationTokenOnDestroy();
-        var filenames = HanreiRepository.Instance.GetNames(Application.dataPath + "/" + dat[0].targetHanreiDataPath);
+        var filenames = HanreiRepository.Instance.GetNames(Application.dataPath + "/" + dat.targetHanreiDataPath);
+        Resources.UnloadAsset(dat);
         var a = new List<(string, string)>();
         foreach (var f in filenames)
         {

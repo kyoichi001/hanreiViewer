@@ -22,15 +22,16 @@ public class pdf2txt : Singleton<pdf2txt>
 
     public async UniTask ConvertPDF2Txt(string filePath, string outputPath = null)
     {
-        var dat = Resources.FindObjectsOfTypeAll<ProgramConfig>();
-        if (dat == null || dat.Length == 0)
+        var dat = Resources.Load<ProgramConfig>("ConfigData");
+        if (dat == null)
         {
             Akak.Debug.LogError("Program Config Data not found");
             return;
         }
-        string pdfOutputPath = dat[0].pdfOutputPath;
-        string josnOutputPath = dat[0].jsonOutputPath;
-        string headerRulePath = dat[0].headerRulePath;
+        string pdfOutputPath = dat.pdfOutputPath;
+        string josnOutputPath = dat.jsonOutputPath;
+        string headerRulePath = dat.headerRulePath;
+        Resources.UnloadAsset(dat);
 
         var inputFileName = Path.GetFileNameWithoutExtension(filePath);
 
