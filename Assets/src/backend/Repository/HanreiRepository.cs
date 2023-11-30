@@ -97,13 +97,53 @@ public class HanreiRepository : Singleton<HanreiRepository>
         //Debug.Log("aaaaaaa:" + textID);
         foreach (var section in dat.contents.fact_reason.sections)
         {
-            /* foreach (var t in section.texts)
-             {
-                 Debug.Log(t.text_id);
-             }*/
             var index = section.texts.Find((t) => t.text_id == textID);
             if (index == null) continue;
+            /*foreach (var t in section.texts)
+               {
+                   Debug.Log(t.text_id);
+               }*/
             return section;
+        }
+        return null;
+    }
+    public async UniTask<Section>
+    GetParentSection(string filename, Section section, CancellationToken token)
+    {
+        var dat = await GetTextData(filename, token);
+        Section parent = null;
+        foreach (var s in dat.contents.fact_reason.sections)
+        {
+            if (s.indent == section.indent - 1) parent = s;
+            if (s.indent == section.indent)
+            {
+                if (s.header == section.header && s.type == section.type && s.texts.Equals(s.texts.Count))
+                {
+                    return parent;
+                }
+            }
+        }
+        return null;
+    }
+    public async UniTask<List<Section>>
+    GetParentsSection(string filename, Section section, CancellationToken token)
+    {
+        var dat = await GetTextData(filename, token);
+        var res = new List<Section>(section.indent - 1);
+        foreach (var s in dat.contents.fact_reason.sections)
+        {
+            if (s.indent < section.indent)
+            {
+                Debug.Log(s.indent + "," + section.indent);
+                res[s.indent - 1] = s;
+            }
+            if (s.indent == section.indent)
+            {
+                if (s.header == section.header && s.type == section.type && s.texts.Equals(s.texts.Count))
+                {
+                    return res;
+                }
+            }
         }
         return null;
     }

@@ -877,7 +877,6 @@ GameObject:
   m_Component:
   - component: {fileID: 560760853}
   - component: {fileID: 560760852}
-  - component: {fileID: 560760854}
   m_Layer: 0
   m_Name: SceneManager
   m_TagString: Untagged
@@ -914,20 +913,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &560760854
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 560760851}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a858f65de3db5c24c9284410f81b3882, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fileName: Save/saveData.json
-  filePath_: 
 --- !u!1 &620898794
 GameObject:
   m_ObjectHideFlags: 0

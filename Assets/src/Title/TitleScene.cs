@@ -31,17 +31,17 @@ public class TitleScene : SingletonMonoBehaviour<TitleScene>
     SaveData saveFile;
     void Awake()
     {
-        saveDataIO = GetComponent<SaveDataIO>();
+        // saveDataIO = GetComponent<SaveDataIO>();
     }
 
     void Start()
     {
-        saveFile = saveDataIO.Load();
-        OnSaveDataLoaded.Invoke(saveFile.recentFiles);
+        //saveFile = saveDataIO.Load();
+        //OnSaveDataLoaded.Invoke(saveFile.recentFiles);
     }
     private void OnApplicationQuit()
     {
-        saveDataIO.Save(saveFile);
+        //saveDataIO.Save(saveFile);
     }
     public void AddFile(string path)
     {

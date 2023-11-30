@@ -173,8 +173,27 @@ public class UIFishbone : MonoBehaviour
                 var obj = ModalManager.Instance.AddModal(modalPrefab);
                 var dat = await HanreiRepository.Instance.GetText(FishboneViewManager.Instance.GetCurrentPath(), i.Value.text_id, token);
                 var section = await HanreiRepository.Instance.GetTextSection(FishboneViewManager.Instance.GetCurrentPath(), i.Value.text_id, token);
-                if (section != null)
-                    obj.GetComponent<HanreiTextModal>().Init(section.header, dat.text, i.Value.person, Time2Text(eve.time), i.Value.acts[id]);
+                if (section == null)
+                {
+                    Akak.Debug.LogWarn("section not found");
+                    return;
+                }
+                var sections = await HanreiRepository.Instance.GetParentsSection(FishboneViewManager.Instance.GetCurrentPath(), section, token);
+                var text = "";
+                foreach (var s in sections)
+                {
+                    text += s.header + "\n";
+                }
+                text += "\n";
+                foreach (var t in section.texts)
+                {
+                    if (t.text_id == i.Value.text_id)
+                        text += "<size=150%>" + t.raw_text + "</size>" + "\n";
+                    else
+                        text += t.raw_text + "\n";
+                }
+                //Akak.Debug.Log($"{section.header},{text}");
+                obj.GetComponent<HanreiTextModal>().Init(section.header, text, i.Value.person, Time2Text(eve.time), i.Value.acts[id]);
             });
             var eventButtonScr = Instantiate(eventButtonPrefab, eventsList).GetComponent<UIEventButton>();
             eventButtonScr.Init(time_id.ToString(), eve.person, Time2Text(eve.time));

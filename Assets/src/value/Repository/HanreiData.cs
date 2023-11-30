@@ -71,7 +71,7 @@ public class Section
     public string header;
     public string header_text;
     public int indent;
-    public List<SectionText> texts = new List<SectionText>();
+    public List<SectionText> texts = new();
 }
 
 [System.Serializable]
