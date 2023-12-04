@@ -117,7 +117,7 @@ public class HanreiRepository : Singleton<HanreiRepository>
             if (s.indent == section.indent - 1) parent = s;
             if (s.indent == section.indent)
             {
-                if (s.header == section.header && s.type == section.type && s.texts.Equals(s.texts.Count))
+                if (s.header == section.header && s.type == section.type && s.texts.Equals(s.texts))
                 {
                     return parent;
                 }
@@ -129,22 +129,24 @@ public class HanreiRepository : Singleton<HanreiRepository>
     GetParentsSection(string filename, Section section, CancellationToken token)
     {
         var dat = await GetTextData(filename, token);
-        var res = new List<Section>(section.indent - 1);
+        var res = new List<Section>();
+        for (int i = 0; i < section.indent - 1; i++) res.Add(null);
         foreach (var s in dat.contents.fact_reason.sections)
         {
             if (s.indent < section.indent)
             {
-                Debug.Log(s.indent + "," + section.indent);
+                Debug.Log(s.indent + "," + section.indent + "," + res.Count);
                 res[s.indent - 1] = s;
             }
             if (s.indent == section.indent)
             {
-                if (s.header == section.header && s.type == section.type && s.texts.Equals(s.texts.Count))
+                if (s.header == section.header && s.type == section.type && s.texts.Count == section.texts.Count)
                 {
                     return res;
                 }
             }
         }
+        Debug.Log("section not found");
         return null;
     }
     public async UniTask<HanreiTokenizedData.HanreiTextTokenData.HanreiEventsData>

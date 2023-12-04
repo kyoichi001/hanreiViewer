@@ -178,13 +178,13 @@ public class UIFishbone : MonoBehaviour
                     Akak.Debug.LogWarn("section not found");
                     return;
                 }
-                var sections = await HanreiRepository.Instance.GetParentsSection(FishboneViewManager.Instance.GetCurrentPath(), section, token);
                 var text = "";
+                /*var sections = await HanreiRepository.Instance.GetParentsSection(FishboneViewManager.Instance.GetCurrentPath(), section, token);
                 foreach (var s in sections)
                 {
                     text += s.header + "\n";
                 }
-                text += "\n";
+                text += "\n";*/
                 foreach (var t in section.texts)
                 {
                     if (t.text_id == i.Value.text_id)
