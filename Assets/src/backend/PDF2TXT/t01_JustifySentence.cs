@@ -38,7 +38,7 @@ public class t01_JustifySentence
 
     public OutputData Convert(InputData data)
     {
-        OutputData res = new OutputData();
+        var res = new OutputData();
         foreach (var page in data.pages)
         {
             page.contents.Sort((a, b) =>

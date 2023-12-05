@@ -35,9 +35,9 @@ public class CabochaWrapper : Singleton<CabochaWrapper>
 
     private Process _process;
 
-    List<string> buffer = new();
+    readonly List<string> buffer = new();
     public class OnTextTokenizedEvent : UnityEvent<CaboChaRes> { }
-    OnTextTokenizedEvent OnTextTokenized = new();
+    readonly OnTextTokenizedEvent OnTextTokenized = new();
     ~CabochaWrapper()
     {
         DisposeProcess();
