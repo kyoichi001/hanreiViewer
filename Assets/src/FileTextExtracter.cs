@@ -47,7 +47,7 @@ public class FileTextExtracter : SingletonMonoBehaviour<FileTextExtracter>
         try
         {
             var inputFileName = Path.GetFileNameWithoutExtension(filePath);
-            await pdf2txt.Instance.ConvertPDF2Txt(filePath, Application.dataPath + "/" + "out2.json");
+            await pdf2txt.ConvertPDF2Txt(filePath, Application.dataPath + "/" + "out2.json");
         }
         catch (System.Exception e)
         {
