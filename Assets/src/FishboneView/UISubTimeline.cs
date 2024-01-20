@@ -53,7 +53,7 @@ public class UISubTimeline : MonoBehaviour
     {
         var arr = data.is_top ? topTimes : bottomTimes;
         int layer = 0;
-        while (!isCapable(data.time, layer, data.is_top))
+        while (!isCapable(data.time, layer, data.is_top, 3))
         {
             layer++;
         }
@@ -128,7 +128,7 @@ public class UISubTimeline : MonoBehaviour
         var time_height = 25;
         var time_layer_offset = isTop ? time_height : -time_height;
         var padding = isTop ? 30 : -30;
-        var (b, e) = data.data.time.GetMinMax(10);
+        var (b, e) = data.data.time.GetMinMax(3);
         var beginRatio = (float)(b - minTime).TotalDays / (float)(maxTime - minTime).TotalDays;
         var endRatio = (float)(e - minTime).TotalDays / (float)(maxTime - minTime).TotalDays;
         var rc = data.gameObject.transform as RectTransform;
@@ -148,7 +148,7 @@ public class UISubTimeline : MonoBehaviour
                     data.data.layer * time_layer_offset + padding
                     );
                 var widthRatio = endRatio - beginRatio;
-                rc.sizeDelta = new Vector2(widthRatio * rectTransform.rect.width, time_height);
+                rc.sizeDelta = new Vector2(Mathf.Max(widthRatio * rectTransform.rect.width, 140), time_height);
                 break;
         }
     }

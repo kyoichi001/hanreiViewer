@@ -9,7 +9,7 @@ using System.Linq;
 public class UITimeline : MonoBehaviour
 {
 
-    [SerializeField] float yearUnitLength = 100;
+    [SerializeField] float yearUnitLength = 400;
     [Header("References")]
     [SerializeField] GameObject subTimelinePrefab;
 

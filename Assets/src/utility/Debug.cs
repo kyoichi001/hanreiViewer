@@ -27,7 +27,7 @@ namespace Akak
 #if UNITY_EDITOR
                         UnityEngine.Debug.Log(message);
 #else
-                        this.Print(message);
+                        Debug.Print(message);
 #endif
                 }
                 public static void LogWarn(object message)
@@ -35,7 +35,7 @@ namespace Akak
 #if UNITY_EDITOR
                         UnityEngine.Debug.LogWarning(message);
 #else
-                        this.PrintWarn(message);
+                        Debug.PrintWarn(message);
 #endif
                 }
                 public static void LogError(object message)
@@ -43,7 +43,7 @@ namespace Akak
 #if UNITY_EDITOR
                         UnityEngine.Debug.LogError(message);
 #else
-                        this.PrintError(message.ToString());
+                        Debug.PrintError(message.ToString());
 #endif
                 }
 
@@ -52,7 +52,7 @@ namespace Akak
 #if UNITY_EDITOR
                         UnityEngine.Debug.Log(message, context);
 #else
-                        this.Print(message.ToString());
+                        Debug.Print(message.ToString());
 #endif
                 }
                 public static void LogWarn(object message, Object context)
@@ -60,7 +60,7 @@ namespace Akak
 #if UNITY_EDITOR
                         UnityEngine.Debug.LogWarning(message, context);
 #else
-                        this.PrintWarn(message.ToString());
+                        Debug.PrintWarn(message.ToString());
 #endif
                 }
                 public static void LogError(object message, Object context)
@@ -68,7 +68,7 @@ namespace Akak
 #if UNITY_EDITOR
                         UnityEngine.Debug.LogError(message, context);
 #else
-                        this.PrintError(message.ToString());
+                        Debug.PrintError(message.ToString());
 #endif
                 }
         }

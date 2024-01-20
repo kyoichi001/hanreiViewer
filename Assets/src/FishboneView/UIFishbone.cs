@@ -69,7 +69,7 @@ public class UIFishbone : MonoBehaviour
         {
             await FilterUI(genkokuToggle.isOn, hikokuToggle.isOn, jijitsuToggle.isOn, token);
         });
-        timelineSlider.value = 300;//yearUnitLength;
+        timelineSlider.value = 400;//yearUnitLength;
         var eventTrriger = timelineSlider.GetComponent<EventTrigger>();
         var enter_entry = new EventTrigger.Entry
         {
